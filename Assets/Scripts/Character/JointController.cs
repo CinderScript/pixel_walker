@@ -4,15 +4,11 @@ using UnityEngine;
 
 public class JointController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public GameObject Joint;
+	
+	
+	public void AddTorque(float x, float y, float z)
+	{
+		
+	}
 }
