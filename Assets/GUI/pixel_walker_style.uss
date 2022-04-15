@@ -1,0 +1,25 @@
+.button-yellow {
+
+    -unity-text-outline-color: rgb(0, 0, 0);
+    background-color: rgb(255, 189, 0);
+    -unity-font-style: normal;
+    font-size: 18px;
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+    border-left-color: rgb(0, 0, 0);
+    border-right-color: rgb(0, 0, 0);
+    border-top-color: rgb(0, 0, 0);
+    border-bottom-color: rgb(0, 0, 0);
+    border-left-width: 0;
+    border-right-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
+}
+
+.button-yellow:hover {
+    -unity-text-outline-color: rgb(0, 0, 0);
+    background-color: rgb(255, 134, 0);
+    -unity-font-style: normal;   
+}
