@@ -1,0 +1,81 @@
+default_settings:
+    hyperparameters:
+      # Hyperparameters 
+      # (common to PPO and SAC)
+      batch_size: 1024
+      buffer_size: 10240
+      learning_rate: 3.0e-4           # (3.0e-4)   1e-5 - 1e-3
+      learning_rate_schedule: linear
+
+    # Configuration of the neural network 
+    # (common to PPO/SAC)
+    network_settings:
+      vis_encode_type: simple
+      normalize: false
+      hidden_units: 256               # (128)     32 - 512        $
+      num_layers: 2                   # (2)       1 - 3
+      # memory
+      memory:
+        sequence_length: 64
+        memory_size: 256
+
+    # Trainer configurations
+    # (common to all trainers)
+    max_steps: 5.0e5
+    time_horizon: 64                  # (64)   32 - 2048
+    summary_freq: 10000
+    keep_checkpoints: 5
+    checkpoint_interval: 50000
+    threaded: true                    # (false)                   $
+    init_path: null
+
+    # Trainer configurations
+    # (for PPO and SAC)
+    reward_signals:
+      # environment reward
+      extrinsic:
+        strength: 1.0
+        gamma: 0.99
+
+      # curiosity module
+      curiosity:
+        strength: 0.02
+        gamma: 0.99
+        encoding_size: 256
+        learning_rate: 3.0e-4         # (3.0e-4)   1e-5 - 1e-3
+
+behaviors:
+
+# * * * * * * * * * * * * * PPO * * * * * * * * * * * * * * *
+  Stand_PPO:
+    trainer_type: ppo
+
+    hyperparameters:
+      # Parameters common to PPO and SAC
+      # are in default_settings
+
+      # PPO-specific hyperparameters
+      beta: 5.0e-3                  # (5.0e-3)    1e-4 - 1e-2, 
+      beta_schedule: constant
+      epsilon: 0.2
+      epsilon_schedule: linear
+      lambd: 0.95                   # (0.95)      0.9 - 0.95
+      num_epoch: 3
+
+
+# * * * * * * * * * * * * * * SAC * * * * * * * * * * * * * *
+  Stand_SAC:
+    trainer_type: sac
+      # Parameters common to PPO and SAC
+      # are in default_settings
+
+    # SAC-specific configs
+    hyperparameters:
+
+      # SAC-specific hyperparameters
+      buffer_init_steps: 0
+      tau: 0.005                    # (0.005)     0.005 - 0.01
+      steps_per_update: 10.0
+      save_replay_buffer: false
+      init_entcoef: 0.5
+      reward_signal_steps_per_update: 10.0
