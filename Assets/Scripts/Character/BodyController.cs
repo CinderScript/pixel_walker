@@ -13,4 +13,33 @@ public class BodyController : MonoBehaviour
 	public Vector3 HipTorqueMax;
 	public Vector3 KneeTorqueMax;
 	public Vector3 AnkleTorqueMax;
+
+	public float AverageLimbVelocity { get; private set; }
+	
+	private JointController[] jointControllers;
+
+	private void Awake()
+	{
+		var joints = GetComponentsInChildren<Joint>();
+	}
+
+	public void ApplyTorque(Vector3 headTorque, 
+							Vector3 stomachTorque, 
+							Vector3 shoulderTorque, 
+							Vector3 elbowTorque, 
+							Vector3 wristTorque, 
+							Vector3 hipTorque, 
+							Vector3 kneeTorque, 
+							Vector3 ankleTorque)
+	{
+		// Apply Torque
+		GetComponent<Rigidbody>().AddRelativeTorque(headTorque);
+		GetComponent<Rigidbody>().AddRelativeTorque(stomachTorque);
+		GetComponent<Rigidbody>().AddRelativeTorque(shoulderTorque);
+		GetComponent<Rigidbody>().AddRelativeTorque(elbowTorque);
+		GetComponent<Rigidbody>().AddRelativeTorque(wristTorque);
+		GetComponent<Rigidbody>().AddRelativeTorque(hipTorque);
+		GetComponent<Rigidbody>().AddRelativeTorque(kneeTorque);
+		GetComponent<Rigidbody>().AddRelativeTorque(ankleTorque);
+	}
 }

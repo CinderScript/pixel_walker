@@ -2,7 +2,7 @@ default_settings:
     hyperparameters:
       # Hyperparameters 
       # (common to PPO and SAC)
-      batch_size: 1024
+  
       buffer_size: 10240
       learning_rate: 3.0e-4           # (3.0e-4)   1e-5 - 1e-3
       learning_rate_schedule: linear
@@ -21,8 +21,8 @@ default_settings:
 
     # Trainer configurations
     # (common to all trainers)
-    max_steps: 5.0e5
-    time_horizon: 64                  # (64)   32 - 2048
+    max_steps: 5.0e5                  # (500000) 
+    time_horizon: 90                  # (64)    32 - 2048
     summary_freq: 10000
     keep_checkpoints: 5
     checkpoint_interval: 50000
@@ -53,14 +53,15 @@ behaviors:
     hyperparameters:
       # Parameters common to PPO and SAC
       # are in default_settings
+      batch_size: 1024
 
       # PPO-specific hyperparameters
       beta: 5.0e-3                  # (5.0e-3)    1e-4 - 1e-2, 
       beta_schedule: constant
       epsilon: 0.2
       epsilon_schedule: linear
-      lambd: 0.95                   # (0.95)      0.9 - 0.95
-      num_epoch: 3
+      lambd: 0.95                   # (0.95)      0.9 - 0.95                          
+      num_epoch: 3                                                            // lower this if rewards don't stabilize
 
 
 # * * * * * * * * * * * * * * SAC * * * * * * * * * * * * * *
@@ -71,6 +72,7 @@ behaviors:
 
     # SAC-specific configs
     hyperparameters:
+      batch_size: 512
 
       # SAC-specific hyperparameters
       buffer_init_steps: 0
