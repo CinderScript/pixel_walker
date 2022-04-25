@@ -2,22 +2,40 @@
     "Stand": {
         "checkpoints": [
             {
-                "steps": 360,
-                "file_path": "results\\ppo_stand_test\\Stand\\Stand-360.onnx",
-                "reward": 0.0,
-                "creation_time": 1650859132.2196248,
+                "steps": 49974,
+                "file_path": "results\\ppo_stand_test\\Stand\\Stand-49974.onnx",
+                "reward": 65.45519553770016,
+                "creation_time": 1650870206.006341,
                 "auxillary_file_paths": [
-                    "results\\ppo_stand_test\\Stand\\Stand-360.pt"
+                    "results\\ppo_stand_test\\Stand\\Stand-49974.pt"
+                ]
+            },
+            {
+                "steps": 99959,
+                "file_path": "results\\ppo_stand_test\\Stand\\Stand-99959.onnx",
+                "reward": 6270.708160566834,
+                "creation_time": 1650870248.4721627,
+                "auxillary_file_paths": [
+                    "results\\ppo_stand_test\\Stand\\Stand-99959.pt"
+                ]
+            },
+            {
+                "steps": 123953,
+                "file_path": "results\\ppo_stand_test\\Stand\\Stand-123953.onnx",
+                "reward": -69.84801477193832,
+                "creation_time": 1650870333.0212698,
+                "auxillary_file_paths": [
+                    "results\\ppo_stand_test\\Stand\\Stand-123953.pt"
                 ]
             }
         ],
         "final_checkpoint": {
-            "steps": 360,
+            "steps": 123953,
             "file_path": "results\\ppo_stand_test\\Stand.onnx",
-            "reward": 0.0,
-            "creation_time": 1650859132.2196248,
+            "reward": -69.84801477193832,
+            "creation_time": 1650870333.0212698,
             "auxillary_file_paths": [
-                "results\\ppo_stand_test\\Stand\\Stand-360.pt"
+                "results\\ppo_stand_test\\Stand\\Stand-123953.pt"
             ]
         }
     },

@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 
 using Unity.MLAgents.Actuators;
-
 using UnityEngine;
 
 public class CharacterController : MonoBehaviour
@@ -14,6 +13,8 @@ public class CharacterController : MonoBehaviour
 	public int NumberOfJoints => jointControllers.Length;
 	public int NumberOfObservations { get; private set; }   // for Agent observation scripts
 	public float TotalTorqueUsed { get; private set; }
+	public CharacterPose StartingPose { get; private set; }
+
 
 	private JointController[] jointControllers;
 
@@ -33,6 +34,7 @@ public class CharacterController : MonoBehaviour
 
 		jointControllers = tempList.ToArray();
 		NumberOfObservations = jointControllers.Length * 4;
+		StartingPose = GetCharacterPose();
 	}
 
 	public void ProcessActionBuffers(ActionBuffers actionBuffers)
@@ -81,12 +83,6 @@ public class CharacterController : MonoBehaviour
 		return observations;
 	}
 
-	void Update()
-	{
-		Debug.Log($"Position Height{PositionReferencePoint.transform.position.y}");
-		//Debug.Log($"Position Rotation: {PositionReferencePoint.transform.rotation.eulerAngles}");
-	}
-
 	private void ApplyTorque(Vector3[] torques)
 	{
 		for (int i = 0; i < NumberOfJoints; i++)
@@ -95,11 +91,29 @@ public class CharacterController : MonoBehaviour
 		}
 	}
 
-	private void SaveCharacterStartingPose()
+	public void ResetPose()
 	{
-		foreach (Transform child in transform)
+		SetCharacterPose(StartingPose);
+	}
+	public void SetCharacterPose(CharacterPose pose)
+	{
+		var children = GetComponentsInChildren<Transform>();
+		foreach (Transform child in children)
 		{
-			//child.rotation.get
+			child.position = pose.Positions[child.name];
+			child.rotation = pose.Rotations[child.name];
 		}
+	}
+	public CharacterPose GetCharacterPose()
+	{
+		CharacterPose characterPose = new CharacterPose();
+		var children = GetComponentsInChildren<Transform>();
+		foreach (Transform child in children)
+		{
+			characterPose.Positions[child.name] = child.position;
+			characterPose.Rotations[child.name] = child.rotation;
+		}
+
+		return characterPose;
 	}
 }
