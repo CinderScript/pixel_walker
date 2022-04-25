@@ -1,0 +1,29 @@
+{
+    "Stand": {
+        "checkpoints": [
+            {
+                "steps": 360,
+                "file_path": "results\\ppo_stand_test\\Stand\\Stand-360.onnx",
+                "reward": 0.0,
+                "creation_time": 1650859132.2196248,
+                "auxillary_file_paths": [
+                    "results\\ppo_stand_test\\Stand\\Stand-360.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 360,
+            "file_path": "results\\ppo_stand_test\\Stand.onnx",
+            "reward": 0.0,
+            "creation_time": 1650859132.2196248,
+            "auxillary_file_paths": [
+                "results\\ppo_stand_test\\Stand\\Stand-360.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.29.0",
+        "torch_version": "1.11.0+cu113"
+    }
+}

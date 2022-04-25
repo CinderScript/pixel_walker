@@ -13,7 +13,6 @@ public class BehaviorSelector : MonoBehaviour
 
 	public GameObject SelectBehavior()
 	{
-
 		return GameObject.FindGameObjectWithTag("Stand");
 	}
 }

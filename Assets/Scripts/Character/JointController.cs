@@ -4,19 +4,24 @@ using UnityEngine;
 
 public class JointController : MonoBehaviour
 {
-	public string Name { get; }
-	private readonly Rigidbody rb;
-	private readonly Joint joint;
-	private readonly Vector3 torqueAxisScaler;
-	
-	public float AverageLimbVelocity { get; private set; }
-
-	public void AddTorque(float x, float y, float z)
+	public Rigidbody Rb
 	{
-		rb.AddRelativeTorque(x * torqueAxisScaler.x, y * torqueAxisScaler.y, z * torqueAxisScaler.z);
+		get
+		{
+			return rb;
+		}
+	}
+	private Rigidbody rb;
+	private Joint joint;
+
+	void Awake()
+	{
+		rb = GetComponent<Rigidbody>();
+		joint = rb.GetComponent<Joint>();
 	}
 
-	public Vector3 TorqueScaler() {
-		return joint.axis;
+	public void ApplyTorque(in Vector3 torque)
+	{
+		rb.AddRelativeTorque( Vector3.Scale( torque, joint.axis ) );
 	}
 }
