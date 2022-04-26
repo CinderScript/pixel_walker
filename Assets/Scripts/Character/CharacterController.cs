@@ -3,18 +3,17 @@ using System.Collections.Generic;
 
 using Unity.MLAgents.Actuators;
 using UnityEngine;
-
+[RequireComponent(typeof(ChildCollisionListener))]
 public class CharacterController : MonoBehaviour
 {
 	public const int MAX_LIMB_TORQUE = 1200;
 
-	public GameObject PositionReferencePoint;
+	public GameObject CollisionGizmo;
 
 	public int NumberOfJoints => jointControllers.Length;
-	public int NumberOfObservations { get; private set; }   // for Agent observation scripts
+	public int NumberOfObservations { get; private set; }
 	public float TotalTorqueUsed { get; private set; }
 	public CharacterPose StartingPose { get; private set; }
-
 
 	private JointController[] jointControllers;
 
@@ -36,6 +35,13 @@ public class CharacterController : MonoBehaviour
 		NumberOfObservations = jointControllers.Length * 4;
 		StartingPose = GetCharacterPose();
 	}
+	private void Start()
+	{
+		GetComponent<ChildCollisionListener>().OnCollisionStay
+			= (child, collision) => { 
+				Debug.Log($"'{child.name}' collided with '{collision.gameObject.name}'"); 
+			};
+	}
 
 	public void ProcessActionBuffers(ActionBuffers actionBuffers)
 	{
@@ -54,7 +60,7 @@ public class CharacterController : MonoBehaviour
 			torques[jointIndex] = new Vector3(x, y, z) * MAX_LIMB_TORQUE;
 			totalTorque = Mathf.Abs(x) + Mathf.Abs(y) + Mathf.Abs(z);
 		}
-		TotalTorqueUsed = totalTorque / NumberOfJoints * 3f * MAX_LIMB_TORQUE;
+		TotalTorqueUsed = totalTorque * MAX_LIMB_TORQUE;
 		ApplyTorque(torques);
 
 		// complete additional actions
@@ -82,6 +88,10 @@ public class CharacterController : MonoBehaviour
 		}
 		return observations;
 	}
+	public void ResetPose()
+	{
+		SetCharacterPose(StartingPose);
+	}
 
 	private void ApplyTorque(Vector3[] torques)
 	{
@@ -90,12 +100,7 @@ public class CharacterController : MonoBehaviour
 			jointControllers[i].ApplyTorque( in torques[i] );
 		}
 	}
-
-	public void ResetPose()
-	{
-		SetCharacterPose(StartingPose);
-	}
-	public void SetCharacterPose(CharacterPose pose)
+	private void SetCharacterPose(CharacterPose pose)
 	{
 		var children = GetComponentsInChildren<Transform>();
 		foreach (Transform child in children)
@@ -104,7 +109,7 @@ public class CharacterController : MonoBehaviour
 			child.rotation = pose.Rotations[child.name];
 		}
 	}
-	public CharacterPose GetCharacterPose()
+	private CharacterPose GetCharacterPose()
 	{
 		CharacterPose characterPose = new CharacterPose();
 		var children = GetComponentsInChildren<Transform>();

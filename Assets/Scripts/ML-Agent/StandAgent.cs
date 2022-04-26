@@ -40,20 +40,12 @@ public class StandAgent : Agent
 	{
 		cc.ProcessActionBuffers(actionBuffers);
 
-		if (cc.PositionReferencePoint.transform.position.y > 0.7f)
-		{
-			AddReward(remainStandingreward);
-			remainStandingreward += 0.005f;
-		}
-		else if (cc.PositionReferencePoint.transform.position.y < 0.5f)
-		{
-			AddReward(-0.1f);
-		}
+		//if (cc.BodyReferenceLower.transform.position.y > 0.7f)
+		//{
+		//	AddReward(remainStandingreward);
+		//	remainStandingreward += 0.005f;
+		//}
 
-		if (cc.PositionReferencePoint.transform.position.y < 0.4f)
-		{
-			EndEpisode();
-		}
 
 		if (remainStandingreward > 0.99999999f)
 		{

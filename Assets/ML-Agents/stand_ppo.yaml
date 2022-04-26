@@ -6,14 +6,14 @@ behaviors:
       # Hyperparameters common to PPO and SAC
       batch_size: 5120
       buffer_size: 409600
-      learning_rate: 3.0e-4
+      learning_rate: 3.0e-5
       learning_rate_schedule: linear
 
       # PPO-specific hyperparameters
       # Replaces the "PPO-specific hyperparameters" section above
-      beta: 2.0e-2
+      beta: 5.0e-2
       beta_schedule: constant
-      epsilon: 0.1
+      epsilon: 0.2
       epsilon_schedule: linear
       lambd: 0.95
       num_epoch: 3
