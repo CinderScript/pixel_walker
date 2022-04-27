@@ -30,14 +30,17 @@ public class ChildCollisionListener : MonoBehaviour
 		var objName = reportingObject.name;
 		
 		bool isChild = childIDs.Contains( collisionObjectID );
-		
-		if ( DetectInterChildCollisions )
+
+		if (OnCollisionStay != null)
 		{
-			OnCollisionStay(reportingObject, collision);
-		}
-		else if ( !isChild )
-		{
-			OnCollisionStay(reportingObject, collision);
+			if (DetectInterChildCollisions)
+			{
+				OnCollisionStay(reportingObject, collision);
+			}
+			else if (!isChild)
+			{
+				OnCollisionStay(reportingObject, collision);
+			}
 		}
 	}
 }
