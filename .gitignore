@@ -1,4 +1,7 @@
 
+# VSCode
+/.vscode
+
 ML-Agents/python-env-mlagents
 /results/*
 /ML-Agents
