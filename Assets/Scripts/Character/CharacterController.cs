@@ -11,7 +11,6 @@ public class CharacterController : MonoBehaviour
 	public int NumberOfJoints => jointControllers.Length;
 	public int NumberOfObservations { get; private set; }
 	public float TotalTorqueUsed { get; private set; }
-	public CharacterPose StartingPose { get; private set; }
 
 	private JointController[] jointControllers;
 
@@ -31,7 +30,6 @@ public class CharacterController : MonoBehaviour
 
 		jointControllers = tempList.ToArray();
 		NumberOfObservations = jointControllers.Length * 4;
-		StartingPose = GetCharacterPose();
 	}
 
 	public void ProcessActionBuffers(ActionBuffers actionBuffers)
@@ -79,10 +77,6 @@ public class CharacterController : MonoBehaviour
 		}
 		return observations;
 	}
-	public void ResetPose()
-	{
-		SetCharacterPose(StartingPose);
-	}
 
 	private void ApplyTorque(Vector3[] torques)
 	{
@@ -90,26 +84,5 @@ public class CharacterController : MonoBehaviour
 		{
 			jointControllers[i].ApplyTorque( in torques[i] );
 		}
-	}
-	private void SetCharacterPose(CharacterPose pose)
-	{
-		var children = GetComponentsInChildren<Transform>();
-		foreach (Transform child in children)
-		{
-			child.position = pose.Positions[child.name];
-			child.rotation = pose.Rotations[child.name];
-		}
-	}
-	private CharacterPose GetCharacterPose()
-	{
-		CharacterPose characterPose = new CharacterPose();
-		var children = GetComponentsInChildren<Transform>();
-		foreach (Transform child in children)
-		{
-			characterPose.Positions[child.name] = child.position;
-			characterPose.Rotations[child.name] = child.rotation;
-		}
-
-		return characterPose;
 	}
 }

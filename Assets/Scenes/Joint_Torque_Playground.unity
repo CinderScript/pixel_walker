@@ -310,7 +310,7 @@ MonoBehaviour:
     hasUpgradedBrainParametersWithActionSpec: 1
   m_Model: {fileID: 0}
   m_InferenceDevice: 0
-  m_BehaviorType: 2
+  m_BehaviorType: 0
   m_BehaviorName: Stand
   TeamId: 0
   m_UseChildSensors: 1
@@ -332,7 +332,7 @@ MonoBehaviour:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
   MaxStep: 0
-  CharacterController: {fileID: 7779647623846013477}
+  Character: {fileID: 7779647623846013477}
   Right_Foot: {fileID: 7810830226598919835}
   Left_Foot: {fileID: 5894086862592870742}
   LocationMarker: {fileID: 890202652}
@@ -4738,18 +4738,18 @@ CharacterJoint:
     bounciness: 0
     contactDistance: 0
   m_HighTwistLimit:
-    limit: 20
+    limit: 21.677137
     bounciness: 0
     contactDistance: 0
   m_SwingLimitSpring:
     spring: 0
     damper: 0
   m_Swing1Limit:
-    limit: 10
+    limit: 15.865678
     bounciness: 0
     contactDistance: 0
   m_Swing2Limit:
-    limit: 0
+    limit: 36.77405
     bounciness: 0
     contactDistance: 0
   m_EnableProjection: 0

@@ -9,7 +9,7 @@ using UnityEngine;
 
 public class StandAgent : Agent
 {
-	public GameObject CharacterController;
+	public GameObject Character;
 	public GameObject Right_Foot;
 	public GameObject Left_Foot;
 	public GameObject LocationMarker;
@@ -26,18 +26,18 @@ public class StandAgent : Agent
 
 	void Awake()
 	{
-		cc = CharacterController.GetComponent<CharacterController>();
+		cc = Character.GetComponent<CharacterController>();
 		right_foot_id = Right_Foot.GetInstanceID();
 		left_foot_id = Left_Foot.GetInstanceID();
 		ticksPerSec = 1 / Time.fixedDeltaTime;
 
-		CharacterController.GetComponent<ChildCollisionListener>().OnCollisionStay += OnCollisionStayHandler;
+		Character.GetComponent<ChildCollisionListener>().OnCollisionStay += OnCollisionStayHandler;
+		characterPose = new CharacterPose(Character);
 	}
 
 	public override void OnEpisodeBegin()
 	{
-		cc.ResetPose();
-
+		characterPose.ApplyPoseTo(Character);
 		countDownTimerTicks = ticksPerSec;
 	}
 
@@ -62,11 +62,12 @@ public class StandAgent : Agent
 
 		for (int i = 0; i < contactPoints.Length; i++)
 		{
+			// if the collision was not with the feet, then the character fell
 			var id = contactPoints[i].thisCollider.gameObject.GetInstanceID();
 			if ( id != right_foot_id &&
 				 id != left_foot_id )
 			{
-				SetReward(-0.2f);
+				SetReward(-0.3f);
 				EndEpisode();
 			}
 		}
@@ -98,5 +99,10 @@ public class StandAgent : Agent
 			SetReward(1);
 			EndEpisode();
 		}
+	}
+
+	public override void Heuristic(in ActionBuffers actionsOut)
+	{
+
 	}
 }
