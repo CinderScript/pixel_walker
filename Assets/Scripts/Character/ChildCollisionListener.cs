@@ -15,12 +15,20 @@ public class ChildCollisionListener : MonoBehaviour
 		{
 			var childListener = rb.gameObject.AddComponent<ChildCollisionThrower>();
 			childListener.OnCollisionStayEvent += CollisionStayHandler;
-			childIDs.Add(rb.gameObject.GetInstanceID());
+			
+			var collisionObjectID = rb.GetInstanceID();
+			Debug.Log("Child ID Added: " + collisionObjectID + ", " + rb.name);
+			childIDs.Add(collisionObjectID);
 		}
+
     }
 
 	private void CollisionStayHandler(GameObject obj, Collision collision)
 	{
+		var collisionObjectID = obj.GetInstanceID();
+		var objName = obj.name;
+		Debug.Log($"{objName} has id: {collisionObjectID}");
+
 		bool isChild = childIDs.Contains( obj.GetInstanceID() );
 		if (DetectInterChildCollisions)
 		{
