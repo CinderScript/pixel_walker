@@ -39,8 +39,6 @@ public class StandAgent : Agent
 	public override void OnActionReceived(ActionBuffers actionBuffers)
 	{
 		cc.ProcessActionBuffers(actionBuffers);
-
-
 	}
 
 	private void RewardAgent(){

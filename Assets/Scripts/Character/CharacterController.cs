@@ -3,12 +3,10 @@ using System.Collections.Generic;
 
 using Unity.MLAgents.Actuators;
 using UnityEngine;
-[RequireComponent(typeof(ChildCollisionListener))]
+
 public class CharacterController : MonoBehaviour
 {
-	public const int MAX_LIMB_TORQUE = 1200;
-
-	public GameObject CollisionGizmo;
+	public const int MAX_LIMB_TORQUE = 1500;
 
 	public int NumberOfJoints => jointControllers.Length;
 	public int NumberOfObservations { get; private set; }
@@ -34,13 +32,6 @@ public class CharacterController : MonoBehaviour
 		jointControllers = tempList.ToArray();
 		NumberOfObservations = jointControllers.Length * 4;
 		StartingPose = GetCharacterPose();
-	}
-	private void Start()
-	{
-		GetComponent<ChildCollisionListener>().OnCollisionStay
-			+= (child, collision) => { 
-				Debug.Log($"'{child.name}' collided with '{collision.gameObject.name}'"); 
-			};
 	}
 
 	public void ProcessActionBuffers(ActionBuffers actionBuffers)

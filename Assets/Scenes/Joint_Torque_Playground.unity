@@ -4433,6 +4433,7 @@ GameObject:
   - component: {fileID: 6970741985384460447}
   - component: {fileID: 7779647623846013478}
   - component: {fileID: 7779647623846013479}
+  - component: {fileID: 7779647623846013480}
   m_Layer: 2
   m_Name: Dave
   m_TagString: Player
@@ -4452,7 +4453,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cbf5261ba05aae4dbcf2e4a4930a753, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CollisionGizmo: {fileID: 4792759155127595852, guid: 22b7e2126ded1db4db38c514288c7f3a, type: 3}
 --- !u!114 &7779647623846013479
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4466,6 +4466,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DetectInterChildCollisions: 0
+--- !u!114 &7779647623846013480
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7779647623846013477}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17592e6b64b2845468f6bdc8f4af5938, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Gizmo: {fileID: 1632646360584984873, guid: 24add68e3f703594e8444d89ffb937ca, type: 3}
 --- !u!4 &7801054188635980304
 Transform:
   m_ObjectHideFlags: 0
