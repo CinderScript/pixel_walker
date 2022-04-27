@@ -37,6 +37,8 @@ public class BalanceSensor : MonoBehaviour
 		{
 			TotalMass += rb.mass;
 		}
+
+		GetComponent<ChildCollisionListener>().OnCollisionStay += OnCollisionStayHandler;
 	}
 
 	void Start()
@@ -49,13 +51,9 @@ public class BalanceSensor : MonoBehaviour
 		Gizmo.transform.position = CenterOfMass;
 	}
 
-	private void OnCollisionStay(Collision collision)
+	private void OnCollisionStayHandler(GameObject obj, Collision collision)
 	{
-		//ContactPoint[] contactPoints = new ContactPoint[collision.contactCount];
-		//collision.GetContacts(contactPoints);
-		//foreach (var col in contactPoints)
-		//{
-		//	Debug.Log($"Collision Separation: {col.separation}");
-		//}
+		ContactPoint[] contactPoints = new ContactPoint[collision.contactCount];
+		collision.GetContacts(contactPoints);
 	}
 }
