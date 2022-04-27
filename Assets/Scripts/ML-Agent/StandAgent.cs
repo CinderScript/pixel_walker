@@ -40,6 +40,11 @@ public class StandAgent : Agent
 	{
 		cc.ProcessActionBuffers(actionBuffers);
 
+
+	}
+
+	private void RewardAgent(){
+
 		//if (cc.BodyReferenceLower.transform.position.y > 0.7f)
 		//{
 		//	AddReward(remainStandingreward);
@@ -52,9 +57,5 @@ public class StandAgent : Agent
 			SetReward(1);
 			EndEpisode();
 		}
-	}
-
-	public override void Heuristic(in ActionBuffers actionsOut)
-	{
 	}
 }

@@ -38,7 +38,7 @@ public class CharacterController : MonoBehaviour
 	private void Start()
 	{
 		GetComponent<ChildCollisionListener>().OnCollisionStay
-			= (child, collision) => { 
+			+= (child, collision) => { 
 				Debug.Log($"'{child.name}' collided with '{collision.gameObject.name}'"); 
 			};
 	}

@@ -7,6 +7,7 @@ public class ChildCollisionListener : MonoBehaviour
 	public bool DetectInterChildCollisions = false;
 	public Action<GameObject, Collision> OnCollisionStay { get; set; }
 
+	private Dictionary<int, string> childColliders = new Dictionary<int, string>();
 	private HashSet<int> childIDs = new HashSet<int>();
     void Awake()
     {
@@ -16,27 +17,27 @@ public class ChildCollisionListener : MonoBehaviour
 			var childListener = rb.gameObject.AddComponent<ChildCollisionThrower>();
 			childListener.OnCollisionStayEvent += CollisionStayHandler;
 			
-			var collisionObjectID = rb.GetInstanceID();
-			Debug.Log("Child ID Added: " + collisionObjectID + ", " + rb.name);
-			childIDs.Add(collisionObjectID);
-		}
+			var collisionObjectID = rb.gameObject.GetInstanceID();
 
+			childIDs.Add(collisionObjectID);
+			childColliders[collisionObjectID] = rb.name;
+		}
     }
 
-	private void CollisionStayHandler(GameObject obj, Collision collision)
+	private void CollisionStayHandler(GameObject reportingObject, Collision collision)
 	{
-		var collisionObjectID = obj.GetInstanceID();
-		var objName = obj.name;
-		Debug.Log($"{objName} has id: {collisionObjectID}");
-
-		bool isChild = childIDs.Contains( obj.GetInstanceID() );
-		if (DetectInterChildCollisions)
+		var collisionObjectID = collision.gameObject.GetInstanceID();
+		var objName = reportingObject.name;
+		
+		bool isChild = childIDs.Contains( collisionObjectID );
+		
+		if ( DetectInterChildCollisions )
 		{
-			OnCollisionStay(obj, collision);
+			OnCollisionStay(reportingObject, collision);
 		}
 		else if ( !isChild )
 		{
-			OnCollisionStay(obj, collision);
+			OnCollisionStay(reportingObject, collision);
 		}
 	}
 }
