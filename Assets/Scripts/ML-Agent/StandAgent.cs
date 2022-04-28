@@ -92,8 +92,11 @@ public class StandAgent : Agent
 
 	private void RewardAgent()
 	{
-		if (LocationMarker.transform.position.y > 0.75)
+		if ( LocationMarker.transform.position.y > 0.72f   && 
+			 LocationMarker.transform.position.y < 1.1f)
+		{
 			SetReward(remainStandingreward);
+		}
 
 		if (remainStandingreward > 0.9999f)
 		{
