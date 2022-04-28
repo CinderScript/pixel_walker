@@ -17,7 +17,7 @@ public class StandAgent : Agent
 	private int right_foot_id;
 	private int left_foot_id;
 
-	private CharacterController cc;
+	private CharacterController charController;
 	private CharacterPose characterPose;
 
 	private float remainStandingreward = 0.1f;
@@ -26,7 +26,7 @@ public class StandAgent : Agent
 
 	void Awake()
 	{
-		cc = Character.GetComponent<CharacterController>();
+		charController = Character.GetComponent<CharacterController>();
 		right_foot_id = Right_Foot.GetInstanceID();
 		left_foot_id = Left_Foot.GetInstanceID();
 		ticksPerSec = 1 / Time.fixedDeltaTime;
@@ -43,16 +43,17 @@ public class StandAgent : Agent
 
 	public override void CollectObservations(VectorSensor sensor)
 	{
-		var observations = cc.GetLimbObservations();
-		for (int i = 0; i < cc.NumberOfObservations; i++)
-		{
-			sensor.AddObservation(observations[i]);
-		}
+		//  1. add collision boolean for left and right foot
+		//  2. add center of mass point
+		//  3. normalize all input values [-1, 1]
+
+		charController.AddLimbObservationsTo(sensor);
 	}
 
 	public override void OnActionReceived(ActionBuffers actionBuffers)
 	{
-		cc.ProcessActionBuffers(actionBuffers);
+		// ToDo: Don't request torque values for y and z-axis on hinge joints (only x-axis)
+		charController.ProcessActionBuffers(actionBuffers);
 	}
 
 	private void OnCollisionStayHandler(GameObject obj, Collision collision)

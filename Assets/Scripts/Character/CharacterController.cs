@@ -1,8 +1,9 @@
-using System.Collections;
 using System.Collections.Generic;
 
-using Unity.MLAgents.Actuators;
 using UnityEngine;
+using Unity.MLAgents.Sensors;
+using Unity.MLAgents.Actuators;
+using System;
 
 public class CharacterController : MonoBehaviour
 {
@@ -13,6 +14,9 @@ public class CharacterController : MonoBehaviour
 	public float TotalTorqueUsed { get; private set; }
 
 	private JointController[] jointControllers;
+	private Vector3 MAX_MIN_VELOCITY_ESTIMATE = new Vector3(40, 40, 40);
+	private Vector3 MAX_MIN_ROT_VELOCITY_ESTIMATE = new Vector3(200, 200, 200);
+	private Vector3 MAX_MIN_AGENT_WORLD_SIZE = new Vector3(30, 30, 30);
 
 	private void Awake()
 	{
@@ -63,19 +67,50 @@ public class CharacterController : MonoBehaviour
 			// additional discrete actions
 		}
 	}
-	public Vector3[] GetLimbObservations()
+	public void AddLimbObservationsTo(VectorSensor sensor)
 	{
 		// add velocity, angular velocity, position, and rotation 
 		// for each joint into an observations list.
-		Vector3[] observations = new Vector3[NumberOfObservations];
-		for (int jointIndex = 0, obsIndex = 0; jointIndex < NumberOfJoints; jointIndex++)
+		for (int jointIndex = 0; jointIndex < NumberOfJoints; jointIndex++)
 		{
-			observations[obsIndex++] = jointControllers[jointIndex].Rb.velocity;
-			observations[obsIndex++] = jointControllers[jointIndex].Rb.angularVelocity;
-			observations[obsIndex++] = jointControllers[jointIndex].transform.position;
-			observations[obsIndex++] = jointControllers[jointIndex].transform.localRotation.eulerAngles;
+			var jointVelocity = jointControllers[jointIndex].Rb.velocity;
+			var jointAngularVelocity = jointControllers[jointIndex].Rb.angularVelocity;
+			var jointPosition = jointControllers[jointIndex].transform.localPosition;
+			var jointRotation = jointControllers[jointIndex].transform.localRotation.eulerAngles;
+
+			// NORMALIZE DATA
+			// when falling, max velocity was 2, so make max 40
+			// when falling, max angular velocity was 10, so make max 200
+			// making world space a max of -30 to 30 units for the agent
+			CharacterController.NormalizeVectorValues(ref jointVelocity, MAX_MIN_VELOCITY_ESTIMATE);
+			CharacterController.NormalizeVectorValues(ref jointAngularVelocity, MAX_MIN_ROT_VELOCITY_ESTIMATE);
+			CharacterController.NormalizeVectorValues(ref jointPosition, MAX_MIN_AGENT_WORLD_SIZE);
+			jointRotation = jointRotation / 180f - Vector3.one;    //normalized [-1, 1]
+
+			Debug.Assert(jointVelocity.x < 1);
+			Debug.Assert(jointVelocity.y < 1);
+			Debug.Assert(jointVelocity.z < 1);
+			Debug.Assert(jointVelocity.x > -1);
+			Debug.Assert(jointVelocity.y > -1);
+			Debug.Assert(jointVelocity.z > -1);
+			Debug.Assert(jointAngularVelocity.x < 1);
+			Debug.Assert(jointAngularVelocity.y < 1);
+			Debug.Assert(jointAngularVelocity.z < 1);
+			Debug.Assert(jointAngularVelocity.x > -1);
+			Debug.Assert(jointAngularVelocity.y > -1);
+			Debug.Assert(jointAngularVelocity.z > -1);
+			Debug.Assert(jointPosition.x < 1);
+			Debug.Assert(jointPosition.y < 1);
+			Debug.Assert(jointPosition.z < 1);
+			Debug.Assert(jointPosition.x > -1);
+			Debug.Assert(jointPosition.y > -1);
+			Debug.Assert(jointPosition.z > -1);
+
+			sensor.AddObservation(jointVelocity);
+			sensor.AddObservation(jointAngularVelocity);        
+			sensor.AddObservation(jointPosition);
+			sensor.AddObservation(jointRotation);
 		}
-		return observations;
 	}
 
 	private void ApplyTorque(Vector3[] torques)
@@ -84,5 +119,25 @@ public class CharacterController : MonoBehaviour
 		{
 			jointControllers[i].ApplyTorque( in torques[i] );
 		}
+	}
+
+	private static float Normalize(float value, float min, float max)
+	{
+		return (value - min) / (max - min) * 2 - 1;
+	}
+
+	/// <summary>
+	/// Converts the given vector to a vector with values between -1 and 1.
+	/// vector3.x is used as the min and max for each vector axis.
+	/// </summary>
+	/// <param name="vector">vector to normalize</param>
+	/// <param name="symmetricalMinMax">vector denoting the values</param>
+	private static void NormalizeVectorValues(ref Vector3 vector, in Vector3 symmetricalMinMax)
+	{
+		//     (vector - min) / (max - min) * 2 - 1					
+		//   = (vector + symmetricalMinMax) / (max - min) * 2 - 1	// - min = max if symmetric
+		//	 = (vector + symmetricalMinMax) / (2 * max) * 2 - 1		// max - (-max) = 2 * max
+		//	 = (vector + symmetricalMinMax) / max - 1				// 2s cancel out
+		vector = (vector + symmetricalMinMax) / (symmetricalMinMax.x) - Vector3.one;
 	}
 }
