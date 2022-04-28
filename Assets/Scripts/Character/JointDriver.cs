@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class JointController : MonoBehaviour
+[DisallowMultipleComponent]
+public class JointDriver : MonoBehaviour
 {
 	public Rigidbody Rb
 	{
@@ -20,7 +21,7 @@ public class JointController : MonoBehaviour
 		joint = rb.GetComponent<Joint>();
 	}
 
-	public void ApplyTorque(in Vector3 torque)
+	public void ApplyRelativeTorque(in Vector3 torque)
 	{
 		rb.AddRelativeTorque( Vector3.Scale( torque, joint.axis ) );
 	}

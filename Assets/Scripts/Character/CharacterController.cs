@@ -13,7 +13,7 @@ public class CharacterController : MonoBehaviour
 	public int NumberOfObservations { get; private set; }
 	public float TotalTorqueUsed { get; private set; }
 
-	private JointController[] jointControllers;
+	private JointDriver[] jointControllers;
 	private Vector3 MAX_MIN_VELOCITY_ESTIMATE = new Vector3(40, 40, 40);
 	private Vector3 MAX_MIN_ROT_VELOCITY_ESTIMATE = new Vector3(200, 200, 200);
 	private Vector3 MAX_MIN_AGENT_WORLD_SIZE = new Vector3(30, 30, 30);
@@ -23,12 +23,12 @@ public class CharacterController : MonoBehaviour
 		var joints = GetComponentsInChildren<Joint>();
 
 		// don't add fixed joints that may be found
-		var tempList = new List<JointController>();
+		var tempList = new List<JointDriver>();
 		for (int i = 0; i < joints.Length; i++)
 		{
 			if ( joints[i].GetType() != typeof(FixedJoint) ) // no fixed joints
 			{
-				tempList.Add( joints[i].gameObject.AddComponent<JointController>() );
+				tempList.Add( joints[i].gameObject.AddComponent<JointDriver>() );
 			}
 		}
 
@@ -78,6 +78,12 @@ public class CharacterController : MonoBehaviour
 			var jointPosition = jointControllers[jointIndex].transform.localPosition;
 			var jointRotation = jointControllers[jointIndex].transform.localRotation.eulerAngles;
 
+			// ToDo: make orientation object that will move with the ragdoll and then make
+			// vectors relative to that object.
+
+			// make velocities relative to the character
+			jointVelocity = gameObject.transform.InverseTransformVector(jointVelocity);
+
 			// NORMALIZE DATA
 			// when falling, max velocity was 2, so make max 40
 			// when falling, max angular velocity was 10, so make max 200
@@ -117,7 +123,7 @@ public class CharacterController : MonoBehaviour
 	{
 		for (int i = 0; i < NumberOfJoints; i++)
 		{
-			jointControllers[i].ApplyTorque( in torques[i] );
+			jointControllers[i].ApplyRelativeTorque( in torques[i] );
 		}
 	}
 
