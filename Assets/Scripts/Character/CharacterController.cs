@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.MLAgents.Sensors;
 using Unity.MLAgents.Actuators;
-using System;
 
 public class CharacterController : MonoBehaviour
 {

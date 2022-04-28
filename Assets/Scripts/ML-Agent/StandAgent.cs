@@ -29,16 +29,17 @@ public class StandAgent : Agent
 		charController = Character.GetComponent<CharacterController>();
 		right_foot_id = Right_Foot.GetInstanceID();
 		left_foot_id = Left_Foot.GetInstanceID();
+
 		ticksPerSec = 1 / Time.fixedDeltaTime;
 
-		Character.GetComponent<ChildCollisionListener>().OnCollisionStay += OnCollisionStayHandler;
+		Character.GetComponent<ChildCollisionListener>().OnCollisionEnter += OnCollisionEnterHandler;
 		characterPose = new CharacterPose(Character);
 	}
 
 	public override void OnEpisodeBegin()
 	{
 		characterPose.ApplyPoseTo(Character);
-		countDownTimerTicks = ticksPerSec;
+		countDownTimerTicks = 1 * ticksPerSec;
 	}
 
 	public override void CollectObservations(VectorSensor sensor)
@@ -56,11 +57,12 @@ public class StandAgent : Agent
 		charController.ProcessActionBuffers(actionBuffers);
 	}
 
-	private void OnCollisionStayHandler(GameObject obj, Collision collision)
+	private void OnCollisionEnterHandler(GameObject obj, Collision collision)
 	{
 		ContactPoint[] contactPoints = new ContactPoint[collision.contactCount];
 		collision.GetContacts(contactPoints);
 
+		// for every collision point, check what object collided
 		for (int i = 0; i < contactPoints.Length; i++)
 		{
 			// if the collision was not with the feet, then the character fell
@@ -68,7 +70,7 @@ public class StandAgent : Agent
 			if ( id != right_foot_id &&
 				 id != left_foot_id )
 			{
-				SetReward(-0.3f);
+				SetReward(-0.6f);
 				EndEpisode();
 			}
 		}
@@ -96,6 +98,8 @@ public class StandAgent : Agent
 			 LocationMarker.transform.position.y < 1.1f)
 		{
 			SetReward(remainStandingreward);
+			if (remainStandingreward < 0.7)
+				remainStandingreward += 0.0001f; // = 0.726 @ 4sec
 		}
 
 		if (remainStandingreward > 0.9999f)

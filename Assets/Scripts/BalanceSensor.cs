@@ -38,7 +38,7 @@ public class BalanceSensor : MonoBehaviour
 			TotalMass += rb.mass;
 		}
 
-		GetComponent<ChildCollisionListener>().OnCollisionStay += OnCollisionStayHandler;
+		GetComponent<ChildCollisionListener>().OnCollisionEnter += OnCollisionStayHandler;
 	}
 
 	void Start()
