@@ -12,17 +12,22 @@ public class StandAgent : Agent
 	public GameObject Character;
 	public GameObject Right_Foot;
 	public GameObject Left_Foot;
-	public GameObject LocationMarker;
 
 	private int right_foot_id;
 	private int left_foot_id;
 
 	private CharacterController charController;
 	private CharacterPose characterPose;
+	private Transform pelvis;
+	private Transform referenceOrientation;
+	private Vector3 startPos;
 
-	private float remainStandingreward = 0.1f;
-	private float countDownTimerTicks;
-	private float ticksPerSec;
+	private float remainStandingReward = 0.125f;
+	private float correctLocationReward = 0.0625f;
+
+	private float TIMER_SECONDS = 0.25f;
+	private int ticksPerCountdown;
+	private int currentCountdownTicks;
 
 	void Awake()
 	{
@@ -30,33 +35,30 @@ public class StandAgent : Agent
 		right_foot_id = Right_Foot.GetInstanceID();
 		left_foot_id = Left_Foot.GetInstanceID();
 
-		ticksPerSec = 1 / Time.fixedDeltaTime;
+		ticksPerCountdown = (int)(1 / Time.fixedDeltaTime);
+		ticksPerCountdown = ticksPerCountdown / (int)(1 / TIMER_SECONDS);
+		currentCountdownTicks = ticksPerCountdown;
 
 		Character.GetComponent<ChildCollisionListener>().OnCollisionEnter += OnCollisionEnterHandler;
 		characterPose = new CharacterPose(Character);
+		pelvis = charController.Pelvis;
+		startPos = pelvis.position;
+		referenceOrientation = charController.ReferenceOrientation.transform;
 	}
 
 	public override void OnEpisodeBegin()
 	{
 		characterPose.ApplyPoseTo(Character);
-		countDownTimerTicks = 1 * ticksPerSec;
 	}
-
 	public override void CollectObservations(VectorSensor sensor)
 	{
-		//  1. add collision boolean for left and right foot
-		//  2. add center of mass point
-		//  3. normalize all input values [-1, 1]
-
 		charController.AddLimbObservationsTo(sensor);
 	}
-
 	public override void OnActionReceived(ActionBuffers actionBuffers)
 	{
 		// ToDo: Don't request torque values for y and z-axis on hinge joints (only x-axis)
 		charController.ProcessActionBuffers(actionBuffers);
 	}
-
 	private void OnCollisionEnterHandler(GameObject obj, Collision collision)
 	{
 		ContactPoint[] contactPoints = new ContactPoint[collision.contactCount];
@@ -70,7 +72,7 @@ public class StandAgent : Agent
 			if ( id != right_foot_id &&
 				 id != left_foot_id )
 			{
-				SetReward(-0.6f);
+				SetReward(-0.5f);
 				EndEpisode();
 			}
 		}
@@ -78,35 +80,47 @@ public class StandAgent : Agent
 
 	private void FixedUpdate()
 	{
-		countDownTimerTicks -= Time.fixedDeltaTime;
+		currentCountdownTicks--;
 
-		if (LocationMarker.transform.position.y < -0.1)
+		if (currentCountdownTicks < 0)
 		{
-			SetReward(-0.2f);
-			EndEpisode();
-		}
-
-		if (countDownTimerTicks == 0)
-		{
-			RewardAgent();
+			currentCountdownTicks = ticksPerCountdown;
+			AssignRewards();
 		}
 	}
 
-	private void RewardAgent()
+	private void AssignRewards()
 	{
-		if ( LocationMarker.transform.position.y > 0.72f   && 
-			 LocationMarker.transform.position.y < 1.1f)
-		{
-			SetReward(remainStandingreward);
-			if (remainStandingreward < 0.7)
-				remainStandingreward += 0.0001f; // = 0.726 @ 4sec
-		}
+		float reward = 0;
+		float distanceFromTarget = Vector3.Distance(startPos, pelvis.position);
 
-		if (remainStandingreward > 0.9999f)
+		// check for out of bounds
+		if (distanceFromTarget > 1)
 		{
-			SetReward(1);
+			SetReward(-1);
 			EndEpisode();
 		}
+
+
+		// give reward for standing
+		if ( pelvis.position.y > 0.82f   && 
+			 pelvis.position.y < 1.1f)
+		{
+			reward += remainStandingReward;
+
+			// additional correct location reward if already standing
+			if (distanceFromTarget < 0.15f)
+			{
+				reward += correctLocationReward;
+			}
+		}
+
+		// scale the assigned reward with how well the target rotation is matched.
+		// 1.0 when a perfect match - goes to zero if not matching.
+		var rotationMatchValue = (Vector3.Dot(pelvis.forward, referenceOrientation.forward) + 1) * .5F;
+		reward *= rotationMatchValue;
+
+		AddReward(reward);
 	}
 
 	public override void Heuristic(in ActionBuffers actionsOut)

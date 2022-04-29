@@ -6,6 +6,9 @@ using Unity.MLAgents.Actuators;
 
 public class CharacterController : MonoBehaviour
 {
+	public ReferenceOrientation ReferenceOrientation;
+	public Transform Pelvis;
+
 	public const int MAX_LIMB_TORQUE = 1500;
 
 	public int NumberOfJoints => jointControllers.Length;
@@ -68,54 +71,56 @@ public class CharacterController : MonoBehaviour
 	}
 	public void AddLimbObservationsTo(VectorSensor sensor)
 	{
+		ReferenceOrientation.UpdateOrientation();
+
 		// add velocity, angular velocity, position, and rotation 
 		// for each joint into an observations list.
 		for (int jointIndex = 0; jointIndex < NumberOfJoints; jointIndex++)
 		{
-			var jointVelocity = jointControllers[jointIndex].Rb.velocity;
-			var jointAngularVelocity = jointControllers[jointIndex].Rb.angularVelocity;
-			var jointPosition = jointControllers[jointIndex].transform.localPosition;
+			// POSITION
+			var jointPosition = jointControllers[jointIndex].transform.position;
+			jointPosition = ReferenceOrientation.transform.InverseTransformDirection(jointPosition - Pelvis.position);
+			
+			// ROTATION
 			var jointRotation = jointControllers[jointIndex].transform.localRotation.eulerAngles;
+			
+			// VELOCITY
+			var jointVelocity = jointControllers[jointIndex].Rb.velocity;
+			jointVelocity = ReferenceOrientation.transform.InverseTransformDirection(jointVelocity);
 
-			// ToDo: make orientation object that will move with the ragdoll and then make
-			// vectors relative to that object.
+			// ANGULAR VELOCITY
+			var jointAngularVelocity = jointControllers[jointIndex].Rb.angularVelocity;
+			jointAngularVelocity = ReferenceOrientation.transform.InverseTransformDirection(jointAngularVelocity);
 
-			// make velocities relative to the character
-			jointVelocity = gameObject.transform.InverseTransformVector(jointVelocity);
 
 			// NORMALIZE DATA
 			// when falling, max velocity was 2, so make max 40
 			// when falling, max angular velocity was 10, so make max 200
 			// making world space a max of -30 to 30 units for the agent
-			CharacterController.NormalizeVectorValues(ref jointVelocity, MAX_MIN_VELOCITY_ESTIMATE);
-			CharacterController.NormalizeVectorValues(ref jointAngularVelocity, MAX_MIN_ROT_VELOCITY_ESTIMATE);
-			CharacterController.NormalizeVectorValues(ref jointPosition, MAX_MIN_AGENT_WORLD_SIZE);
-			jointRotation = jointRotation / 180f - Vector3.one;    //normalized [-1, 1]
-
-			Debug.Assert(jointVelocity.x < 1);
-			Debug.Assert(jointVelocity.y < 1);
-			Debug.Assert(jointVelocity.z < 1);
-			Debug.Assert(jointVelocity.x > -1);
-			Debug.Assert(jointVelocity.y > -1);
-			Debug.Assert(jointVelocity.z > -1);
-			Debug.Assert(jointAngularVelocity.x < 1);
-			Debug.Assert(jointAngularVelocity.y < 1);
-			Debug.Assert(jointAngularVelocity.z < 1);
-			Debug.Assert(jointAngularVelocity.x > -1);
-			Debug.Assert(jointAngularVelocity.y > -1);
-			Debug.Assert(jointAngularVelocity.z > -1);
-			Debug.Assert(jointPosition.x < 1);
-			Debug.Assert(jointPosition.y < 1);
-			Debug.Assert(jointPosition.z < 1);
-			Debug.Assert(jointPosition.x > -1);
-			Debug.Assert(jointPosition.y > -1);
-			Debug.Assert(jointPosition.z > -1);
+			NormalizeVectorValues(ref jointVelocity, MAX_MIN_VELOCITY_ESTIMATE);
+			NormalizeVectorValues(ref jointAngularVelocity, MAX_MIN_ROT_VELOCITY_ESTIMATE);
+			NormalizeVectorValues(ref jointPosition, MAX_MIN_AGENT_WORLD_SIZE);
+			jointRotation = jointRotation / 720f - Vector3.one;    //normalized [-1, 1]
 
 			sensor.AddObservation(jointVelocity);
 			sensor.AddObservation(jointAngularVelocity);        
 			sensor.AddObservation(jointPosition);
 			sensor.AddObservation(jointRotation);
 		}
+
+		// Pelvis data
+		var pelvisPosition = ReferenceOrientation.transform.InverseTransformDirection(Pelvis.transform.position);
+		NormalizeVectorValues(ref pelvisPosition, MAX_MIN_AGENT_WORLD_SIZE);
+
+		var pelvisRotation = ReferenceOrientation.transform.InverseTransformDirection(Pelvis.transform.eulerAngles);
+		pelvisRotation = pelvisRotation / 720f - Vector3.one;    //normalized [-1, 1]
+
+		sensor.AddObservation(pelvisPosition);
+		sensor.AddObservation(pelvisRotation);
+
+		// Pelvis and Orientation rotation difference
+		var deltaRotation = Quaternion.FromToRotation(Pelvis.forward, ReferenceOrientation.transform.forward);
+		sensor.AddObservation(deltaRotation.eulerAngles / 720f - Vector3.one);
 	}
 
 	private void ApplyTorque(Vector3[] torques)

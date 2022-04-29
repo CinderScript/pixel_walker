@@ -6,7 +6,7 @@ public class ContactSensor : MonoBehaviour
 {
 	[SerializeField]
 	private bool ContactDetected = false;
-	public float SeparationDistanceThreashold = 0.002f;
+	public float SeparationDistanceThreashold = 0.004f;
 	public bool IsContactDetected => ContactDetected;
 
 	private void OnCollisionStay(Collision collision)
