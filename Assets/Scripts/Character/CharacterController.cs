@@ -131,6 +131,8 @@ public class CharacterController : MonoBehaviour
 		}
 	}
 
+	//private float GetAveLimbVelocity
+
 	private static float Normalize(float value, float min, float max)
 	{
 		return (value - min) / (max - min) * 2 - 1;
