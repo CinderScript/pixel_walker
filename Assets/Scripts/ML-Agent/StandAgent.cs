@@ -22,8 +22,8 @@ public class StandAgent : Agent
 	private Transform referenceOrientation;
 	private Vector3 startPos;
 
-	private float remainStandingReward = 0.125f;
-	private float correctLocationReward = 0.0625f;
+	private float remainStandingReward  = 0.10f;
+	private float correctLocationReward = 0.02f;
 
 	private float TIMER_SECONDS = 0.25f;
 	private int ticksPerCountdown;
@@ -72,7 +72,7 @@ public class StandAgent : Agent
 			if ( id != right_foot_id &&
 				 id != left_foot_id )
 			{
-				SetReward(-0.5f);
+				AddReward(-2f);
 				EndEpisode();
 			}
 		}
@@ -101,7 +101,6 @@ public class StandAgent : Agent
 			EndEpisode();
 		}
 
-
 		// give reward for standing
 		if ( pelvis.position.y > 0.82f   && 
 			 pelvis.position.y < 1.1f)
@@ -120,6 +119,17 @@ public class StandAgent : Agent
 		var rotationMatchValue = (Vector3.Dot(pelvis.forward, referenceOrientation.forward) + 1) * .5F;
 		reward *= rotationMatchValue;
 
+		// penalize for "jitter".  When falling, the average velocity squared of all limbs
+		// seems to max out around 3.0-4.0.  When standing but "jittering", the ave
+		// limb velocity squared seems to be around 0.4 - 0.5.
+		//
+		// subtract a small amount from reward to account for the jitter. This amount should
+		// not overwhelm the small amounts rewarded for facing the correct direction.
+		// 0.4 * 0.02 = 0.008 
+		var vel = charController.AveLimbVelocitySqr;
+		var rewardCorrection = Mathf.Clamp(vel * 0.01f, 0, 0.015f); // don't let overwhelm the reward
+		reward -= rewardCorrection;
+		Debug.Log(rewardCorrection);
 		AddReward(reward);
 	}
 

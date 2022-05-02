@@ -9,16 +9,28 @@ public class CharacterController : MonoBehaviour
 	public ReferenceOrientation ReferenceOrientation;
 	public Transform Pelvis;
 
+	/// <summary>
+	/// Scaler for limb torque value given by ml-agents (a value
+	/// between -1 and 1). Max torque will be 1 * this value.
+	/// </summary>
 	public const int MAX_LIMB_TORQUE = 1500;
 
 	public int NumberOfJoints => jointControllers.Length;
 	public int NumberOfObservations { get; private set; }
 	public float TotalTorqueUsed { get; private set; }
+	public float AveLimbVelocitySqr => aveLimbVelocitySqr;
 
 	private JointDriver[] jointControllers;
 	private Vector3 MAX_MIN_VELOCITY_ESTIMATE = new Vector3(40, 40, 40);
 	private Vector3 MAX_MIN_ROT_VELOCITY_ESTIMATE = new Vector3(200, 200, 200);
 	private Vector3 MAX_MIN_AGENT_WORLD_SIZE = new Vector3(30, 30, 30);
+
+	private float LIMB_VELOCITY_CHECK_RESOLUTION = 0.2f;
+	private int limbVelocityTicksPerCountdown;
+	private int currentAveLimbVelocityCountdownTicks;
+	private float limbVelocitySqrSum;
+	private float aveLimbVelocitySqr;
+	private Rigidbody[] rbodies;
 
 	private void Awake()
 	{
@@ -36,6 +48,15 @@ public class CharacterController : MonoBehaviour
 
 		jointControllers = tempList.ToArray();
 		NumberOfObservations = jointControllers.Length * 4;
+
+		// SETTUP LIMB VELOCITY CHECKING
+		var timerTicksPerSec = (1 / Time.fixedDeltaTime);
+		limbVelocityTicksPerCountdown =
+			Mathf.RoundToInt(timerTicksPerSec * LIMB_VELOCITY_CHECK_RESOLUTION);
+		
+		currentAveLimbVelocityCountdownTicks = limbVelocityTicksPerCountdown;
+
+		rbodies = GetComponentsInChildren<Rigidbody>();
 	}
 
 	public void ProcessActionBuffers(ActionBuffers actionBuffers)
@@ -131,7 +152,29 @@ public class CharacterController : MonoBehaviour
 		}
 	}
 
-	//private float GetAveLimbVelocity
+	private void UpdateAveLimbVelocitySqr()
+	{
+		// LIMB VELOCITY AVERAGE		
+		if (currentAveLimbVelocityCountdownTicks > 0)
+		{
+			currentAveLimbVelocityCountdownTicks--;
+
+			// get sum of all velocities this frame
+			for (int i = 0; i < rbodies.Length; i++)
+			{
+				limbVelocitySqrSum += Mathf.Abs(rbodies[i].velocity.sqrMagnitude);
+			}
+		}
+		else // finished - calculate new average
+		{
+			aveLimbVelocitySqr = limbVelocitySqrSum / limbVelocityTicksPerCountdown;
+			aveLimbVelocitySqr /= rbodies.Length;
+
+			// settup for next average
+			currentAveLimbVelocityCountdownTicks = limbVelocityTicksPerCountdown;
+			limbVelocitySqrSum = 0;
+		}
+	}
 
 	private static float Normalize(float value, float min, float max)
 	{
@@ -151,5 +194,10 @@ public class CharacterController : MonoBehaviour
 		//	 = (vector + symmetricalMinMax) / (2 * max) * 2 - 1		// max - (-max) = 2 * max
 		//	 = (vector + symmetricalMinMax) / max - 1				// 2s cancel out
 		vector = (vector + symmetricalMinMax) / (symmetricalMinMax.x) - Vector3.one;
+	}
+
+	private void FixedUpdate()
+	{
+		UpdateAveLimbVelocitySqr();
 	}
 }
