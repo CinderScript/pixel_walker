@@ -1,19 +1,23 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <ui:VisualElement style="justify-content: space-around; align-items: auto; height: 100%; width: 100%;">
-        <ui:GroupBox name="dave-out" style="flex-direction: column; justify-content: flex-start; align-items: flex-end; top: 0; left: 0; right: 0; position: absolute; bottom: 20%;">
+        <ui:GroupBox name="dave-out" style="flex-direction: column; justify-content: flex-start; align-items: flex-end; top: 20px; left: 1004px; right: 0; position: absolute; bottom: 20%;">
             <ui:TextField picking-mode="Ignore" text="GPT Parse" readonly="true" name="gpt-parsed-words" style="width: 200px; height: 100px; white-space: normal;" />
-            <ui:TextField picking-mode="Ignore" value="filler text" text="Dave Says...." readonly="true" name="gpt-string-out" style="width: 200px; height: 100px; white-space: normal;" />
-            <ui:RadioButtonGroup label="Action List" value="-1" name="action-list" style="height: 176px; flex-direction: column; width: 202px; left: auto; white-space: nowrap; align-items: flex-start; justify-content: center;">
-                <ui:RadioButton label="Pick Up" name="pickUp" />
-                <ui:RadioButton label="Fetch" name="fetch" />
-                <ui:RadioButton label="Go-to" name="goto" />
+            <ui:TextField picking-mode="Ignore" value="filler text" text="Dave Says...." readonly="true" name="dave-output" style="width: 200px; height: 100px; white-space: normal;" />
+            <ui:RadioButtonGroup label="Action List" value="-1" name="action-list" style="height: 176px; flex-direction: column; width: 188px; left: auto; white-space: nowrap; align-items: flex-start; justify-content: center;">
+                <ui:RadioButton label="Pick Up" name="pick-up" value="false" />
+                <ui:RadioButton label="Go-to" name="go-to" />
                 <ui:RadioButton label="Place" name="place" />
                 <ui:RadioButton label="Open" name="open" />
+                <ui:RadioButton label="Fetch" name="fetch" />
             </ui:RadioButtonGroup>
         </ui:GroupBox>
         <ui:GroupBox name="dave-in" style="flex-direction: row; bottom: 0; position: absolute; top: 80%; align-items: auto; justify-content: space-around; height: 15%; width: 99%; left: 0; right: 0;">
-            <ui:TextField picking-mode="Ignore" text="Command Dave..." name="input-box" style="top: auto; font-size: 11px; background-color: rgb(204, 24, 24); background-image: none; justify-content: space-between; align-items: flex-start; flex-direction: row; width: 80%;" />
-            <ui:Button text="Reload Scene" display-tooltip-when-elided="true" name="reload-scene" style="flex-direction: row-reverse; align-items: flex-end;" />
+            <ui:TextField picking-mode="Ignore" text="Command Dave..." name="user-input" style="top: auto; font-size: 11px; background-color: rgb(204, 24, 24); background-image: none; justify-content: space-between; align-items: flex-start; flex-direction: row; width: 80%;" />
+            <ui:Button text="Submit" display-tooltip-when-elided="true" name="submit" enable-rich-text="true" style="flex-direction: column-reverse; align-items: auto; margin-left: 2px; margin-right: 2px; justify-content: flex-end; flex-wrap: wrap; width: 207px;" />
+        </ui:GroupBox>
+        <ui:GroupBox name="menu-buttons" style="flex-direction: row; justify-content: flex-start; align-items: flex-start; top: 20px; left: 2px; right: 1070px; position: absolute; bottom: 624px;">
+            <ui:Button text="Menu" display-tooltip-when-elided="true" name="menu" />
+            <ui:Button text="Reset" display-tooltip-when-elided="true" name="reset" />
         </ui:GroupBox>
     </ui:VisualElement>
 </ui:UXML>
