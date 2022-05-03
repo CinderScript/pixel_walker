@@ -16,7 +16,7 @@ public class StandAgent : Agent
 	private int right_foot_id;
 	private int left_foot_id;
 
-	private CharacterController charController;
+	private PhysicsCharacterController charController;
 	private CharacterPose characterPose;
 	private Transform pelvis;
 	private Transform referenceOrientation;
@@ -31,7 +31,7 @@ public class StandAgent : Agent
 
 	void Awake()
 	{
-		charController = Character.GetComponent<CharacterController>();
+		charController = Character.GetComponent<PhysicsCharacterController>();
 		right_foot_id = Right_Foot.GetInstanceID();
 		left_foot_id = Left_Foot.GetInstanceID();
 
