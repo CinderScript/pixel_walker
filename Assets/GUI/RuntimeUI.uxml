@@ -3,13 +3,7 @@
         <ui:GroupBox name="dave-out" style="flex-direction: column; justify-content: flex-start; align-items: flex-end; top: 20px; left: 1004px; right: 0; position: absolute; bottom: 20%;">
             <ui:TextField picking-mode="Ignore" text="GPT Parse" readonly="true" name="gpt-parsed-words" style="width: 200px; height: 100px; white-space: normal;" />
             <ui:TextField picking-mode="Ignore" value="filler text" text="Dave Says...." readonly="true" name="dave-output" style="width: 200px; height: 100px; white-space: normal;" />
-            <ui:RadioButtonGroup label="Action List" value="-1" name="action-list" style="height: 176px; flex-direction: column; width: 188px; left: auto; white-space: nowrap; align-items: flex-start; justify-content: center;">
-                <ui:RadioButton label="Pick Up" name="pick-up" value="false" />
-                <ui:RadioButton label="Go-to" name="go-to" />
-                <ui:RadioButton label="Place" name="place" />
-                <ui:RadioButton label="Open" name="open" />
-                <ui:RadioButton label="Fetch" name="fetch" />
-            </ui:RadioButtonGroup>
+            <ui:RadioButtonGroup label="Action List" value="0" name="action-list" choices="stand, pickup, go-to, place, open, fetch" style="height: 244px; flex-direction: column; width: 188px; left: auto; white-space: nowrap; align-items: flex-start; justify-content: center;" />
         </ui:GroupBox>
         <ui:GroupBox name="dave-in" style="flex-direction: row; bottom: 0; position: absolute; top: 80%; align-items: auto; justify-content: space-around; height: 15%; width: 99%; left: 0; right: 0;">
             <ui:TextField picking-mode="Ignore" text="Command Dave..." name="user-input" style="top: auto; font-size: 11px; background-color: rgb(204, 24, 24); background-image: none; justify-content: space-between; align-items: flex-start; flex-direction: row; width: 80%;" />

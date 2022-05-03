@@ -20,11 +20,12 @@ public class RuntimeGUI : MonoBehaviour
 
     private TextField gptParseOut;
 
-    public RadioButton stand;
-	public RadioButton goTo;
-	public RadioButton open;
-	public RadioButton pickUp;
-	public RadioButton fetch;
+    public RadioButtonGroup actionListGroup;
+
+
+    string action;
+    public RadioButton currentAction;
+    List<string> actionlist = new List<String>();
 
 
 
@@ -40,41 +41,33 @@ public class RuntimeGUI : MonoBehaviour
         daveOutput = rootVE.Q<TextField>("dave-output");
         gptParseOut = rootVE.Q<TextField>("gpt-parsed-words");
 
-        stand = rootVE.Q<RadioButton>("stand");
-        goTo = rootVE.Q<RadioButton>("go-to");
-        open = rootVE.Q<RadioButton>("open");
-        pickUp = rootVE.Q<RadioButton>("pick-up");
-        fetch = rootVE.Q<RadioButton>("fetch");
+        actionListGroup = rootVE.Q<RadioButtonGroup>("action-list");
 
-        submit.clicked += TestWrite;
+        foreach (var option in actionListGroup.choices)
+        {
+            actionlist.Add(option);
+        }
+        
+        Debug.Log(actionlist);
+        
+
+
+        submit.clicked += TestRadioGroup;
         menu.clicked += OnMainMenuClicked;
         reset.clicked += ReloadScene;
+
 
 
     }
 
     public void SetCurrentBehavior(string behavior)
 	{
-		switch (behavior)
-		{
-			case "Stand":
-				stand.value = true;
-				break;
-			case "GoTo":
-				goTo.value = true;
-				break;
-			case "Open":
-				open.value = true;
-				break;
-			case "PickUp":
-				pickUp.value = true;
-				break;
-			case "Fetch":
-				fetch.value = true;
-				break;
-			default:
-				break;
-		}
+       if(!actionlist.Contains(behavior)){
+           Debug.Log("Error: Action not in list"); 
+       }
+       else{ 
+           actionListGroup.value = actionlist.IndexOf(behavior);
+       }
 	}
 
     void TestWrite(){
@@ -85,11 +78,16 @@ public class RuntimeGUI : MonoBehaviour
     }
 	void OnMainMenuClicked()
 	{
-		throw new NotImplementedException();
+		Debug.Log(actionListGroup.childCount);
 	}
 
     void ReloadScene(){
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    void TestRadioGroup(){
+        action = userInput.value;
+        SetCurrentBehavior(action);
     }
 
 
