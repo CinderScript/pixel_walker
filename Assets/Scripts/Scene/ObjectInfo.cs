@@ -4,6 +4,6 @@ using UnityEngine;
 
 public class ObjectInfo : MonoBehaviour
 {
-    string Name;
+    public string Name;
 	string Description;
 }

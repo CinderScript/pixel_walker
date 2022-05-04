@@ -1,12 +1,18 @@
 using System;
 using UnityEngine;
 
+[DisallowMultipleComponent]
 public class ChildCollisionThrower : MonoBehaviour
 {
-	public Action<GameObject, Collision> OnCollisionStayEvent { get; set; }
+	public Action<GameObject, Collision> OnCollisionEnterEvent { get; set; }
+	public Action<GameObject, Collision> OnCollisionExitEvent { get; set; }
 
-	private void OnCollisionStay(Collision collision)
+	private void OnCollisionEnter(Collision collision)
 	{
-		OnCollisionStayEvent(gameObject, collision);
+		OnCollisionEnterEvent(gameObject, collision);
+	}
+	private void OnCollisionExit(Collision collision)
+	{
+		OnCollisionExitEvent(gameObject, collision);
 	}
 }

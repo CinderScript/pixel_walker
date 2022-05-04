@@ -5,7 +5,8 @@ using UnityEngine;
 public class ChildCollisionListener : MonoBehaviour
 {
 	public bool DetectInterChildCollisions = false;
-	public Action<GameObject, Collision> OnCollisionStay { get; set; }
+	public Action<GameObject, Collision> OnCollisionEnter { get; set; }
+	public Action<GameObject, Collision> OnCollisionExit { get; set; }
 
 	private Dictionary<int, string> childColliders = new Dictionary<int, string>();
 	private HashSet<int> childIDs = new HashSet<int>();
@@ -15,8 +16,9 @@ public class ChildCollisionListener : MonoBehaviour
 		foreach (var rb in rBodies)
 		{
 			var childListener = rb.gameObject.AddComponent<ChildCollisionThrower>();
-			childListener.OnCollisionStayEvent += CollisionStayHandler;
-			
+			childListener.OnCollisionEnterEvent += OnCollisionEnterHandler;
+			childListener.OnCollisionExitEvent += OnCollisionExitHandler;
+
 			var collisionObjectID = rb.gameObject.GetInstanceID();
 
 			childIDs.Add(collisionObjectID);
@@ -24,22 +26,38 @@ public class ChildCollisionListener : MonoBehaviour
 		}
     }
 
-	private void CollisionStayHandler(GameObject reportingObject, Collision collision)
+	private void OnCollisionEnterHandler(GameObject reportingObject, Collision collision)
 	{
-		var collisionObjectID = collision.gameObject.GetInstanceID();
-		var objName = reportingObject.name;
-		
-		bool isChild = childIDs.Contains( collisionObjectID );
-
-		if (OnCollisionStay != null)
+		if (OnCollisionEnter != null)
 		{
+			var collisionObjectID = collision.gameObject.GetInstanceID();
+			bool isChild = childIDs.Contains(collisionObjectID);
+
 			if (DetectInterChildCollisions)
 			{
-				OnCollisionStay(reportingObject, collision);
+				OnCollisionEnter(reportingObject, collision);
 			}
 			else if (!isChild)
 			{
-				OnCollisionStay(reportingObject, collision);
+				OnCollisionEnter(reportingObject, collision);
+			}
+		}
+	}
+
+	private void OnCollisionExitHandler(GameObject reportingObject, Collision collision)
+	{
+		if (OnCollisionExit != null)
+		{
+			var collisionObjectID = collision.gameObject.GetInstanceID();
+			bool isChild = childIDs.Contains(collisionObjectID);
+
+			if (DetectInterChildCollisions)
+			{
+				OnCollisionExit(reportingObject, collision);
+			}
+			else if (!isChild)
+			{
+				OnCollisionExit(reportingObject, collision);
 			}
 		}
 	}
