@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
+using System.Text.RegularExpressions;
 
 
 public class RuntimeGUI : MonoBehaviour
@@ -11,38 +12,39 @@ public class RuntimeGUI : MonoBehaviour
 
     private Button menu;
     private Button reset;
-
     private Button submit;
-
     private TextField userInput;
-
     private TextField daveOutput;
-
     private TextField gptParseOut;
 
     public RadioButtonGroup actionListGroup;
 
-
-    string action;
-    public RadioButton currentAction;
+    string currentAction;
     List<string> actionlist = new List<String>();
-
 
 
     void OnEnable()
     {
+        //Root visual element of the UI Document
         var rootVE = GetComponent<UIDocument>().rootVisualElement;
 
+        //Queries visual elements on UI doc and attaches them to variables in script
+
+        //Button Elements
         menu = rootVE.Q<Button>("menu");
         reset = rootVE.Q<Button>("reset");
         submit = rootVE.Q<Button>("submit");
-
+        
+        //TextField Elements
         userInput = rootVE.Q<TextField>("user-input");
         daveOutput = rootVE.Q<TextField>("dave-output");
         gptParseOut = rootVE.Q<TextField>("gpt-parsed-words");
 
+        //RadioButtonGroup Element
         actionListGroup = rootVE.Q<RadioButtonGroup>("action-list");
 
+        
+        //Loads all radio buttons in teh radiobuttonsgroup t
         foreach (var option in actionListGroup.choices)
         {
             actionlist.Add(option);
@@ -50,13 +52,9 @@ public class RuntimeGUI : MonoBehaviour
         
         Debug.Log(actionlist);
         
-
-
-        submit.clicked += TestRadioGroup;
+        submit.clicked += TestWrite;
         menu.clicked += OnMainMenuClicked;
         reset.clicked += ReloadScene;
-
-
 
     }
 
@@ -71,23 +69,31 @@ public class RuntimeGUI : MonoBehaviour
 	}
 
     void TestWrite(){
-        string command =  userInput.value;
-        userInput.value = "";
-        gptParseOut.value = command;
-        Debug.Log("Button Has Been Pressed");
+        //var gptObj = GetComponent<GPTHandler>();
+        string commandInput =  userInput.value;
+        string reply = GPTHandler.callOpenAI(250, commandInput, "text-davinci-002", 0.7, 1, 0, 0);
+
+        int pFrom = reply.IndexOf("text\":") + "key : ".Length;
+        int pTo = reply.IndexOf(", \"index");
+        string textReply = reply.Substring(pFrom, pTo - pFrom);
+
+        string formattedTextReply = textReply.Replace("\n","");
+
+        gptParseOut.value = formattedTextReply;
+        Debug.Log(reply);
     }
 	void OnMainMenuClicked()
 	{
-		Debug.Log(actionListGroup.childCount);
+		//Debug.Log(actionListGroup.childCount);
 	}
 
     void ReloadScene(){
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
-    void TestRadioGroup(){
-        action = userInput.value;
-        SetCurrentBehavior(action);
+    void SetCurrentActionHelper(){
+        currentAction = userInput.value;
+        SetCurrentBehavior(currentAction);
     }
 
 
