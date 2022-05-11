@@ -15,6 +15,8 @@ public class CameraController : MonoBehaviour
     [Tooltip("The follow target set in the Cinemachine Virtual Camera that the camera will follow")]
     public GameObject CinemachineCameraTarget;
 
+    public float LookSpeedMultiplier = 2.0f;
+
     [Tooltip("How far in degrees can you move the camera up")]
     public float TopClamp = 70.0f;
 
@@ -54,11 +56,8 @@ public class CameraController : MonoBehaviour
         // if there is an input and camera position is not fixed
         if (_input.Look.sqrMagnitude >= _threshold && !LockCameraPosition)
         {
-            //Don't multiply mouse input by Time.deltaTime;
-            float deltaTimeMultiplier = 1;
-
-            _cinemachineTargetYaw += _input.Look.x * deltaTimeMultiplier;
-            _cinemachineTargetPitch += _input.Look.y * deltaTimeMultiplier;
+            _cinemachineTargetYaw += _input.Look.x * LookSpeedMultiplier;
+            _cinemachineTargetPitch += _input.Look.y * LookSpeedMultiplier;
         }
 
         // clamp our rotations so our values are limited 360 degrees
