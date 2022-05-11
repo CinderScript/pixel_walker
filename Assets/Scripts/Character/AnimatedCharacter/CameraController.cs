@@ -32,11 +32,14 @@ public class CameraController : MonoBehaviour
     private float _cinemachineTargetPitch;
 
     // input
-    private CameraMovementValues _input;
+    private UserInputValues _input;
     private const float _threshold = 0.01f;
 
-
-    void Start()
+	private void Awake()
+	{
+        _input = GetComponent<UserInputValues>();
+	}
+	void Start()
     {
         _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
     }

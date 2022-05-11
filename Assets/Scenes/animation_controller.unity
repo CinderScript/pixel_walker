@@ -971,7 +971,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e087ecce43ebbff45a1b360637807d93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Move: {x: 0, y: 0}
+  forward: 0
+  rotate: 0
   Look: {x: 0, y: 0}
 --- !u!114 &1315919561
 MonoBehaviour:
@@ -1653,12 +1654,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 1
+    VectorObservationSize: 0
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 0
-      BranchSizes: 0200000002000000
-    VectorActionSize: 0200000002000000
+      BranchSizes: 0100000002000000
+    VectorActionSize: 0100000002000000
     VectorActionDescriptions: []
     VectorActionSpaceType: 0
     hasUpgradedBrainParametersWithActionSpec: 1
@@ -1686,8 +1687,8 @@ MonoBehaviour:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
   MaxStep: 0
-  inputValues: {fileID: 0}
-  movementValues: {fileID: 0}
+  userInputValues: {fileID: 1315919560}
+  movementValues: {fileID: 7963455351906350068}
 --- !u!4 &14286432260440256
 Transform:
   m_ObjectHideFlags: 0
@@ -4085,9 +4086,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MoveSpeed: 2
-  SprintSpeed: 5.335
-  RotationSmoothTime: 0.12
-  SpeedChangeRate: 10
+  RotationVelocity: 120
+  RotationSpeedAcceleration: 15
+  MoveAcceleration: 10
   LandingAudioClip: {fileID: 8300000, guid: ff697d3070687ce4583faa0561a145a2, type: 3}
   FootstepAudioClips:
   - {fileID: 8300000, guid: 72f526a6a9890f643a88e85a61c86c8a, type: 3}
@@ -4377,7 +4378,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5d68ceea9c195d43b11c28b6116d07b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Move: {x: 0, y: 0}
+  forward: 0
+  rotate: 0
 --- !u!4 &8036514565118434824
 Transform:
   m_ObjectHideFlags: 0
