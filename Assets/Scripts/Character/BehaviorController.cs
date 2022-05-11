@@ -8,13 +8,13 @@ using UnityEngine;
 public class BehaviorController : MonoBehaviour
 {
 	[Header("Behaviors")]
-	public GameObject WalkTo;
+	public GameObject Navigate;
 	public GameObject Open;
 	public GameObject PickUpObject;
 	public GameObject PlaceObject;
 
 	public Agent SelectBehavior()
 	{
-		return WalkTo.GetComponent<Agent>();
+		return Navigate.GetComponent<Agent>();
 	}
 }
