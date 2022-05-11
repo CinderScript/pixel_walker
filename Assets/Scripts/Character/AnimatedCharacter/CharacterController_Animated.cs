@@ -163,7 +163,10 @@ namespace StarterAssets
             _controller.Move(transform.forward * (_currentSpeed * Time.deltaTime));
 
             /** ROTATION MOVEMENT **/
-            float targetRotationVelocity = RotationVelocity;
+            var direction = 1;
+			if (_input.rotate == 2) direction = -1;
+			
+			float targetRotationVelocity = RotationVelocity;
             if (_input.rotate == 0) targetRotationVelocity = 0;
 
             if (_currentRotationVelocity < targetRotationVelocity - speedOffset ||
@@ -181,7 +184,7 @@ namespace StarterAssets
             {
                 _currentRotationVelocity = targetRotationVelocity; // done accelerating
             }
-            transform.Rotate(0, _currentRotationVelocity * Time.deltaTime, 0);
+            transform.Rotate(0, _currentRotationVelocity * direction * Time.deltaTime, 0);
 
             /** ANIMATIONS **/
             _animationBlend = Mathf.Lerp(_animationBlend, targetSpeed, Time.deltaTime * MoveAcceleration);
