@@ -70,6 +70,7 @@ namespace StarterAssets
         private float _currentSpeed;
         private float _animationBlend;
         private float _currentRotationVelocity;
+        private int _rotationDirection = 1;
 
         // animation IDs
         private int _animIDSpeed;
@@ -163,9 +164,10 @@ namespace StarterAssets
             _controller.Move(transform.forward * (_currentSpeed * Time.deltaTime));
 
             /** ROTATION MOVEMENT **/
-            var direction = 1;
-			if (_input.rotate == 2) direction = -1;
-			
+
+			if (_input.rotate == 2) _rotationDirection = -1;
+			else if (_input.rotate == 1) _rotationDirection = 1;
+
 			float targetRotationVelocity = RotationVelocity;
             if (_input.rotate == 0) targetRotationVelocity = 0;
 
@@ -184,7 +186,7 @@ namespace StarterAssets
             {
                 _currentRotationVelocity = targetRotationVelocity; // done accelerating
             }
-            transform.Rotate(0, _currentRotationVelocity * direction * Time.deltaTime, 0);
+            transform.Rotate(0, _currentRotationVelocity * Time.deltaTime * _rotationDirection, 0);
 
             /** ANIMATIONS **/
             _animationBlend = Mathf.Lerp(_animationBlend, targetSpeed, Time.deltaTime * MoveAcceleration);

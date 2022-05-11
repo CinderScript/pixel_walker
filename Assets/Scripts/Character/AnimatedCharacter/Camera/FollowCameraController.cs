@@ -9,8 +9,11 @@
 
 using UnityEngine;
 
-public class CameraController : MonoBehaviour
+public class FollowCameraController : MonoBehaviour
 {
+    [Header("User Input")]
+    public UserInputValues Input;
+
     [Header("Cinemachine")]
     [Tooltip("The follow target set in the Cinemachine Virtual Camera that the camera will follow")]
     public GameObject CinemachineCameraTarget;
@@ -34,13 +37,8 @@ public class CameraController : MonoBehaviour
     private float _cinemachineTargetPitch;
 
     // input
-    private UserInputValues _input;
     private const float _threshold = 0.01f;
 
-	private void Awake()
-	{
-        _input = GetComponent<UserInputValues>();
-	}
 	void Start()
     {
         _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
@@ -54,10 +52,10 @@ public class CameraController : MonoBehaviour
     private void CameraRotation()
     {
         // if there is an input and camera position is not fixed
-        if (_input.Look.sqrMagnitude >= _threshold && !LockCameraPosition)
+        if (Input.Look.sqrMagnitude >= _threshold && !LockCameraPosition)
         {
-            _cinemachineTargetYaw += _input.Look.x * LookSpeedMultiplier;
-            _cinemachineTargetPitch += _input.Look.y * LookSpeedMultiplier;
+            _cinemachineTargetYaw += Input.Look.x * LookSpeedMultiplier;
+            _cinemachineTargetPitch += Input.Look.y * LookSpeedMultiplier;
         }
 
         // clamp our rotations so our values are limited 360 degrees
