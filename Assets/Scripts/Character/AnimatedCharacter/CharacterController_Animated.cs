@@ -80,7 +80,7 @@ namespace StarterAssets
 
         private Animator _animator;
         private CharacterController _controller;
-        private CharacterMovementValues _input;
+        private CharacterMovementInput _input;
         private GameObject _mainCamera;
 
         private bool _hasAnimator;
@@ -99,7 +99,7 @@ namespace StarterAssets
         {            
             _hasAnimator = TryGetComponent(out _animator);
             _controller = GetComponent<CharacterController>();
-            _input = GetComponent<CharacterMovementValues>();
+            _input = GetComponent<CharacterMovementInput>();
 
             AssignAnimationIDs();
         }
@@ -137,7 +137,7 @@ namespace StarterAssets
         {
             /** FORWARD MOVEMENT **/
             float targetSpeed = MoveSpeed;
-            if (_input.forward == 0) targetSpeed = 0.0f;
+            if (_input.bodyForwardMovement == 0) targetSpeed = 0.0f;
 
             // a reference to the players current horizontal velocity
             float currentHorizontalSpeed = new Vector3(_controller.velocity.x, 0.0f, _controller.velocity.z).magnitude;
@@ -165,11 +165,11 @@ namespace StarterAssets
 
             /** ROTATION MOVEMENT **/
 
-			if (_input.rotate == 2) _rotationDirection = -1;
-			else if (_input.rotate == 1) _rotationDirection = 1;
+			if (_input.bodyRotation == 2) _rotationDirection = -1;
+			else if (_input.bodyRotation == 1) _rotationDirection = 1;
 
 			float targetRotationVelocity = RotationVelocity;
-            if (_input.rotate == 0) targetRotationVelocity = 0;
+            if (_input.bodyRotation == 0) targetRotationVelocity = 0;
 
             if (_currentRotationVelocity < targetRotationVelocity - speedOffset ||
                 _currentRotationVelocity > targetRotationVelocity + speedOffset)

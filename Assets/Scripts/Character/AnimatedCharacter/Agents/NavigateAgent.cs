@@ -6,12 +6,12 @@ using UnityEngine;
 public class NavigateAgent : Agent
 {
 	public UserInputValues userInputValues;
-	public CharacterMovementValues movementValues;
+	public CharacterMovementInput movementValues;
 
 	public override void OnActionReceived(ActionBuffers actions)
 	{
-		movementValues.forward = actions.DiscreteActions[0];
-		movementValues.rotate = actions.DiscreteActions[1];
+		movementValues.bodyForwardMovement = actions.DiscreteActions[0];
+		movementValues.bodyRotation = actions.DiscreteActions[1];
 	}
 
 	public override void Heuristic(in ActionBuffers actionsOut)
@@ -23,10 +23,10 @@ public class NavigateAgent : Agent
 
 	private void WalkCharacter(int movement)
 	{
-		movementValues.forward = movement;
+		movementValues.bodyForwardMovement = movement;
 	}
 	private void RotateCharacter(int rotation)
 	{
-		movementValues.rotate = rotation;
+		movementValues.bodyRotation = rotation;
 	}
 }

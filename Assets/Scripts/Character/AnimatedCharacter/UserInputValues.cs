@@ -8,16 +8,6 @@ public class UserInputValues : MonoBehaviour
 	public int rotate;
 	public Vector2 Look;
 
-	public void OnMove(InputValue value)
-	{
-		MoveInput(value.Get<Vector2>());
-	}
-
-	public void OnLook(InputValue value)
-	{
-		LookInput(value.Get<Vector2>());
-	}
-
 	/* * * INVOKED BY UNITY'S PLAYER INPUT CLASS * * * */
 
 	/// <summary>
