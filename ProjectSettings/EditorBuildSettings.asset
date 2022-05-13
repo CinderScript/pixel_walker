@@ -14,7 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/garage.unity
     guid: 83fb5c3ab65bc9846b721d7e6893859d
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Collision_Playground.unity
     guid: 7504730824e26e844a4e54d32e6d8b22
   m_configObjects:
