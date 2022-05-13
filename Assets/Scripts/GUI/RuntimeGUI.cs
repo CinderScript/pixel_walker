@@ -12,11 +12,15 @@ public class RuntimeGUI : MonoBehaviour
 
     private Button menu;
     private Button reset;
+<<<<<<< HEAD
     private Button resetInMenu;
+=======
+>>>>>>> master
     private Button submit;
     private TextField userInput;
     private TextField daveOutput;
     private TextField gptParseOut;
+<<<<<<< HEAD
     private TextField apiInput;
 
     private Button sceneSelect;
@@ -34,6 +38,8 @@ public class RuntimeGUI : MonoBehaviour
 
     private Label errorLabel;
 
+=======
+>>>>>>> master
 
     public RadioButtonGroup actionListGroup;
 
@@ -41,8 +47,11 @@ public class RuntimeGUI : MonoBehaviour
     List<string> actionlist = new List<String>();
 
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> master
     void OnEnable()
     {
         //Root visual element of the UI Document
@@ -59,6 +68,7 @@ public class RuntimeGUI : MonoBehaviour
         userInput = rootVE.Q<TextField>("user-input");
         daveOutput = rootVE.Q<TextField>("dave-output");
         gptParseOut = rootVE.Q<TextField>("gpt-parsed-words");
+<<<<<<< HEAD
         
         menuWindow = rootVE.Q<VisualElement>("menu-pane");
         sceneSelect = rootVE.Q<Button>("scene");
@@ -77,6 +87,8 @@ public class RuntimeGUI : MonoBehaviour
         infoWindow = rootVE.Q<VisualElement>("info-window");
         errorLabel = rootVE.Q<Label>("error-label");
 
+=======
+>>>>>>> master
 
         //RadioButtonGroup Element
         actionListGroup = rootVE.Q<RadioButtonGroup>("action-list");
@@ -90,6 +102,7 @@ public class RuntimeGUI : MonoBehaviour
         
         Debug.Log(actionlist);
         
+<<<<<<< HEAD
         submit.clicked += ParseGPT3Reply;
         menu.clicked += OnMainMenuClicked;       
         reset.clicked += ReloadScene;
@@ -101,6 +114,11 @@ public class RuntimeGUI : MonoBehaviour
         levelA.clicked += () => SceneManager.LoadScene(0);
         levelC.clicked += () => SceneManager.LoadScene(1);
         levelB.clicked += () => SceneManager.LoadScene(2);
+=======
+        submit.clicked += TestWrite;
+        menu.clicked += OnMainMenuClicked;
+        reset.clicked += ReloadScene;
+>>>>>>> master
 
     }
 
@@ -114,6 +132,7 @@ public class RuntimeGUI : MonoBehaviour
        }
 	}
 
+<<<<<<< HEAD
     void ParseGPT3Reply(){
         if(GPTHandler.keyString == ""){
             errorLabel.text = "ERROR: NO KEY API PROVIDED. \n Submit one to Menu > API key.";
@@ -139,6 +158,25 @@ public class RuntimeGUI : MonoBehaviour
         } else {
             menuWindow.style.display = DisplayStyle.None;
         }
+=======
+    void TestWrite(){
+        //var gptObj = GetComponent<GPTHandler>();
+        string commandInput =  userInput.value;
+        string reply = GPTHandler.callOpenAI(250, commandInput, "text-davinci-002", 0.7, 1, 0, 0);
+
+        int pFrom = reply.IndexOf("text\":") + "key : ".Length;
+        int pTo = reply.IndexOf(", \"index");
+        string textReply = reply.Substring(pFrom, pTo - pFrom);
+
+        string formattedTextReply = textReply.Replace("\n","");
+
+        gptParseOut.value = formattedTextReply;
+        Debug.Log(reply);
+    }
+	void OnMainMenuClicked()
+	{
+		//Debug.Log(actionListGroup.childCount);
+>>>>>>> master
 	}
 
     void ReloadScene(){
@@ -150,6 +188,7 @@ public class RuntimeGUI : MonoBehaviour
         SetCurrentBehavior(currentAction);
     }
 
+<<<<<<< HEAD
     void OpenSceneMenu(){
         if(levelSelectWindow.style.display == DisplayStyle.Flex){
             levelSelectWindow.style.display = DisplayStyle.None;
@@ -174,5 +213,7 @@ public class RuntimeGUI : MonoBehaviour
         GPTHandler.keyString = apiInput.value;
         apiWindow.style.display = DisplayStyle.None;
     }
+=======
+>>>>>>> master
 
 }

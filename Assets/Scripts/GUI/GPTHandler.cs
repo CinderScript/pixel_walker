@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 using Newtonsoft.Json.Linq;
+=======
+using Newtonsoft.Json;
+>>>>>>> master
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,6 +11,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using UnityEngine;
 
+<<<<<<< HEAD
 public class GPTHandler 
 {
     public static string keyString = "";
@@ -14,6 +19,33 @@ public class GPTHandler
         double temperature, int topP, int frequencyPenalty, int presencePenalty)
         {
             var openAiKey = keyString; 
+=======
+
+public class GPTHandler : MonoBehaviour
+{
+/*
+
+    public class GPTJson{
+        public string id; 
+        public string obj; 
+        public string created; 
+        
+        public string model; 
+        
+        public List<Metadata> choices;
+
+    }
+
+    public class Metadata{
+        public string text{ get; set; }
+    }
+*/
+
+    public static string callOpenAI(int tokens, string input, string engine,
+        double temperature, int topP, int frequencyPenalty, int presencePenalty)
+        {
+            var openAiKey = "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";
+>>>>>>> master
             var apiCall = "https://api.openai.com/v1/engines/" + engine + "/completions";
             try
             {
@@ -31,6 +63,7 @@ public class GPTHandler
                         var response = httpClient.SendAsync(request).Result;
                         string json = response.Content.ReadAsStringAsync().Result;
 
+<<<<<<< HEAD
                         var parsedJSON = JObject.Parse(json);
                         var replyText = parsedJSON["choices"][0]["text"];
 
@@ -40,11 +73,30 @@ public class GPTHandler
                         }
                     }
                 }
+=======
+                        //var dynObj = JsonConvert.DeserializeObject(json);
+
+                        if (json != null)
+                        {
+                            return json;
+                        }
+
+                    }
+                }
+
+>>>>>>> master
             }
             catch (Exception ex)
             {
                 Debug.Log(ex.Message);
             }
+<<<<<<< HEAD
             return null;
     }
+=======
+
+            return null;
+
+        }
+>>>>>>> master
 }
