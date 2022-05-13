@@ -38,6 +38,8 @@ public class RuntimeGUI : MonoBehaviour
     public RadioButtonGroup actionListGroup;
 
     string currentAction;
+
+    string commandInput;
     List<string> actionlist = new List<String>();
 
     void OnEnable()
@@ -118,9 +120,10 @@ public class RuntimeGUI : MonoBehaviour
             Debug.Log("ERROR: NO KEY API PROVIDED");
         }
         else{
-            //var gptObj = GetComponent<GPTHandler>();
-            string commandInput =  userInput.value;
-            string reply = GPTHandler.callOpenAI(250, commandInput, "text-davinci-002", 0.7, 1, 0, 0);
+            GPTHandler.currentPrompt = userInput.value;
+            commandInput = GPTHandler.currentPrompt;
+            string reply = GPTHandler.callOpenAI(250, commandInput, "text-curie-001", 0.7, 1, 0, 0);
+            Debug.Log("currentPrompt" + GPTHandler.currentPrompt);
             Debug.Log(reply);
             gptParseOut.value = reply;
         }

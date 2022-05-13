@@ -10,6 +10,7 @@ using UnityEngine;
 public class GPTHandler 
 {
     public static string keyString = "";
+    public static string currentPrompt = "";
     public static string callOpenAI(int tokens, string input, string engine,
         double temperature, int topP, int frequencyPenalty, int presencePenalty)
         {
