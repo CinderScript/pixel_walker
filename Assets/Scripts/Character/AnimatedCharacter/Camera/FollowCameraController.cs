@@ -39,9 +39,19 @@ public class FollowCameraController : MonoBehaviour
     // input
     private const float _threshold = 0.01f;
 
+    private Quaternion _startingRotation;
+
+    void Awake()
+	{
+        _startingRotation = CinemachineCameraTarget.transform.rotation;
+	}
+
 	void Start()
     {
-        _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
+		CinemachineCameraTarget.transform.rotation = _startingRotation;
+
+		_cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
+        _cinemachineTargetPitch = CinemachineCameraTarget.transform.rotation.eulerAngles.x;
     }
 
     private void LateUpdate()

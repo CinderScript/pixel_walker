@@ -9,6 +9,15 @@ public class UserInputValues : MonoBehaviour
 	public Vector2 Look;
 
 	/* * * INVOKED BY UNITY'S PLAYER INPUT CLASS * * * */
+	public void OnMove(InputValue value)
+	{
+		MoveInput(value.Get<Vector2>());
+	}
+
+	public void OnLook(InputValue value)
+	{
+		LookInput(value.Get<Vector2>());
+	}
 
 	/// <summary>
 	/// Records the player's input values to the class variables
