@@ -10,36 +10,46 @@ using System.Text.RegularExpressions;
 public class RuntimeGUI : MonoBehaviour
 {
 
-    private Button menu;
-    private Button reset;
-    private Button resetInMenu;
+    // Main UI Elements (Always Visible)
+    private VisualElement daveOutGroup;
+    private VisualElement daveInGroup;
+    private Button menuBtn;
+    private Button resetBtn;
     private Button submit;
     private TextField userInput;
     private TextField daveOutput;
-    private TextField gptParseOut;
+    private TextField gptParseOutput;
     private TextField apiInput;
+    public RadioButtonGroup actionRadioGroup;
 
-    private Button sceneSelect;
-    private Button apiKey;
-    private Button levelA;
-    private Button levelB;
-    private Button levelC;
 
-    private Button apiSubmit;
-
+    //Main Menu screen elements (Visible in Main Menu)
     private VisualElement menuWindow;
-    private VisualElement levelSelectWindow;
-    private VisualElement apiWindow;
-    private VisualElement infoWindow;
+    private Button levelSelectBtn;
+    private Button menuResetBtn;
+    private Button apiKeyBtn;
 
+    //Level Select screen elements
+    private VisualElement levelSelectWindow;
+    private Button levelOneBtn;
+    private Button levelTwoBtn;
+    private Button levelthreeBtn;
+
+    //API Key screen elements
+    private VisualElement apiWindow;
+    private Button apiSubmitBtn;
+
+   
+    //Elements for error pop up screen
+    private VisualElement infoWindow;
     private Label errorLabel;
 
 
-    public RadioButtonGroup actionListGroup;
-
+    //Variables to store input and current selected action
     string currentAction;
-
     string commandInput;
+
+    //List used to fill actions radio button group
     List<string> actionlist = new List<String>();
 
     void OnEnable()
@@ -47,59 +57,60 @@ public class RuntimeGUI : MonoBehaviour
         //Root visual element of the UI Document
         var rootVE = GetComponent<UIDocument>().rootVisualElement;
 
-        //Queries visual elements on UI doc and attaches them to variables in script
 
-        //Button Elements
-        menu = rootVE.Q<Button>("menu");
-        reset = rootVE.Q<Button>("reset");
+        //Initialize Main UI elements
+        menuBtn = rootVE.Q<Button>("menu");
+        resetBtn = rootVE.Q<Button>("reset");
         submit = rootVE.Q<Button>("submit");
-        
-        //TextField Elements
         userInput = rootVE.Q<TextField>("user-input");
         daveOutput = rootVE.Q<TextField>("dave-output");
-        gptParseOut = rootVE.Q<TextField>("gpt-parsed-words");
+        gptParseOutput = rootVE.Q<TextField>("gpt-parsed-words");
         
+        //Initialize Menu window elements
         menuWindow = rootVE.Q<VisualElement>("menu-pane");
-        sceneSelect = rootVE.Q<Button>("scene");
-        resetInMenu = rootVE.Q<Button>("reset-in-menu");
-        apiKey = rootVE.Q<Button>("insert-key");
+        levelSelectBtn = rootVE.Q<Button>("scene");
+        menuResetBtn = rootVE.Q<Button>("reset-in-menu");
+        apiKeyBtn = rootVE.Q<Button>("insert-key");
 
+        //Initialize Level Select window elements
         levelSelectWindow = rootVE.Q<VisualElement>("level-select");
-        levelA = rootVE.Q<Button>("level-1");
-        levelB = rootVE.Q<Button>("level-2");
-        levelC = rootVE.Q<Button>("level-3");
+        levelOneBtn = rootVE.Q<Button>("level-1");
+        levelTwoBtn = rootVE.Q<Button>("level-2");
+        levelthreeBtn = rootVE.Q<Button>("level-3");
 
+        //Initialize API key window elements
         apiWindow = rootVE.Q<VisualElement>("api-menu");
-        apiSubmit = rootVE.Q<Button>("api-submit");
+        apiSubmitBtn = rootVE.Q<Button>("api-submit");
         apiInput = rootVE.Q<TextField>("api-input-field");
+        daveOutGroup = rootVE.Q<VisualElement>("dave-in");
+        daveInGroup = rootVE.Q<VisualElement>("dave-out");
 
+        //Initialize error window elements
         infoWindow = rootVE.Q<VisualElement>("info-window");
         errorLabel = rootVE.Q<Label>("error-label");
 
 
-        //RadioButtonGroup Element
-        actionListGroup = rootVE.Q<RadioButtonGroup>("action-list");
-
-        
-        //Loads all radio buttons in teh radiobuttonsgroup t
-        foreach (var option in actionListGroup.choices)
+        //Initializes and fills the Action list radio groups witht the appropriate action from uxml
+        actionRadioGroup = rootVE.Q<RadioButtonGroup>("action-list");
+        foreach (var option in actionRadioGroup.choices)
         {
             actionlist.Add(option);
         }
         
-        Debug.Log(actionlist);
+        Debug.Log(actionlist); // prints action list to console
         
+        //Fuctionality of all buttons added here
         submit.clicked += ParseGPT3Reply;
-        menu.clicked += OnMainMenuClicked;       
-        reset.clicked += ReloadScene;
-        resetInMenu.clicked += ReloadScene;
-        sceneSelect.clicked += OpenSceneMenu;
-        apiKey.clicked += OpenApiInputMenu;
-        apiSubmit.clicked += SetApiKey;
+        menuBtn.clicked += OnMainMenuClicked;       
+        resetBtn.clicked += ReloadScene;
+        menuResetBtn.clicked += ReloadScene;
+        levelSelectBtn.clicked += OpenSceneMenu;
+        apiKeyBtn.clicked += OpenApiInputMenu;
+        apiSubmitBtn.clicked += () => StartCoroutine(SetApiKey());
 
-        levelA.clicked += () => SceneManager.LoadScene(0);
-        levelC.clicked += () => SceneManager.LoadScene(1);
-        levelB.clicked += () => SceneManager.LoadScene(2);
+        levelOneBtn.clicked += () => SceneManager.LoadScene(0);
+        levelthreeBtn.clicked += () => SceneManager.LoadScene(1);
+        levelTwoBtn.clicked += () => SceneManager.LoadScene(2);
 
     }
 
@@ -109,26 +120,32 @@ public class RuntimeGUI : MonoBehaviour
            Debug.Log("Error: Action not in list"); 
        }
        else{ 
-           actionListGroup.value = actionlist.IndexOf(behavior);
+           actionRadioGroup.value = actionlist.IndexOf(behavior);
        }
 	}
 
+    //Calls upon GPTHandler.cs to send and parse user input, sends error if API key is missing.
     void ParseGPT3Reply(){
+        //Prints error if there is no API Key present
         if(GPTHandler.keyString == ""){
             errorLabel.text = "ERROR: NO KEY API PROVIDED. \n Submit one to Menu > API key.";
             infoWindow.style.display = DisplayStyle.Flex;
             Debug.Log("ERROR: NO KEY API PROVIDED");
         }
         else{
-            GPTHandler.currentPrompt = userInput.value;
-            commandInput = GPTHandler.currentPrompt;
+            GPTHandler.userInputString = userInput.value;
+            commandInput = GPTHandler.userInputString;
             string reply = GPTHandler.callOpenAI(250, commandInput, "text-curie-001", 0.7, 1, 0, 0);
-            Debug.Log("currentPrompt" + GPTHandler.currentPrompt);
+            Debug.Log("currentPrompt: " + GPTHandler.userInputString);
             Debug.Log(reply);
-            gptParseOut.value = reply;
+            gptParseOutput.value = reply;
         }
         
     }
+    
+    //Determines what happens when menu ui button is clicked
+    //Turns display  attribute for the 'menu-pane' ve in 
+    //RuntimeUI.uxml on and off (Flex or None).
 	void OnMainMenuClicked()
 	{
         infoWindow.style.display = DisplayStyle.None;
@@ -136,11 +153,18 @@ public class RuntimeGUI : MonoBehaviour
             menuWindow.style.display = DisplayStyle.Flex;
             apiWindow.style.display = DisplayStyle.None;
             levelSelectWindow.style.display = DisplayStyle.None;
+            daveInGroup.style.display = DisplayStyle.None;
+            daveOutGroup.style.display = DisplayStyle.None;
+            actionRadioGroup.style.display = DisplayStyle.None;
         } else {
             menuWindow.style.display = DisplayStyle.None;
+            daveInGroup.style.display = DisplayStyle.Flex;
+            daveOutGroup.style.display = DisplayStyle.Flex;
+            actionRadioGroup.style.display = DisplayStyle.Flex;
         }
 	}
 
+    //Calls Unity.SceneManager to get current scene and loads it on execution
     void ReloadScene(){
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
@@ -170,9 +194,17 @@ public class RuntimeGUI : MonoBehaviour
         }  
     }
 
-    void SetApiKey(){
+    IEnumerator SetApiKey(){
         GPTHandler.keyString = apiInput.value;
         apiWindow.style.display = DisplayStyle.None;
+        errorLabel.text = "Success!";
+        infoWindow.style.display = DisplayStyle.Flex;
+        yield return new WaitForSeconds(2);
+        infoWindow.style.display = DisplayStyle.None;
+        daveInGroup.style.display = DisplayStyle.Flex;
+        daveOutGroup.style.display = DisplayStyle.Flex;
+        actionRadioGroup.style.display = DisplayStyle.Flex;
+
     }
 
 }
