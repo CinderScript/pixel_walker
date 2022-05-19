@@ -1781,7 +1781,7 @@ GameObject:
   - component: {fileID: 4899474742958509669}
   - component: {fileID: 1765288192929611588}
   m_Layer: 9
-  m_Name: Dave_Animated
+  m_Name: Dave_Animated_Raycasts
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

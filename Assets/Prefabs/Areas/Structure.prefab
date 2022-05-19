@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 136476442}
   - component: {fileID: 136476441}
   - component: {fileID: 136476440}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube (8)
-  m_TagString: Untagged
+  m_TagString: Surface
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -109,9 +109,9 @@ GameObject:
   - component: {fileID: 197365158}
   - component: {fileID: 197365157}
   - component: {fileID: 197365156}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube (6)
-  m_TagString: Untagged
+  m_TagString: Surface
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -206,9 +206,9 @@ GameObject:
   - component: {fileID: 391114546}
   - component: {fileID: 391114545}
   - component: {fileID: 391114544}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube (15)
-  m_TagString: Untagged
+  m_TagString: Surface
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -303,9 +303,9 @@ GameObject:
   - component: {fileID: 951863084}
   - component: {fileID: 951863083}
   - component: {fileID: 951863082}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube (12)
-  m_TagString: Untagged
+  m_TagString: Surface
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -400,9 +400,9 @@ GameObject:
   - component: {fileID: 1338757401}
   - component: {fileID: 1338757400}
   - component: {fileID: 1338757399}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube (7)
-  m_TagString: Untagged
+  m_TagString: Surface
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -497,9 +497,9 @@ GameObject:
   - component: {fileID: 1357052306}
   - component: {fileID: 1357052305}
   - component: {fileID: 1357052304}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube (11)
-  m_TagString: Untagged
+  m_TagString: Surface
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -594,9 +594,9 @@ GameObject:
   - component: {fileID: 1363325387}
   - component: {fileID: 1363325386}
   - component: {fileID: 1363325385}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube (10)
-  m_TagString: Untagged
+  m_TagString: Surface
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -691,9 +691,9 @@ GameObject:
   - component: {fileID: 1392377706}
   - component: {fileID: 1392377705}
   - component: {fileID: 1392377704}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube (9)
-  m_TagString: Untagged
+  m_TagString: Surface
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -788,9 +788,9 @@ GameObject:
   - component: {fileID: 1480286437}
   - component: {fileID: 1480286436}
   - component: {fileID: 1480286435}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube (13)
-  m_TagString: Untagged
+  m_TagString: Surface
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -885,9 +885,9 @@ GameObject:
   - component: {fileID: 1740424106}
   - component: {fileID: 1740424105}
   - component: {fileID: 1740424104}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube (14)
-  m_TagString: Untagged
+  m_TagString: Surface
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -980,7 +980,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7834558590603638541}
   - component: {fileID: 6598720733481118270}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: collider (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1026,9 +1026,9 @@ GameObject:
   - component: {fileID: 374697825404843806}
   - component: {fileID: 1485704614718153748}
   - component: {fileID: 2724049814220845695}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Drywall Panel (1)
-  m_TagString: Untagged
+  m_TagString: Obsticle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -1108,9 +1108,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1731979955368501626}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: CornerWall (1)
-  m_TagString: Untagged
+  m_TagString: Obsticle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -1143,9 +1143,9 @@ GameObject:
   - component: {fileID: 1024436795586909094}
   - component: {fileID: 5408410060962374217}
   - component: {fileID: 1293809355719374970}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Cube (6)
-  m_TagString: Untagged
+  m_TagString: Surface
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -1240,9 +1240,9 @@ GameObject:
   - component: {fileID: 6922584625083586700}
   - component: {fileID: 5294124420800667496}
   - component: {fileID: 1568756343008938457}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Cube (11)
-  m_TagString: Untagged
+  m_TagString: Surface
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -1337,9 +1337,9 @@ GameObject:
   - component: {fileID: 2541390127674618754}
   - component: {fileID: 2919401145904372490}
   - component: {fileID: 7428803663345917968}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Cube (12)
-  m_TagString: Untagged
+  m_TagString: Surface
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -1434,9 +1434,9 @@ GameObject:
   - component: {fileID: 1440397138681716041}
   - component: {fileID: 679995458413648781}
   - component: {fileID: 4185941645900744481}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: wall (9)
-  m_TagString: Untagged
+  m_TagString: Obsticle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -1531,9 +1531,9 @@ GameObject:
   - component: {fileID: 207121836439021280}
   - component: {fileID: 8184795690265104018}
   - component: {fileID: 4684921605393254918}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: wall (8)
-  m_TagString: Untagged
+  m_TagString: Obsticle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -1628,9 +1628,9 @@ GameObject:
   - component: {fileID: 5192621093559758807}
   - component: {fileID: 1098964372706941657}
   - component: {fileID: 8616488464116648297}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: wall (6)
-  m_TagString: Untagged
+  m_TagString: Obsticle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -1725,9 +1725,9 @@ GameObject:
   - component: {fileID: 847007432322921639}
   - component: {fileID: 6114224070266676418}
   - component: {fileID: 4271330198352742380}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Cube (2)
-  m_TagString: Untagged
+  m_TagString: Surface
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -1822,7 +1822,7 @@ GameObject:
   - component: {fileID: 6237367322500581975}
   - component: {fileID: 3050572654549227679}
   - component: {fileID: 138682221155959974}
-  m_Layer: 3
+  m_Layer: 8
   m_Name: Ground (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1921,9 +1921,9 @@ GameObject:
   - component: {fileID: 8586778582213880205}
   - component: {fileID: 2407214000273582176}
   - component: {fileID: 4451229381115077053}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Cube (5)
-  m_TagString: Untagged
+  m_TagString: Surface
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -2018,7 +2018,7 @@ GameObject:
   - component: {fileID: 2537214347287387}
   - component: {fileID: 1779614842486015458}
   - component: {fileID: 8338974021398010079}
-  m_Layer: 3
+  m_Layer: 8
   m_Name: Ground (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2117,9 +2117,9 @@ GameObject:
   - component: {fileID: 5268288215821629632}
   - component: {fileID: 724254533668523401}
   - component: {fileID: 1348527927247503151}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: wall (2)
-  m_TagString: Untagged
+  m_TagString: Obsticle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -2214,9 +2214,9 @@ GameObject:
   - component: {fileID: 9111294457262934836}
   - component: {fileID: 145877568684072108}
   - component: {fileID: 5083968028494118706}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: wall (3)
-  m_TagString: Untagged
+  m_TagString: Obsticle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -2311,9 +2311,9 @@ GameObject:
   - component: {fileID: 9110479013932718461}
   - component: {fileID: 7573489089912784878}
   - component: {fileID: 795050360412762554}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: wall (7)
-  m_TagString: Untagged
+  m_TagString: Obsticle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -2405,9 +2405,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5458737205636530521}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Surfaces
-  m_TagString: Untagged
+  m_TagString: Surface
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -2465,9 +2465,9 @@ GameObject:
   - component: {fileID: 8752610091479449783}
   - component: {fileID: 8467196575457359002}
   - component: {fileID: 6817597605090344954}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Cube (7)
-  m_TagString: Untagged
+  m_TagString: Surface
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -2562,7 +2562,7 @@ GameObject:
   - component: {fileID: 3846122996971702182}
   - component: {fileID: 3838612764629276268}
   - component: {fileID: 3890134481102878546}
-  m_Layer: 3
+  m_Layer: 8
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2660,7 +2660,7 @@ GameObject:
   - component: {fileID: 3820922798080060948}
   - component: {fileID: 3846108473798511446}
   - component: {fileID: 3838693974011942736}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Stud Frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2747,7 +2747,7 @@ GameObject:
   - component: {fileID: 3850019925202191500}
   - component: {fileID: 3838745446324293280}
   - component: {fileID: 2377390047562249247}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Drywall Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2842,7 +2842,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3820927245742656532}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Structure
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2864,6 +2864,8 @@ Transform:
   - {fileID: 5817480797098531275}
   - {fileID: 7457780921185180321}
   - {fileID: 5458737205636530521}
+  - {fileID: 5817480796990791079}
+  - {fileID: 5817480797182070039}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2879,9 +2881,9 @@ GameObject:
   - component: {fileID: 7354043916545116415}
   - component: {fileID: 5124967461382783049}
   - component: {fileID: 3263272486641586415}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Cube (13)
-  m_TagString: Untagged
+  m_TagString: Surface
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -2976,9 +2978,9 @@ GameObject:
   - component: {fileID: 6526562376068015795}
   - component: {fileID: 4201546252284137649}
   - component: {fileID: 7799104020170928}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Cube (15)
-  m_TagString: Untagged
+  m_TagString: Surface
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -3073,9 +3075,9 @@ GameObject:
   - component: {fileID: 8534130934346250879}
   - component: {fileID: 3273940277374613420}
   - component: {fileID: 2068470306904051107}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Cube (14)
-  m_TagString: Untagged
+  m_TagString: Surface
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -3170,9 +3172,9 @@ GameObject:
   - component: {fileID: 6612782899908895650}
   - component: {fileID: 171750271475172427}
   - component: {fileID: 3528238399852507758}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: wall (10)
-  m_TagString: Untagged
+  m_TagString: Obsticle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -3264,7 +3266,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7457780921185180321}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Walls
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3317,7 +3319,7 @@ GameObject:
   - component: {fileID: 8466528041212893700}
   - component: {fileID: 3307294097445797530}
   - component: {fileID: 8809307164036282247}
-  m_Layer: 3
+  m_Layer: 8
   m_Name: Ground (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3416,9 +3418,9 @@ GameObject:
   - component: {fileID: 2581594057154808554}
   - component: {fileID: 6323563601393273333}
   - component: {fileID: 4692477439158008333}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Cube (1)
-  m_TagString: Untagged
+  m_TagString: Surface
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -3513,9 +3515,9 @@ GameObject:
   - component: {fileID: 5106432980811742274}
   - component: {fileID: 4276364830717947670}
   - component: {fileID: 2526985514798916259}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Cube (10)
-  m_TagString: Untagged
+  m_TagString: Surface
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -3608,7 +3610,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5817480795275506577}
   - component: {fileID: 5817480795275506590}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3653,7 +3655,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5817480795414652159}
   - component: {fileID: 5817480795414652156}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: collider (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3700,7 +3702,7 @@ GameObject:
   - component: {fileID: 5817480795684460626}
   - component: {fileID: 5817480795684460629}
   - component: {fileID: 5817480795684460628}
-  m_Layer: 3
+  m_Layer: 8
   m_Name: Ground (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3797,7 +3799,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5817480795911147198}
   - component: {fileID: 5817480795911147199}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: collider (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3844,9 +3846,9 @@ GameObject:
   - component: {fileID: 5817480795928569546}
   - component: {fileID: 5817480795928569549}
   - component: {fileID: 1972204979416712599}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Drywall
-  m_TagString: Untagged
+  m_TagString: Obsticle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -3943,7 +3945,7 @@ GameObject:
   - component: {fileID: 5817480796046903885}
   - component: {fileID: 5817480796046903884}
   - component: {fileID: 5817480796046903887}
-  m_Layer: 3
+  m_Layer: 8
   m_Name: Ground (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4042,7 +4044,7 @@ GameObject:
   - component: {fileID: 5817480796232724987}
   - component: {fileID: 5817480796232724986}
   - component: {fileID: 5817480796232724989}
-  m_Layer: 3
+  m_Layer: 8
   m_Name: Ground (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4139,7 +4141,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5817480796302162678}
   - component: {fileID: 5817480796302162679}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: collider (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4183,7 +4185,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5817480797098531275}
-  m_Layer: 3
+  m_Layer: 8
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4226,9 +4228,9 @@ GameObject:
   - component: {fileID: 5817480797336490239}
   - component: {fileID: 5817480797336490238}
   - component: {fileID: 7635445224121533611}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Drywall Panel
-  m_TagString: Untagged
+  m_TagString: Obsticle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -4321,9 +4323,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5817480797345056530}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: CornerWall
-  m_TagString: Untagged
+  m_TagString: Obsticle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -4357,9 +4359,9 @@ GameObject:
   - component: {fileID: 8938336990430589395}
   - component: {fileID: 6087829892654012754}
   - component: {fileID: 8816080692387001311}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: wall (1)
-  m_TagString: Untagged
+  m_TagString: Obsticle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -4454,9 +4456,9 @@ GameObject:
   - component: {fileID: 1340094708444862999}
   - component: {fileID: 5512773026753440796}
   - component: {fileID: 8645655621157603633}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Cube (3)
-  m_TagString: Untagged
+  m_TagString: Surface
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -4551,9 +4553,9 @@ GameObject:
   - component: {fileID: 2715499509964526179}
   - component: {fileID: 8199896547812142606}
   - component: {fileID: 4727044276744989219}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Cube (4)
-  m_TagString: Untagged
+  m_TagString: Surface
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -4648,9 +4650,9 @@ GameObject:
   - component: {fileID: 1337891907330529728}
   - component: {fileID: 7480967332580459566}
   - component: {fileID: 2982739762336108215}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: wall (4)
-  m_TagString: Untagged
+  m_TagString: Obsticle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -4743,7 +4745,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7305491381804270324}
   - component: {fileID: 8451112809242032269}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: collider (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4790,7 +4792,7 @@ GameObject:
   - component: {fileID: 1212656012470920374}
   - component: {fileID: 2129870089782955311}
   - component: {fileID: 6204417120560102814}
-  m_Layer: 3
+  m_Layer: 8
   m_Name: Ground (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4889,9 +4891,9 @@ GameObject:
   - component: {fileID: 6893829040526447434}
   - component: {fileID: 4255337009611656891}
   - component: {fileID: 7508682846287429259}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: Surface
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -4986,7 +4988,7 @@ GameObject:
   - component: {fileID: 3450020268498911616}
   - component: {fileID: 1331351970609923233}
   - component: {fileID: 1660084119638152278}
-  m_Layer: 3
+  m_Layer: 8
   m_Name: Ground (8)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5085,9 +5087,9 @@ GameObject:
   - component: {fileID: 5469920104288251690}
   - component: {fileID: 2128349851084688405}
   - component: {fileID: 4339455073302173943}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: wall (5)
-  m_TagString: Untagged
+  m_TagString: Obsticle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -5182,9 +5184,9 @@ GameObject:
   - component: {fileID: 1612364692503721899}
   - component: {fileID: 8564080285627988648}
   - component: {fileID: 7435488566303747045}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Drywall Panel (4)
-  m_TagString: Untagged
+  m_TagString: Obsticle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -5278,7 +5280,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4876456791048696408}
   - component: {fileID: 4912317025798765977}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: collider (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5325,9 +5327,9 @@ GameObject:
   - component: {fileID: 6659522451472921665}
   - component: {fileID: 3772945269528299476}
   - component: {fileID: 1465514451799165270}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Cube (9)
-  m_TagString: Untagged
+  m_TagString: Surface
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -5422,9 +5424,9 @@ GameObject:
   - component: {fileID: 4136455883601583416}
   - component: {fileID: 1482351232497611385}
   - component: {fileID: 1236148403463007533}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Cube (8)
-  m_TagString: Untagged
+  m_TagString: Surface
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -5519,9 +5521,9 @@ GameObject:
   - component: {fileID: 5112057660583050596}
   - component: {fileID: 797957823891323077}
   - component: {fileID: 9166046254646223757}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Drywall Panel (2)
-  m_TagString: Untagged
+  m_TagString: Obsticle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -5616,9 +5618,9 @@ GameObject:
   - component: {fileID: 297031949349247917}
   - component: {fileID: 5245713567187110647}
   - component: {fileID: 4279587483892005078}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Drywall Panel (3)
-  m_TagString: Untagged
+  m_TagString: Obsticle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -5701,9 +5703,9 @@ GameObject:
   - component: {fileID: 9128736879546208033}
   - component: {fileID: 8856372769609312630}
   - component: {fileID: 7160958240942779358}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: wall
-  m_TagString: Untagged
+  m_TagString: Obsticle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -5797,7 +5799,7 @@ GameObject:
   - component: {fileID: 8426905250708018104}
   - component: {fileID: 4370815155329723049}
   - component: {fileID: 1137863725564743125}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Stud Frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5872,3 +5874,242 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1001 &5817480796990916385
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 3820927245742656532}
+    m_Modifications:
+    - target: {fileID: 100006, guid: a457357027ba5014f89b7f0e04a6a884, type: 3}
+      propertyPath: m_Name
+      value: Garage_Workbench
+      objectReference: {fileID: 0}
+    - target: {fileID: 100006, guid: a457357027ba5014f89b7f0e04a6a884, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 100006, guid: a457357027ba5014f89b7f0e04a6a884, type: 3}
+      propertyPath: m_TagString
+      value: Surface
+      objectReference: {fileID: 0}
+    - target: {fileID: 100006, guid: a457357027ba5014f89b7f0e04a6a884, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 400006, guid: a457357027ba5014f89b7f0e04a6a884, type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 400006, guid: a457357027ba5014f89b7f0e04a6a884, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.686
+      objectReference: {fileID: 0}
+    - target: {fileID: 400006, guid: a457357027ba5014f89b7f0e04a6a884, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400006, guid: a457357027ba5014f89b7f0e04a6a884, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -3.0690002
+      objectReference: {fileID: 0}
+    - target: {fileID: 400006, guid: a457357027ba5014f89b7f0e04a6a884, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 400006, guid: a457357027ba5014f89b7f0e04a6a884, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400006, guid: a457357027ba5014f89b7f0e04a6a884, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 400006, guid: a457357027ba5014f89b7f0e04a6a884, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400006, guid: a457357027ba5014f89b7f0e04a6a884, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400006, guid: a457357027ba5014f89b7f0e04a6a884, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 400006, guid: a457357027ba5014f89b7f0e04a6a884, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a457357027ba5014f89b7f0e04a6a884, type: 3}
+--- !u!4 &5817480796990791079 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 400006, guid: a457357027ba5014f89b7f0e04a6a884, type: 3}
+  m_PrefabInstance: {fileID: 5817480796990916385}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5817480796990947719 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 100006, guid: a457357027ba5014f89b7f0e04a6a884, type: 3}
+  m_PrefabInstance: {fileID: 5817480796990916385}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &1009500119
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5817480796990947719}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.457353, y: 1.0887983, z: 1.0382841}
+  m_Center: {x: 4.038968e-28, y: 0.54439914, z: 0.00000011920929}
+--- !u!114 &1009500114
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5817480796990947719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0292f36871c1c65459ff979a81d5f49b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: Unnamed
+  Description: 
+--- !u!1001 &5817480797182465949
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 3820927245742656532}
+    m_Modifications:
+    - target: {fileID: 100000, guid: efe9381559c516743bd05cef82f39ebb, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: efe9381559c516743bd05cef82f39ebb, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 100002, guid: efe9381559c516743bd05cef82f39ebb, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 100002, guid: efe9381559c516743bd05cef82f39ebb, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 100004, guid: efe9381559c516743bd05cef82f39ebb, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 100004, guid: efe9381559c516743bd05cef82f39ebb, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 100006, guid: efe9381559c516743bd05cef82f39ebb, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 100006, guid: efe9381559c516743bd05cef82f39ebb, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 100008, guid: efe9381559c516743bd05cef82f39ebb, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 100008, guid: efe9381559c516743bd05cef82f39ebb, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 100010, guid: efe9381559c516743bd05cef82f39ebb, type: 3}
+      propertyPath: m_Name
+      value: Workbench
+      objectReference: {fileID: 0}
+    - target: {fileID: 100010, guid: efe9381559c516743bd05cef82f39ebb, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 100010, guid: efe9381559c516743bd05cef82f39ebb, type: 3}
+      propertyPath: m_TagString
+      value: Surface
+      objectReference: {fileID: 0}
+    - target: {fileID: 100010, guid: efe9381559c516743bd05cef82f39ebb, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 400010, guid: efe9381559c516743bd05cef82f39ebb, type: 3}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 400010, guid: efe9381559c516743bd05cef82f39ebb, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 7.783
+      objectReference: {fileID: 0}
+    - target: {fileID: 400010, guid: efe9381559c516743bd05cef82f39ebb, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.386
+      objectReference: {fileID: 0}
+    - target: {fileID: 400010, guid: efe9381559c516743bd05cef82f39ebb, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -3.2340002
+      objectReference: {fileID: 0}
+    - target: {fileID: 400010, guid: efe9381559c516743bd05cef82f39ebb, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 400010, guid: efe9381559c516743bd05cef82f39ebb, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400010, guid: efe9381559c516743bd05cef82f39ebb, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400010, guid: efe9381559c516743bd05cef82f39ebb, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400010, guid: efe9381559c516743bd05cef82f39ebb, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400010, guid: efe9381559c516743bd05cef82f39ebb, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400010, guid: efe9381559c516743bd05cef82f39ebb, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: efe9381559c516743bd05cef82f39ebb, type: 3}
+--- !u!4 &5817480797182070039 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 400010, guid: efe9381559c516743bd05cef82f39ebb, type: 3}
+  m_PrefabInstance: {fileID: 5817480797182465949}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5817480797182366007 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 100010, guid: efe9381559c516743bd05cef82f39ebb, type: 3}
+  m_PrefabInstance: {fileID: 5817480797182465949}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &606170840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5817480797182366007}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0292f36871c1c65459ff979a81d5f49b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: Unnamed
+  Description: 
