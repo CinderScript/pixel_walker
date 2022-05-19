@@ -98,7 +98,6 @@ public class NavigateAgent : Agent
 	private void OnCollision(ControllerColliderHit hitInfo)
 	{
 		AddReward(CollisionPenalty);
-		Debug.Log("Reward: " + GetCumulativeReward());
 	}
 
 	void OnDrawGizmos()
