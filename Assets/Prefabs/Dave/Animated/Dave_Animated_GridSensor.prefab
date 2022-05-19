@@ -4909,6 +4909,7 @@ GameObject:
   - component: {fileID: 8801338994503678033}
   - component: {fileID: 8173878857353339622}
   - component: {fileID: 8173878857353339617}
+  - component: {fileID: 4458497212548917227}
   m_Layer: 9
   m_Name: PlayerArmature
   m_TagString: Player
@@ -5053,6 +5054,18 @@ MonoBehaviour:
   - m_Rig: {fileID: 2300376171029908274}
     m_Active: 0
   m_Effectors: []
+--- !u!114 &4458497212548917227
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8801338994503678042}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b35c91bd4eed4d47926c6b47ca9e470, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8846316503265113543
 GameObject:
   m_ObjectHideFlags: 0
@@ -5397,7 +5410,7 @@ PrefabInstance:
       objectReference: {fileID: 3806307060247331078}
     - target: {fileID: 2070925441746177913, guid: a1a802ecaf6775746bb2a929fb554ad8, type: 3}
       propertyPath: m_Lens.m_SensorSize.x
-      value: 1.5172085
+      value: 1.8493013
       objectReference: {fileID: 0}
     - target: {fileID: 2070925442191277752, guid: a1a802ecaf6775746bb2a929fb554ad8, type: 3}
       propertyPath: CameraCollisionFilter.m_Bits

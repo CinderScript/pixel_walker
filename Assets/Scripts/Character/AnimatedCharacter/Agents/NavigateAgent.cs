@@ -11,6 +11,9 @@ public class NavigateAgent : Agent
 	public GameObject agentBody;
 	public Transform target;
 
+	[Header("Collision Detection")]
+	public CollisionThrower CollisionThrower;
+
 	[Header("Heuristic Input")]
 	public UserInputValues userInputValues;
 	public CharacterMovementInput movementValues;
@@ -22,8 +25,12 @@ public class NavigateAgent : Agent
 	public AreaProps AreaProps;
 	public float success_distance = 0.35f;
 
-	private Vector3 startPos;
+	[Header("Reward Weights")]
+	public float SuccessReward = 3;
+	public float TimePenalty = -0.001f;
+	public float CollisionPenalty = -0.002f;
 
+	private Vector3 startPos;
 
 	private void Awake()
 	{
@@ -33,9 +40,11 @@ public class NavigateAgent : Agent
 		var controller = GetComponentInParent<CharacterController>();
 		agentBody = controller.gameObject;
 
+		CollisionThrower.OnCharacterCollision += OnCollision;
+
 		startPos = agentReference.transform.position;
 	}
-		
+	
 	public override void OnEpisodeBegin()
 	{
 		var spawn = spawnPoints.SelectRandomLocation().position;
@@ -77,13 +86,19 @@ public class NavigateAgent : Agent
 		//Debug.Log(distance);
 		if (distance < success_distance)
 		{
-			SetReward(2.0f);
+			AddReward(SuccessReward);
 			EndEpisode();
 		}
 		else
 		{
-			SetReward(-0.001f);
+			SetReward(TimePenalty);
 		}
+	}
+
+	private void OnCollision(ControllerColliderHit hitInfo)
+	{
+		AddReward(CollisionPenalty);
+		Debug.Log("Reward: " + GetCumulativeReward());
 	}
 
 	void OnDrawGizmos()

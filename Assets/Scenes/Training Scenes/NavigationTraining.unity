@@ -4223,6 +4223,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5690402928111296435, guid: 803079eeb0f12c54bbe810c909613cf2, type: 3}
   m_PrefabInstance: {fileID: 2258250475217374703}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5980147282889172080 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4458497212548917227, guid: 7df67cb08d519ea41af2f9c64badbc89, type: 3}
+  m_PrefabInstance: {fileID: 8463001549470342389}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b35c91bd4eed4d47926c6b47ca9e470, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6481749869874973139
 GameObject:
   m_ObjectHideFlags: 0
@@ -4317,11 +4328,6 @@ Transform:
   m_Father: {fileID: 1774891083}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &7682592182334596735 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2300376171901991562, guid: 7df67cb08d519ea41af2f9c64badbc89, type: 3}
-  m_PrefabInstance: {fileID: 8463001549470342389}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7700291926670939966
 Transform:
   m_ObjectHideFlags: 0
@@ -4466,32 +4472,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5e67e87328b64084c984aef97c23ce0b, type: 3}
---- !u!114 &8241947259514644638
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7682592182334596735}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6bb6b867a41448888c1cd4f99643ad71, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SensorName: RayPerceptionSensorWide
-  m_DetectableTags: []
-  m_RaysPerDirection: 2
-  m_MaxRayDegrees: 67
-  m_SphereCastRadius: 0.12
-  m_RayLength: 3
-  m_RayLayerMask:
-    serializedVersion: 2
-    m_Bits: 1416
-  m_ObservationStacks: 1
-  rayHitColor: {r: 1, g: 0, b: 0, a: 1}
-  rayMissColor: {r: 1, g: 1, b: 1, a: 1}
-  m_StartVerticalOffset: 1.6
-  m_EndVerticalOffset: 1
 --- !u!1001 &8463001549470342389
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4499,30 +4479,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1774891083}
     m_Modifications:
-    - target: {fileID: 509989018333443176, guid: 7df67cb08d519ea41af2f9c64badbc89, type: 3}
-      propertyPath: m_GridSize.x
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 509989018333443176, guid: 7df67cb08d519ea41af2f9c64badbc89, type: 3}
-      propertyPath: m_GridSize.z
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 509989018333443177, guid: 7df67cb08d519ea41af2f9c64badbc89, type: 3}
-      propertyPath: m_MaxRayDegrees
-      value: 23
-      objectReference: {fileID: 0}
-    - target: {fileID: 509989018333443177, guid: 7df67cb08d519ea41af2f9c64badbc89, type: 3}
-      propertyPath: m_RaysPerDirection
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 509989018333443177, guid: 7df67cb08d519ea41af2f9c64badbc89, type: 3}
-      propertyPath: m_SphereCastRadius
-      value: 0.12
-      objectReference: {fileID: 0}
-    - target: {fileID: 509989018333443177, guid: 7df67cb08d519ea41af2f9c64badbc89, type: 3}
-      propertyPath: m_StartVerticalOffset
-      value: 1.6
-      objectReference: {fileID: 0}
     - target: {fileID: 1732989905121701311, guid: 7df67cb08d519ea41af2f9c64badbc89, type: 3}
       propertyPath: m_Name
       value: Dave_Animated
@@ -4539,6 +4495,14 @@ PrefabInstance:
       propertyPath: userInputValues
       value: 
       objectReference: {fileID: 2148889774803357155}
+    - target: {fileID: 2300376171901991566, guid: 7df67cb08d519ea41af2f9c64badbc89, type: 3}
+      propertyPath: CollisionPenalty
+      value: -0.001
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300376171901991566, guid: 7df67cb08d519ea41af2f9c64badbc89, type: 3}
+      propertyPath: CollisionThrower
+      value: 
+      objectReference: {fileID: 5980147282889172080}
     - target: {fileID: 7695357664465193098, guid: 7df67cb08d519ea41af2f9c64badbc89, type: 3}
       propertyPath: m_RootOrder
       value: 4

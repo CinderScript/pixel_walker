@@ -39,7 +39,7 @@ public class StandAgent : Agent
 		ticksPerCountdown = ticksPerCountdown / (int)(1 / TIMER_SECONDS);
 		currentCountdownTicks = ticksPerCountdown;
 
-		Character.GetComponent<ChildCollisionListener>().OnCollisionEnter += OnCollisionEnterHandler;
+		Character.GetComponent<ChildRbCollisionListener>().OnCollisionEnter += OnCollisionEnterHandler;
 		characterPose = new CharacterPose(Character);
 		pelvis = charController.Pelvis;
 		startPos = pelvis.position;

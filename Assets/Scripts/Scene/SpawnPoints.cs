@@ -4,23 +4,26 @@ using UnityEngine;
 
 public class SpawnPoints : MonoBehaviour
 {
-	public Transform[] SpawnLocations;
+	public List<Transform> SpawnLocations;
 	public Transform SelectedLocation;
 
 	private void Awake()
 	{
-		SpawnLocations = GetComponentsInChildren<Transform>();
+		foreach (Transform child in transform)
+		{
+			SpawnLocations.Add(child);
+		}
 	}
 
 	public Transform SelectRandomLocation()
 	{
-		if (SpawnLocations.Length == 0)
+		if (SpawnLocations.Count == 0)
 		{
 			Debug.LogError("No Locations");
 			return null;
 		}
 
-		var location = SpawnLocations[Random.Range(0, SpawnLocations.Length)];
+		var location = SpawnLocations[Random.Range(0, SpawnLocations.Count)];
 		return SelectedLocation = location;
 	}
 }

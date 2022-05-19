@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChildCollisionListener : MonoBehaviour
+public class ChildRbCollisionListener : MonoBehaviour
 {
 	public bool DetectInterChildCollisions = false;
 	public Action<GameObject, Collision> OnCollisionEnter { get; set; }
@@ -15,7 +15,7 @@ public class ChildCollisionListener : MonoBehaviour
         var rBodies = GetComponentsInChildren<Rigidbody>();
 		foreach (var rb in rBodies)
 		{
-			var childListener = rb.gameObject.AddComponent<ChildCollisionThrower>();
+			var childListener = rb.gameObject.AddComponent<CollisionThrower>();
 			childListener.OnCollisionEnterEvent += OnCollisionEnterHandler;
 			childListener.OnCollisionExitEvent += OnCollisionExitHandler;
 
