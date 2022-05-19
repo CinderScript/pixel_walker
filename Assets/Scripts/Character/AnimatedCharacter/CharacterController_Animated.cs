@@ -35,6 +35,8 @@ namespace StarterAssets
         [Tooltip("Acceleration and deceleration")]
         public float MoveAcceleration = 10.0f;
 
+        [Tooltip("Audio")]
+        public bool AudioOn = true;
         public AudioClip LandingAudioClip;
         public AudioClip[] FootstepAudioClips;
         [Range(0, 1)] public float FootstepAudioVolume = 0.5f;
@@ -199,37 +201,43 @@ namespace StarterAssets
             }
         }
 
-        private void OnDrawGizmosSelected()
-        {
-            Color transparentGreen = new Color(0.0f, 1.0f, 0.0f, 0.35f);
-            Color transparentRed = new Color(1.0f, 0.0f, 0.0f, 0.35f);
+        //private void OnDrawGizmosSelected()
+        //{
+        //    Color transparentGreen = new Color(0.0f, 1.0f, 0.0f, 0.35f);
+        //    Color transparentRed = new Color(1.0f, 0.0f, 0.0f, 0.35f);
 
-            if (Grounded) Gizmos.color = transparentGreen;
-            else Gizmos.color = transparentRed;
+        //    if (Grounded) Gizmos.color = transparentGreen;
+        //    else Gizmos.color = transparentRed;
 
-            // when selected, draw a gizmo in the position of, and matching radius of, the grounded collider
-            Gizmos.DrawSphere(
-                new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z),
-                GroundedRadius);
-        }
+        //    // when selected, draw a gizmo in the position of, and matching radius of, the grounded collider
+        //    Gizmos.DrawSphere(
+        //        new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z),
+        //        GroundedRadius);
+        //}
 
         private void OnFootstep(AnimationEvent animationEvent)
         {
-            if (animationEvent.animatorClipInfo.weight > 0.5f)
+            if (AudioOn)
             {
-                if (FootstepAudioClips.Length > 0)
+                if (animationEvent.animatorClipInfo.weight > 0.5f)
                 {
-                    var index = Random.Range(0, FootstepAudioClips.Length);
-                    AudioSource.PlayClipAtPoint(FootstepAudioClips[index], transform.TransformPoint(_controller.center), FootstepAudioVolume);
+                    if (FootstepAudioClips.Length > 0)
+                    {
+                        var index = Random.Range(0, FootstepAudioClips.Length);
+                        AudioSource.PlayClipAtPoint(FootstepAudioClips[index], transform.TransformPoint(_controller.center), FootstepAudioVolume);
+                    }
                 }
             }
         }
 
         private void OnLand(AnimationEvent animationEvent)
         {
-            if (animationEvent.animatorClipInfo.weight > 0.5f)
+            if (AudioOn)
             {
-                AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center), FootstepAudioVolume);
+                if (animationEvent.animatorClipInfo.weight > 0.5f)
+                {
+                    AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center), FootstepAudioVolume);
+                }
             }
         }
     }

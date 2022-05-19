@@ -6,6 +6,7 @@ TagManager:
   tags:
   - StandBehavior
   - Ground
+  - CinemachineTarget
   layers:
   - Default
   - TransparentFX
@@ -14,9 +15,9 @@ TagManager:
   - Water
   - UI
   - Unlit
-  - 
-  - 
-  - 
+  - Props
+  - Structure
+  - Player
   - 
   - 
   - 
