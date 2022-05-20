@@ -11,6 +11,7 @@ TagManager:
   - SpawnPoints
   - UserInput
   - AgentArea
+  - AreaPropReferences
   layers:
   - Default
   - TransparentFX

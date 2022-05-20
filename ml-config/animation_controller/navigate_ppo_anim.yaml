@@ -1,3 +1,7 @@
+# Configuration is based on the hyperparameters for "Pyramids"
+# ml-agents example project found at:
+# https://github.com/Unity-Technologies/ml-agents/blob/release_19_docs/docs/Learning-Environment-Examples.md
+
 behaviors:
   Navigate:
     trainer_type: ppo
@@ -19,11 +23,9 @@ behaviors:
       vis_encode_type: simple
 
     reward_signals:
-    
       extrinsic:
         gamma: 0.99
         strength: 1.0
-
       curiosity:
         gamma: 0.99
         strength: 0.02
@@ -36,11 +38,12 @@ behaviors:
     time_horizon: 128
     summary_freq: 30000
 
+
 engine_settings:
   width: 84
   height: 84
   quality_level: 0
   time_scale: 6
   target_frame_rate: -1
-  capture_frame_rate: 30
+  capture_frame_rate: 60
   no_graphics: true
