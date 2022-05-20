@@ -110,3 +110,5 @@ crashlytics-build.properties
 /python-env-mlagents/Scripts/Activate.ps1
 /python-env-mlagents/Scripts/activate.bat
 /python-env-mlagents/Scripts/activate
+/InputHandlerFramework/obj/Debug
+/InputHandlerFramework/obj/Release
