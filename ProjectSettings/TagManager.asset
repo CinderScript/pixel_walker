@@ -8,6 +8,9 @@ TagManager:
   - Obsticle
   - Surface
   - Prop
+  - SpawnPoints
+  - UserInput
+  - AgentArea
   layers:
   - Default
   - TransparentFX

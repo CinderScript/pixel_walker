@@ -11,7 +11,9 @@ public class AreaProps : MonoBehaviour
 
 	private void Awake()
 	{
-        Props = FindObjectsOfType(typeof(PropInfo)) as PropInfo[];
+		// area containing props is the parent of this object
+		GameObject area = transform.parent.gameObject;
+		Props = area.GetComponentsInChildren<PropInfo>();
 	}
 
 	public GameObject SelectRandomProp()
