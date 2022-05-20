@@ -1,6 +1,12 @@
+# Configuration is based on the hyperparameters for "Pyramids"
+# ml-agents example project found at:
+# https://github.com/Unity-Technologies/ml-agents/blob/release_19_docs/docs/Learning-Environment-Examples.md
+
+
 behaviors:
-  Pyramids:
+  Navigate:
     trainer_type: sac
+
     hyperparameters:
       learning_rate: 0.0003
       learning_rate_schedule: constant
@@ -12,23 +18,29 @@ behaviors:
       save_replay_buffer: false
       init_entcoef: 0.01
       reward_signal_steps_per_update: 10.0
+
     network_settings:
       normalize: false
       hidden_units: 512
       num_layers: 3
       vis_encode_type: simple
+
     reward_signals:
       extrinsic:
         gamma: 0.995
         strength: 2.0
-      gail:
-        gamma: 0.99
-        strength: 0.01
-        learning_rate: 0.0003
-        use_actions: true
-        use_vail: false
-        demo_path: Project/Assets/ML-Agents/Examples/Pyramids/Demos/ExpertPyramid.demo
+
     keep_checkpoints: 5
     max_steps: 3000000
     time_horizon: 128
     summary_freq: 30000
+
+
+engine_settings:
+  width: 84
+  height: 84
+  quality_level: 0
+  time_scale: 6
+  target_frame_rate: -1
+  capture_frame_rate: 60
+  no_graphics: true
