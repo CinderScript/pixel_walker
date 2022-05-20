@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace InputHandlerFramework
 {
-	internal class Program
+	internal class TestDriver
 	{
 		static void Main(string[] args)
 		{
