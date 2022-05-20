@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-internal static class PromptLoader
+public static class PromptLoader
 {
 	public static GptPrompts GetPromptsFromFile(string filePath)
 	{
@@ -14,13 +14,14 @@ internal static class PromptLoader
 		var BestMatchSelector = "Prompt: Response BestMatchSelector";
 
 		GptPrompts prompts;
-		// load json from file, deserialize json into Prompts object
+		// TODO: load json from file, deserialize json into Prompts object
+
 		prompts = new GptPrompts(inputClassifier, questionClassifier, responseClassifier, BestMatchSelector);
 		return prompts;
 	}
 }
 
-internal class GptPrompts
+public class GptPrompts
 {
 	public string InputClassifier { get; }
 	public string QuestionResponder { get; }

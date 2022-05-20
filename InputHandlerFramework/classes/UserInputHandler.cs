@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-internal class UserInputHandler
+public class UserInputHandler
 {
 	private Gpt3Connection connection;
 	private GptPrompts prompts;
@@ -13,20 +13,23 @@ internal class UserInputHandler
 	public UserInputHandler(string apiKey, string gptPromptsFilePath)
 	{
 		connection = new Gpt3Connection(apiKey);
+		prompts = PromptLoader.GetPromptsFromFile(gptPromptsFilePath);
 	}
 
-	public GptResponse? GetGptResponce(string userInput, out Exception exception)
+	public GptResponse GetGptResponce(string userInput, out Exception exception)
 	{
 		InputType inputType = classifyText(userInput);
 		string generatedText = "Error: No Responce Saved";
 		
-		AgentBehaviorProperties? agentBehaviorProperties = null;
+		AgentBehaviorProperties agentBehaviorProperties = null;
 		Exception responseException = null;
 
 		switch (inputType)
 		{
 			case InputType.Unknown:
 				// TODO: send back responce or check again
+				exception = new Exception("The user's input could not be classified.");
+				return null;
 				break;
 				
 			case InputType.Question:
@@ -34,25 +37,30 @@ internal class UserInputHandler
 				break;
 				
 			case InputType.Command:
-				AgentBehaviorProperties? behavior = parseCommand(userInput);
+				agentBehaviorProperties = parseCommand(userInput);
+
 				// error checking - if this is null (couldn't parse) then send exception
-				if (!behavior.HasValue)
+				if (agentBehaviorProperties == null)
 				{
 					exception = new Exception("Couldn't parse command");
 					return null;
 				}
+				else
+				{   // COMMAND WAS PARSED
+					string nameOfUserRequestedObject = agentBehaviorProperties.Object;
+
+					// TODO: GET BEST MATCH TO ITEM IN SCENE IF COMMAND
+					string objectBestMatch = getObjectBestMatch(nameOfUserRequestedObject);
+				}
 				break;
 		}
-
-		// TODO: GET BEST MATCH TO ITEM IN SCENE IF COMMAND
-		string objectBestMatch = 
 
 		GptResponse gptResponce = new GptResponse(
 			inputType, 
 			generatedText, 
-			agentBehaviorProperties, 
-			responseException);
-		
+			agentBehaviorProperties);
+
+		exception = null;
 		return gptResponce;
 	}
 
@@ -66,7 +74,7 @@ internal class UserInputHandler
 		string responce = connection.GenerateText(fullPrompt);
 
 		// TODO: CODE TO SELECT CORRECT INPUT CLASSIFICATION
-		InputType type = InputType.Unknown; // todo
+		InputType type = InputType.Command; // todo
 
 		return type;
 	}
@@ -85,7 +93,7 @@ internal class UserInputHandler
 		return answer;
 	}
 
-	private AgentBehaviorProperties? parseCommand(string userInput)
+	private AgentBehaviorProperties parseCommand(string userInput)
 	{
 		string promptStart = prompts.CommandParser;
 
@@ -100,7 +108,7 @@ internal class UserInputHandler
 		string sceneObject = "ToDo: get object";
 		string location = "ToDo: get location";
 
-		// IF THERE IS AN ERROR AND WE CAN'T SERIALIZE, TRY AGAIN?, RETURN NULL IF FAILED
+		// IF THERE IS AN ERROR AND WE CAN'T SERIALIZE, RETURN NULL - FAILED, Try again?
 		if (!success)
 		{
 			return null;
@@ -121,6 +129,8 @@ internal class UserInputHandler
 		string responce = connection.GenerateText(fullPrompt);
 
 		// TODO: if the responce is not a valid object, try 3 more times before returning ""
+		// responce = "";
+
 		return "NOT IMPLEMENTED";
 	}
 }
