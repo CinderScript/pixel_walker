@@ -5,6 +5,7 @@
 python-env-mlagents/*
 /results/*
 /ML-Agents
+/Assets/ML-Agents/Timers*
 
 # This .gitignore file should be placed at the root of your Unity project directory
 #
