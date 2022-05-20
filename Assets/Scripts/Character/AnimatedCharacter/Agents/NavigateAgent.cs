@@ -25,10 +25,10 @@ public class NavigateAgent : Agent
 	public AreaProps AreaProps;
 	public float success_distance = 0.35f;
 
-	[Header("Reward Weights")]
-	public float SuccessReward = 3;
-	public float TimePenalty = -0.001f;
-	public float CollisionPenalty = -0.002f;
+	// REWARD WEIGHTS
+	private const float SUCCESS_REWARD = 3;
+	private const float TIME_PENALTY = -0.001f;
+	private const float COLLISION_PENALTY = -0.002f;
 
 	private Vector3 startPos;
 
@@ -86,18 +86,18 @@ public class NavigateAgent : Agent
 		//Debug.Log(distance);
 		if (distance < success_distance)
 		{
-			AddReward(SuccessReward);
+			AddReward(SUCCESS_REWARD);
 			EndEpisode();
 		}
 		else
 		{
-			SetReward(TimePenalty);
+			AddReward(TIME_PENALTY);
 		}
 	}
 
 	private void OnCollision(ControllerColliderHit hitInfo)
 	{
-		AddReward(CollisionPenalty);
+		AddReward(COLLISION_PENALTY);
 	}
 
 	void OnDrawGizmos()

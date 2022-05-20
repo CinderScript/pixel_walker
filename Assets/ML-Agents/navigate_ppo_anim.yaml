@@ -42,5 +42,5 @@ engine_settings:
   quality_level: 0
   time_scale: 6
   target_frame_rate: -1
-  capture_frame_rate: 60
+  capture_frame_rate: 30
   no_graphics: true

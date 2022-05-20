@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7613291703355959292}
   m_Layer: 8
   m_Name: Drill Press
-  m_TagString: Untagged
+  m_TagString: Prop
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -60,7 +60,7 @@ GameObject:
   - component: {fileID: 380746234527427674}
   m_Layer: 8
   m_Name: colliders
-  m_TagString: Untagged
+  m_TagString: Prop
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 7535880884660708176}
   m_Layer: 8
   m_Name: pole
-  m_TagString: Untagged
+  m_TagString: Prop
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -141,7 +141,7 @@ GameObject:
   - component: {fileID: 8682417516865285389}
   m_Layer: 8
   m_Name: top
-  m_TagString: Untagged
+  m_TagString: Prop
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -186,7 +186,7 @@ GameObject:
   - component: {fileID: 8402553060651790719}
   m_Layer: 8
   m_Name: table
-  m_TagString: Untagged
+  m_TagString: Prop
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -231,7 +231,7 @@ GameObject:
   - component: {fileID: 567515787783970683}
   m_Layer: 8
   m_Name: base
-  m_TagString: Untagged
+  m_TagString: Prop
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -277,7 +277,7 @@ GameObject:
   - component: {fileID: 3347570161410203836}
   m_Layer: 8
   m_Name: Drilling machine
-  m_TagString: Untagged
+  m_TagString: Prop
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647

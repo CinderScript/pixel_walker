@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6659947406775311443}
   m_Layer: 0
   m_Name: colliders
-  m_TagString: Untagged
+  m_TagString: Prop
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -57,7 +57,7 @@ GameObject:
   - component: {fileID: 6449296568064318055}
   m_Layer: 0
   m_Name: Tank Oxygen
-  m_TagString: Untagged
+  m_TagString: Prop
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -101,9 +101,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8404675971502004733}
     m_Modifications:
+    - target: {fileID: 100000, guid: 984251e495ac23049a81eee87ff2e2a8, type: 3}
+      propertyPath: m_TagString
+      value: Prop
+      objectReference: {fileID: 0}
+    - target: {fileID: 100002, guid: 984251e495ac23049a81eee87ff2e2a8, type: 3}
+      propertyPath: m_TagString
+      value: Prop
+      objectReference: {fileID: 0}
     - target: {fileID: 100004, guid: 984251e495ac23049a81eee87ff2e2a8, type: 3}
       propertyPath: m_Name
       value: Tank_Oxygene
+      objectReference: {fileID: 0}
+    - target: {fileID: 100004, guid: 984251e495ac23049a81eee87ff2e2a8, type: 3}
+      propertyPath: m_TagString
+      value: Prop
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 984251e495ac23049a81eee87ff2e2a8, type: 3}
       propertyPath: m_RootOrder

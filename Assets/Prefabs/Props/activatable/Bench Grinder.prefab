@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8408195524814593671}
   m_Layer: 8
   m_Name: Bench Grinder
-  m_TagString: Untagged
+  m_TagString: Prop
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -61,7 +61,7 @@ GameObject:
   - component: {fileID: 7615427621625699568}
   m_Layer: 8
   m_Name: base
-  m_TagString: Untagged
+  m_TagString: Prop
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -105,7 +105,7 @@ GameObject:
   - component: {fileID: 7272140122550818884}
   m_Layer: 8
   m_Name: colliders
-  m_TagString: Untagged
+  m_TagString: Prop
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -139,7 +139,7 @@ GameObject:
   - component: {fileID: 2328021614186056040}
   m_Layer: 8
   m_Name: body
-  m_TagString: Untagged
+  m_TagString: Prop
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -188,12 +188,20 @@ PrefabInstance:
       value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 7b432d1efda1d744ebd86703dd3f5d76, type: 3}
+      propertyPath: m_TagString
+      value: Prop
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 7b432d1efda1d744ebd86703dd3f5d76, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 100002, guid: 7b432d1efda1d744ebd86703dd3f5d76, type: 3}
       propertyPath: m_Layer
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 100002, guid: 7b432d1efda1d744ebd86703dd3f5d76, type: 3}
+      propertyPath: m_TagString
+      value: Prop
       objectReference: {fileID: 0}
     - target: {fileID: 100002, guid: 7b432d1efda1d744ebd86703dd3f5d76, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -202,6 +210,10 @@ PrefabInstance:
     - target: {fileID: 100004, guid: 7b432d1efda1d744ebd86703dd3f5d76, type: 3}
       propertyPath: m_Layer
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 100004, guid: 7b432d1efda1d744ebd86703dd3f5d76, type: 3}
+      propertyPath: m_TagString
+      value: Prop
       objectReference: {fileID: 0}
     - target: {fileID: 100004, guid: 7b432d1efda1d744ebd86703dd3f5d76, type: 3}
       propertyPath: m_StaticEditorFlags

@@ -1393,11 +1393,15 @@ MonoBehaviour:
   agentReference: {fileID: 1732989905121701311}
   agentBody: {fileID: 8801338994503678042}
   target: {fileID: 0}
+  CollisionThrower: {fileID: 4458497212548917227}
   userInputValues: {fileID: 0}
   movementValues: {fileID: 8173878857353339622}
   spawnPoints: {fileID: 0}
   AreaProps: {fileID: 0}
   success_distance: 0.7
+  SuccessReward: 3
+  TimePenalty: -0.001
+  CollisionPenalty: -0.002
 --- !u!114 &2300376171901991561
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1455,8 +1459,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SensorName: GridSensor
-  m_CellScale: {x: 0.3, y: 0.1, z: 0.3}
-  m_GridSize: {x: 7, y: 1, z: 7}
+  m_CellScale: {x: 0.2, y: 0.1, z: 0.2}
+  m_GridSize: {x: 20, y: 1, z: 20}
   m_RotateWithAgent: 1
   m_AgentGameObject: {fileID: 8801338994503678042}
   m_DetectableTags:
@@ -1465,7 +1469,7 @@ MonoBehaviour:
   - Prop
   m_ColliderMask:
     serializedVersion: 2
-    m_Bits: 896
+    m_Bits: 256
   m_MaxColliderBufferSize: 500
   m_InitialColliderBufferSize: 4
   m_DebugColors:
@@ -1473,7 +1477,7 @@ MonoBehaviour:
   - {r: 0, g: 0.021628141, b: 1, a: 0}
   - {r: 0, g: 1, b: 0.13595366, a: 0}
   m_GizmoYOffset: -0.18
-  m_ShowGizmos: 1
+  m_ShowGizmos: 0
   m_CompressionType: 1
   m_ObservationStacks: 1
 --- !u!114 &509989018333443177
@@ -5312,7 +5316,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8944336655422409503, guid: f6d148d888ffbf54b9afe9936dfaec1f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -4.1767697
+      value: -4.1767707
       objectReference: {fileID: 0}
     - target: {fileID: 8944336655422409503, guid: f6d148d888ffbf54b9afe9936dfaec1f, type: 3}
       propertyPath: m_LocalRotation.w
@@ -5374,7 +5378,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2070925441746177912, guid: a1a802ecaf6775746bb2a929fb554ad8, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -4.1767697
+      value: -4.1767707
       objectReference: {fileID: 0}
     - target: {fileID: 2070925441746177912, guid: a1a802ecaf6775746bb2a929fb554ad8, type: 3}
       propertyPath: m_LocalRotation.w
@@ -5410,7 +5414,7 @@ PrefabInstance:
       objectReference: {fileID: 3806307060247331078}
     - target: {fileID: 2070925441746177913, guid: a1a802ecaf6775746bb2a929fb554ad8, type: 3}
       propertyPath: m_Lens.m_SensorSize.x
-      value: 1.8493013
+      value: 1.9587737
       objectReference: {fileID: 0}
     - target: {fileID: 2070925442191277752, guid: a1a802ecaf6775746bb2a929fb554ad8, type: 3}
       propertyPath: CameraCollisionFilter.m_Bits
