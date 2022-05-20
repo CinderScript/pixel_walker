@@ -2,9 +2,10 @@
 # VSCode
 /.vscode
 
-ML-Agents/python-env-mlagents
+python-env-mlagents/*
 /results/*
 /ML-Agents
+/Assets/ML-Agents/Timers*
 
 # This .gitignore file should be placed at the root of your Unity project directory
 #
@@ -78,5 +79,36 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
-/InputHandlerFramework/obj
-/python-env-mlagents
+/python-env-mlagents/Lib/site-packages
+/python-env-mlagents/pyvenv.cfg
+/python-env-mlagents/Scripts/__pycache__
+/python-env-mlagents/Scripts/wheel.exe
+/python-env-mlagents/Scripts/torchrun.exe
+/python-env-mlagents/Scripts/tensorboard.exe
+/python-env-mlagents/Scripts/pywin32_testall.py
+/python-env-mlagents/Scripts/pywin32_postinstall.py
+/python-env-mlagents/Scripts/pythonw.exe
+/python-env-mlagents/Scripts/python.exe
+/python-env-mlagents/Scripts/pyrsa-verify.exe
+/python-env-mlagents/Scripts/pyrsa-sign.exe
+/python-env-mlagents/Scripts/pyrsa-priv2pub.exe
+/python-env-mlagents/Scripts/pyrsa-keygen.exe
+/python-env-mlagents/Scripts/pyrsa-encrypt.exe
+/python-env-mlagents/Scripts/pyrsa-decrypt.exe
+/python-env-mlagents/Scripts/pip3.exe
+/python-env-mlagents/Scripts/pip3.8.exe
+/python-env-mlagents/Scripts/pip.exe
+/python-env-mlagents/Scripts/normalizer.exe
+/python-env-mlagents/Scripts/mlagents-run-experiment.exe
+/python-env-mlagents/Scripts/mlagents-learn.exe
+/python-env-mlagents/Scripts/markdown_py.exe
+/python-env-mlagents/Scripts/google-oauthlib-tool.exe
+/python-env-mlagents/Scripts/f2py.exe
+/python-env-mlagents/Scripts/deactivate.bat
+/python-env-mlagents/Scripts/convert-onnx-to-caffe2.exe
+/python-env-mlagents/Scripts/convert-caffe2-to-onnx.exe
+/python-env-mlagents/Scripts/Activate.ps1
+/python-env-mlagents/Scripts/activate.bat
+/python-env-mlagents/Scripts/activate
+/InputHandlerFramework/obj/Debug
+/InputHandlerFramework/obj/Release
