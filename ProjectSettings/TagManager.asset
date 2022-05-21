@@ -12,6 +12,7 @@ TagManager:
   - UserInput
   - AgentArea
   - AreaPropReferences
+  - RoomVolume
   layers:
   - Default
   - TransparentFX

@@ -6,8 +6,7 @@ public class CollisionThrower : MonoBehaviour
 {
 	public Action<GameObject, Collision> OnCollisionEnterEvent { get; set; }
 	public Action<GameObject, Collision> OnCollisionExitEvent { get; set; }
-
-	public Action<ControllerColliderHit> OnCharacterCollision { get; set; }
+	public Action<GameObject, ControllerColliderHit> OnCharacterCollision { get; set; }
 
 	private void OnCollisionEnter(Collision collision)
 	{
@@ -20,6 +19,6 @@ public class CollisionThrower : MonoBehaviour
 
 	void OnControllerColliderHit(ControllerColliderHit hit)
 	{
-		OnCharacterCollision(hit);
+		OnCharacterCollision(gameObject, hit);
 	}
 }

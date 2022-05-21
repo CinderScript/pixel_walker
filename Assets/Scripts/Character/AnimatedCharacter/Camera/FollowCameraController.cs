@@ -9,13 +9,15 @@
 
 using UnityEngine;
 
+[DisallowMultipleComponent]
 public class FollowCameraController : MonoBehaviour
 {
     [Header("User Input")]
     public UserInputValues Input;
     public float LookSpeedMultiplier = 2.0f;
 
-    [Header("Area In Scene")]
+    [Header("Area of CameraTarget")]
+    [Tooltip("This camera controller will use this PlayerArea to find the player to follow.")]
     public GameObject sceneArea;
 
     [Header("Camera Settings")]

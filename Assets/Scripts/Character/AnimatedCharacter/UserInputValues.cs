@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[DisallowMultipleComponent]
 public class UserInputValues : MonoBehaviour
 {
 	[Header("Player Input Values")]
