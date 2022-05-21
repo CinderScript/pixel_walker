@@ -26,10 +26,9 @@ behaviors:
       extrinsic:
         gamma: 0.99
         strength: 1.0
-        learning_rate: 0.0003
 
     keep_checkpoints: 5
-    max_steps: 10000000
+    max_steps: 30e6
     time_horizon: 128
     summary_freq: 30000
 

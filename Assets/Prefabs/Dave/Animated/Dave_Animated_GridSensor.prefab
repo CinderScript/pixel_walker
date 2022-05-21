@@ -1392,16 +1392,14 @@ MonoBehaviour:
   MaxStep: 4000
   agentReference: {fileID: 1732989905121701311}
   agentBody: {fileID: 8801338994503678042}
+  collisionThrower: {fileID: 4458497212548917227}
+  success_distance: 0.7
+  playerArea: {fileID: 0}
+  spawnPoints: {fileID: 0}
+  areaProps: {fileID: 0}
   target: {fileID: 0}
-  CollisionThrower: {fileID: 4458497212548917227}
   userInputValues: {fileID: 0}
   movementValues: {fileID: 8173878857353339622}
-  spawnPoints: {fileID: 0}
-  AreaProps: {fileID: 0}
-  success_distance: 0.7
-  SuccessReward: 3
-  TimePenalty: -0.001
-  CollisionPenalty: -0.002
 --- !u!114 &2300376171901991561
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1415,7 +1413,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 6
+    VectorObservationSize: 9
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 0
@@ -5316,7 +5314,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8944336655422409503, guid: f6d148d888ffbf54b9afe9936dfaec1f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -4.1767707
+      value: -4.1767697
       objectReference: {fileID: 0}
     - target: {fileID: 8944336655422409503, guid: f6d148d888ffbf54b9afe9936dfaec1f, type: 3}
       propertyPath: m_LocalRotation.w
@@ -5378,7 +5376,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2070925441746177912, guid: a1a802ecaf6775746bb2a929fb554ad8, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -4.1767707
+      value: -4.1767697
       objectReference: {fileID: 0}
     - target: {fileID: 2070925441746177912, guid: a1a802ecaf6775746bb2a929fb554ad8, type: 3}
       propertyPath: m_LocalRotation.w
@@ -5414,7 +5412,7 @@ PrefabInstance:
       objectReference: {fileID: 3806307060247331078}
     - target: {fileID: 2070925441746177913, guid: a1a802ecaf6775746bb2a929fb554ad8, type: 3}
       propertyPath: m_Lens.m_SensorSize.x
-      value: 1.9587737
+      value: 1.6148648
       objectReference: {fileID: 0}
     - target: {fileID: 2070925442191277752, guid: a1a802ecaf6775746bb2a929fb554ad8, type: 3}
       propertyPath: CameraCollisionFilter.m_Bits
