@@ -187,15 +187,11 @@ public class NavigateAgent : Agent
 	void OnDrawGizmos()
 	{
 		// Draw a yellow sphere at the transform's position
-		Gizmos.color = Color.green;
-		if (agentBody)
-		{
-			Gizmos.DrawSphere(agentBody.transform.position, .3f);
-		}
+		Gizmos.color = Color.magenta;
 		if (target)
 		{
 			Vector3 pos = new Vector3(target.position.x, 0, target.position.z);
-			Gizmos.DrawSphere(pos, .3f);
+			Gizmos.DrawSphere(pos, .45f);
 		}
 	}
 	/// <summary>
