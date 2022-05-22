@@ -35,7 +35,9 @@ public class NavigateAgent : Agent
 	// REWARD WEIGHTS
 	private const float SUCCESS_REWARD = 5;
 	private const float TIME_PENALTY = -0.001f;
-	private const float COLLISION_PENALTY = -0.004f;
+	
+	private const float COLLISION_PENALTY_DEFAULT = -0.002f;
+	private float collisionPenalty;
 
 	private Vector3 startPos;
 	private VectorSensorComponent targetRoomSensorComponent;
@@ -96,6 +98,10 @@ public class NavigateAgent : Agent
 
 		// get the starting room
 		currentRoom = spawn.room;
+
+		// get penalty for this lesson in curriculum
+		collisionPenalty = Academy.Instance.EnvironmentParameters
+			.GetWithDefault("collision_penalty", COLLISION_PENALTY_DEFAULT);
 	}
 	public override void CollectObservations(VectorSensor sensor)
 	{
@@ -171,7 +177,8 @@ public class NavigateAgent : Agent
 	{
 		if (hitInfo.gameObject.layer == LayerMask.NameToLayer("Structure"))
 		{
-			AddReward(COLLISION_PENALTY);
+			Debug.Log(collisionPenalty);
+			AddReward(collisionPenalty);
 		}
 		// penalize
 	}
