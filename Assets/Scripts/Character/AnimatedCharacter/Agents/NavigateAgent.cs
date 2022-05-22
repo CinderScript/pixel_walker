@@ -35,7 +35,7 @@ public class NavigateAgent : Agent
 	// REWARD WEIGHTS
 	private const float SUCCESS_REWARD = 5;
 	private const float TIME_PENALTY = -0.001f;
-	private const float COLLISION_PENALTY = -0.003f;
+	private const float COLLISION_PENALTY = -0.004f;
 
 	private Vector3 startPos;
 	private VectorSensorComponent targetRoomSensorComponent;
