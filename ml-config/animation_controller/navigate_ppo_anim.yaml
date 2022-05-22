@@ -36,7 +36,7 @@ behaviors:
         learning_rate: 0.0003
 
     keep_checkpoints: 5
-    max_steps: 30e6
+    max_steps: 20e6
     time_horizon: 128
     summary_freq: 30000
 

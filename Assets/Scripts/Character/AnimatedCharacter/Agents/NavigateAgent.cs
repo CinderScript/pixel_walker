@@ -156,6 +156,7 @@ public class NavigateAgent : Agent
 			{
 				wasRewarded = true;
 				AddReward(SUCCESS_REWARD);
+				//Debug.Log("Reward: " + GetCumulativeReward());
 				EndEpisode();
 			}
 		}
