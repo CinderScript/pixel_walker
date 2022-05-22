@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 609719174}
   - component: {fileID: 609719175}
   - component: {fileID: 2768669205441001972}
-  m_Layer: 2
+  m_Layer: 10
   m_Name: ToolRoom_extended
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -701,7 +701,7 @@ GameObject:
   - component: {fileID: 2236974056435412503}
   - component: {fileID: 7829795297955347216}
   - component: {fileID: 5501769815073728707}
-  m_Layer: 2
+  m_Layer: 10
   m_Name: PaintRoom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1197,7 +1197,7 @@ GameObject:
   - component: {fileID: 1970531397056769916}
   - component: {fileID: 3589673082895137705}
   - component: {fileID: 892672544947106713}
-  m_Layer: 2
+  m_Layer: 10
   m_Name: WorkShop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1574,9 +1574,9 @@ GameObject:
   - component: {fileID: 5059753505411661788}
   - component: {fileID: 9187232016775822769}
   - component: {fileID: 8294181342470878165}
-  m_Layer: 2
+  m_Layer: 10
   m_Name: MusicRoom
-  m_TagString: RoomVolume
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -2327,7 +2327,7 @@ GameObject:
   - component: {fileID: 5537434765412262826}
   - component: {fileID: 6875790770836237489}
   - component: {fileID: 1631233887569869789}
-  m_Layer: 2
+  m_Layer: 10
   m_Name: 'ToolRoom '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4040,7 +4040,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7624586084986249151, guid: 7df67cb08d519ea41af2f9c64badbc89, type: 3}
       propertyPath: m_Lens.m_SensorSize.x
-      value: 1.7502702
+      value: 1.8041885
       objectReference: {fileID: 0}
     - target: {fileID: 7695357664465193098, guid: 7df67cb08d519ea41af2f9c64badbc89, type: 3}
       propertyPath: m_RootOrder

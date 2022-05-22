@@ -1494,13 +1494,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_SensorName: RayPerceptionSensorFeet
   m_DetectableTags: []
-  m_RaysPerDirection: 8
-  m_MaxRayDegrees: 119.4
+  m_RaysPerDirection: 10
+  m_MaxRayDegrees: 135
   m_SphereCastRadius: 0.12
   m_RayLength: 3
   m_RayLayerMask:
     serializedVersion: 2
-    m_Bits: 1416
+    m_Bits: 392
   m_ObservationStacks: 1
   rayHitColor: {r: 1, g: 0, b: 0, a: 1}
   rayMissColor: {r: 1, g: 1, b: 1, a: 1}
