@@ -11,12 +11,13 @@ GameObject:
   - component: {fileID: 410086}
   - component: {fileID: 3310384}
   - component: {fileID: 2382920}
-  m_Layer: 0
+  - component: {fileID: 5962875915870044033}
+  m_Layer: 7
   m_Name: Satellite_center
-  m_TagString: Untagged
+  m_TagString: Prop
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &410086
 Transform:
@@ -83,3 +84,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &5962875915870044033
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 159690}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.91278315, y: 0.28935546, z: 0.39160272}
+  m_Center: {x: -0.0000020712614, y: 0.000000022351742, z: -0.000000022351747}

@@ -21,6 +21,7 @@ using UnityEngine;
 
 namespace StarterAssets
 {
+    [DisallowMultipleComponent]
     [RequireComponent(typeof(CharacterController))]
     public class CharacterController_Animated : MonoBehaviour
     {

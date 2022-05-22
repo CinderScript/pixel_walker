@@ -12,6 +12,7 @@
 
 using UnityEngine;
 
+[DisallowMultipleComponent]
 public class CharacterMovementInput : MonoBehaviour
 {
 	[Header("Base Movement Values")]

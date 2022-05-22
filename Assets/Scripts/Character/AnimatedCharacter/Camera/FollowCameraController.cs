@@ -9,17 +9,18 @@
 
 using UnityEngine;
 
+[DisallowMultipleComponent]
 public class FollowCameraController : MonoBehaviour
 {
     [Header("User Input")]
     public UserInputValues Input;
-
-    [Header("Cinemachine")]
-    [Tooltip("The follow target set in the Cinemachine Virtual Camera that the camera will follow")]
-    public GameObject CinemachineTarget;
-
     public float LookSpeedMultiplier = 2.0f;
 
+    [Header("Area of CameraTarget")]
+    [Tooltip("This camera controller will use this PlayerArea to find the player to follow.")]
+    public GameObject sceneArea;
+
+    [Header("Camera Settings")]
     [Tooltip("How far in degrees can you move the camera up")]
     public float TopClamp = 70.0f;
 
@@ -32,6 +33,10 @@ public class FollowCameraController : MonoBehaviour
     [Tooltip("For locking the camera position on all axis")]
     public bool LockCameraPosition = false;
 
+    [Header("Set at RTime")]
+    //The target the Cinemachine Virtual Camera will follow
+    public GameObject cinemachineTarget;
+
     // cinemachine
     private float _cinemachineTargetYaw;
     private float _cinemachineTargetPitch;
@@ -43,15 +48,17 @@ public class FollowCameraController : MonoBehaviour
 
     void Awake()
 	{
-        _startingRotation = CinemachineTarget.transform.rotation;
+		// find the camera target in children (child of character armature)
+		cinemachineTarget = sceneArea.GetComponentInChildren<CameraTarget>().gameObject;
+		_startingRotation = cinemachineTarget.transform.rotation;		
 	}
 
 	void Start()
     {
-		CinemachineTarget.transform.rotation = _startingRotation;
+		cinemachineTarget.transform.rotation = _startingRotation;
 
-		_cinemachineTargetYaw = CinemachineTarget.transform.rotation.eulerAngles.y;
-        _cinemachineTargetPitch = CinemachineTarget.transform.rotation.eulerAngles.x;
+		_cinemachineTargetYaw = cinemachineTarget.transform.rotation.eulerAngles.y;
+        _cinemachineTargetPitch = cinemachineTarget.transform.rotation.eulerAngles.x;
     }
 
     private void LateUpdate()
@@ -73,7 +80,7 @@ public class FollowCameraController : MonoBehaviour
         _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
 
         // Cinemachine will follow this target
-        CinemachineTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride,
+        cinemachineTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride,
             _cinemachineTargetYaw, 0.0f);
     }
 

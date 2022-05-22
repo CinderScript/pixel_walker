@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2268144573487164761}
   - component: {fileID: 6659947406775311443}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: colliders
   m_TagString: Prop
   m_Icon: {fileID: 0}
@@ -55,7 +55,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8404675971502004733}
   - component: {fileID: 6449296568064318055}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Tank Oxygen
   m_TagString: Prop
   m_Icon: {fileID: 0}
@@ -69,7 +69,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8972871592463307462}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 11.028, y: 0.004, z: 8.103}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -102,8 +102,16 @@ PrefabInstance:
     m_TransformParent: {fileID: 8404675971502004733}
     m_Modifications:
     - target: {fileID: 100000, guid: 984251e495ac23049a81eee87ff2e2a8, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 984251e495ac23049a81eee87ff2e2a8, type: 3}
       propertyPath: m_TagString
       value: Prop
+      objectReference: {fileID: 0}
+    - target: {fileID: 100002, guid: 984251e495ac23049a81eee87ff2e2a8, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 100002, guid: 984251e495ac23049a81eee87ff2e2a8, type: 3}
       propertyPath: m_TagString
@@ -112,6 +120,10 @@ PrefabInstance:
     - target: {fileID: 100004, guid: 984251e495ac23049a81eee87ff2e2a8, type: 3}
       propertyPath: m_Name
       value: Tank_Oxygene
+      objectReference: {fileID: 0}
+    - target: {fileID: 100004, guid: 984251e495ac23049a81eee87ff2e2a8, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 100004, guid: 984251e495ac23049a81eee87ff2e2a8, type: 3}
       propertyPath: m_TagString
@@ -202,6 +214,10 @@ PrefabInstance:
     - target: {fileID: 5060972806473989863, guid: 44d914c0e6e546f4088e8acfecca93b8, type: 3}
       propertyPath: m_Name
       value: on_off_switch
+      objectReference: {fileID: 0}
+    - target: {fileID: 5060972806473989863, guid: 44d914c0e6e546f4088e8acfecca93b8, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 6699244421014773940, guid: 44d914c0e6e546f4088e8acfecca93b8, type: 3}
       propertyPath: m_RootOrder

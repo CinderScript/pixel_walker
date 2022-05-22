@@ -8,6 +8,11 @@ TagManager:
   - Obsticle
   - Surface
   - Prop
+  - SpawnPoints
+  - UserInput
+  - AgentArea
+  - AreaPropReferences
+  - RoomVolume
   layers:
   - Default
   - TransparentFX
@@ -19,7 +24,7 @@ TagManager:
   - Props
   - Structure
   - Player
-  - 
+  - RoomTrigger
   - 
   - 
   - 
