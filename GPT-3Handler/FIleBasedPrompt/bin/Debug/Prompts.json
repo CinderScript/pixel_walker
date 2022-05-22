@@ -1,0 +1,58 @@
+[
+    {
+        "content": "Pick up the screwdriver",
+        "isCommand": true,
+        "behavior": "PickUp",
+        "item": "screwdriver",
+        "destination": null
+    },
+
+    {
+        "content": "set down the book on the bench",
+        "isCommand": true,
+        "behavior": "SetDown",
+        "item": "book",
+        "destination": "bench"
+    },
+
+    {
+        "content": "set down the lamp",
+        "isCommand": true,
+        "behavior": "SetDown",
+        "item": "lamp",
+        "destination": null
+    },
+
+    {
+        "content": "locate the water bottle",
+        "isCommand": true,
+        "behavior": "WalkTo",
+        "item": "water bottle",
+        "destination": null
+    },
+
+    {
+        "content": "Is there a hammer in this room?",
+        "isCommand": false,
+        "behavior": null,
+        "item": "hammer",
+        "destination": null
+    },
+
+    {
+        "content": "Can you move the table over there",
+        "isCommand": false,
+        "behavior": null,
+        "item": "table",
+        "destination": null
+    },
+
+    {
+        "content": "Can you pick up the package, the one near the door?",
+        "isCommand": false,
+        "behavior": null,
+        "item": "package",
+        "destination": "door"
+    }
+    
+]
