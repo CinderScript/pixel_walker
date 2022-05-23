@@ -19,11 +19,8 @@ behaviors:
     network_settings:
       normalize: false
       hidden_units: 512
-      num_layers: 2
+      num_layers: 3
       vis_encode_type: simple
-      memory:
-        sequence_length: 16
-        memory_size: 32
 
     reward_signals:
       extrinsic:
@@ -44,8 +41,8 @@ environment_parameters:
           behavior: Navigate       # next behavior
           signal_smoothing: true
           min_lesson_length: 20
-          threshold: 1
-        value: -0.002
+          threshold: 2
+        value: -0.004
 
       - name: Lesson2
         completion_criteria:
@@ -54,7 +51,7 @@ environment_parameters:
           signal_smoothing: true
           min_lesson_length: 20
           threshold: 3.0
-        value: -0.005
+        value: -0.008
 
       - name: Lesson3
         completion_criteria:
@@ -63,7 +60,7 @@ environment_parameters:
           signal_smoothing: true
           min_lesson_length: 20
           threshold: 4.0
-        value: -0.01
+        value: -0.015
 
       - name: Lesson4
         completion_criteria:
@@ -74,7 +71,7 @@ environment_parameters:
           threshold: 4.5
         value: -0.015
       - name: Lesson5
-        value: -0.02
+        value: -0.04
 
 
 
