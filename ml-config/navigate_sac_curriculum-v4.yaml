@@ -2,33 +2,33 @@
 # ml-agents example project found at:
 # https://github.com/Unity-Technologies/ml-agents/blob/release_19_docs/docs/Learning-Environment-Examples.md
 
+
 behaviors:
   Navigate:
-    trainer_type: ppo
+    trainer_type: sac
 
     hyperparameters:
+      learning_rate: 0.0003
+      learning_rate_schedule: constant
       batch_size: 256
-      buffer_size: 4096
-      learning_rate: 0.0002
-      beta: 0.01
-      epsilon: 0.2
-      lambd: 0.95
-      num_epoch: 3
-      learning_rate_schedule: linear
+      buffer_size: 3000000
+      buffer_init_steps: 1000
+      tau: 0.01
+      steps_per_update: 10.0
+      save_replay_buffer: false
+      init_entcoef: 0.01
+      reward_signal_steps_per_update: 10.0
 
     network_settings:
       normalize: false
       hidden_units: 512
-      num_layers: 2
+      num_layers: 3
       vis_encode_type: simple
-      memory:
-        sequence_length: 16
-        memory_size: 32
 
     reward_signals:
       extrinsic:
-        gamma: 0.99
-        strength: 1.0
+        gamma: 0.995
+        strength: 2.0
 
     keep_checkpoints: 5
     max_steps: 30e6
@@ -44,8 +44,8 @@ environment_parameters:
           behavior: Navigate       # next behavior
           signal_smoothing: true
           min_lesson_length: 20
-          threshold: 1
-        value: -0.002
+          threshold: 2
+        value: -0.004
 
       - name: Lesson2
         completion_criteria:
@@ -54,7 +54,7 @@ environment_parameters:
           signal_smoothing: true
           min_lesson_length: 20
           threshold: 3.0
-        value: -0.005
+        value: -0.008
 
       - name: Lesson3
         completion_criteria:
@@ -63,7 +63,7 @@ environment_parameters:
           signal_smoothing: true
           min_lesson_length: 20
           threshold: 4.0
-        value: -0.01
+        value: -0.015
 
       - name: Lesson4
         completion_criteria:
@@ -74,11 +74,7 @@ environment_parameters:
           threshold: 4.5
         value: -0.015
       - name: Lesson5
-        value: -0.02
-
-
-
-
+        value: -0.04
 
 engine_settings:
   width: 84
