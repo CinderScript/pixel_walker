@@ -4,20 +4,27 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - StandBehavior
-  - Ground
+  - CinemachineTarget
+  - Obsticle
+  - Surface
+  - Prop
+  - SpawnPoints
+  - UserInput
+  - AgentArea
+  - AreaPropReferences
+  - RoomVolume
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Ground
   - Water
   - UI
   - Unlit
-  - 
-  - 
-  - 
-  - 
+  - Props
+  - Structure
+  - Player
+  - RoomTrigger
   - 
   - 
   - 

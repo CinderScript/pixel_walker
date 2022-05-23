@@ -1,0 +1,30 @@
+[
+    {
+      "name": "Pick up the screwdriver",
+      "behavior": "PickUp",
+      "item": "screwdriver",
+      "destination": "none"
+    },
+
+    {
+      "name": "set down the book on the bench",
+      "behavior": "SetDown",
+      "item": "book",
+      "destination": "bench"
+    },
+
+    {
+      "name": "set down the lamp",
+      "behavior": "SetDown",
+      "item": "lamp",
+      "destination": "none"
+    },
+
+    {
+      "name": "locate the water bottle",
+      "behavior": "WalkTo",
+      "item": "water bottle",
+      "destination": "none"
+    }
+
+  ]

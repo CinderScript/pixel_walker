@@ -63,7 +63,7 @@ public class RuntimeGUI : MonoBehaviour
         resetBtn = rootVE.Q<Button>("reset");
         submit = rootVE.Q<Button>("submit");
         userInput = rootVE.Q<TextField>("user-input");
-        daveOutput = rootVE.Q<TextField>("dave-output");
+        daveOutput = rootVE.Q<TextField>("dave-text-out");
         gptParseOutput = rootVE.Q<TextField>("gpt-parsed-words");
         
         //Initialize Menu window elements
@@ -97,7 +97,7 @@ public class RuntimeGUI : MonoBehaviour
             actionlist.Add(option);
         }
         
-        Debug.Log(actionlist); // prints action list to console
+        Debug.Log(actionRadioGroup.choices.ToString()); // prints action list to console
         
         //Fuctionality of all buttons added here
         submit.clicked += ParseGPT3Reply;
@@ -133,12 +133,18 @@ public class RuntimeGUI : MonoBehaviour
             Debug.Log("ERROR: NO KEY API PROVIDED");
         }
         else{
-            GPTHandler.userInputString = userInput.value;
-            commandInput = GPTHandler.userInputString;
-            string reply = GPTHandler.callOpenAI(250, commandInput, "text-curie-001", 0.7, 1, 0, 0);
-            Debug.Log("currentPrompt: " + GPTHandler.userInputString);
-            Debug.Log(reply);
-            gptParseOutput.value = reply;
+            Tuple<string,string> parsedReply = PromptClassifier.ClassifyString(userInput.value);
+            Debug.Log(parsedReply);
+            gptParseOutput.value = parsedReply.Item1;
+            daveOutput.value = parsedReply.Item2;
+            string convertedToStr = parsedReply.Item2;
+            if (gptParseOutput.value == "Command"){
+                int Pos1 = convertedToStr.IndexOf("behavior: ") + "behavior: ".Length;
+                int Pos2 = convertedToStr.IndexOf(",");
+                string finalStr = convertedToStr.Substring(Pos1, Pos2-Pos1);
+                Debug.Log(finalStr);
+                SetCurrentBehavior(finalStr.Trim());
+            }
         }
         
     }
@@ -199,7 +205,7 @@ public class RuntimeGUI : MonoBehaviour
         apiWindow.style.display = DisplayStyle.None;
         errorLabel.text = "Success!";
         infoWindow.style.display = DisplayStyle.Flex;
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1);
         infoWindow.style.display = DisplayStyle.None;
         daveInGroup.style.display = DisplayStyle.Flex;
         daveOutGroup.style.display = DisplayStyle.Flex;

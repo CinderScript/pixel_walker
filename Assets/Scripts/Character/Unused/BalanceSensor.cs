@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(ChildCollisionListener))]
+[RequireComponent(typeof(ChildRbCollisionListener))]
 public class BalanceSensor : MonoBehaviour
 {
 	public GameObject Gizmo;
@@ -39,7 +39,7 @@ public class BalanceSensor : MonoBehaviour
 			TotalMass += rb.mass;
 		}
 
-		GetComponent<ChildCollisionListener>().OnCollisionEnter += OnCollisionStayHandler;
+		GetComponent<ChildRbCollisionListener>().OnCollisionEnter += OnCollisionStayHandler;
 	}
 
 	void Start()

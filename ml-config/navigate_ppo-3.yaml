@@ -1,0 +1,43 @@
+# Configuration is based on the hyperparameters for "Pyramids"
+# ml-agents example project found at:
+# https://github.com/Unity-Technologies/ml-agents/blob/release_19_docs/docs/Learning-Environment-Examples.md
+
+behaviors:
+  Navigate:
+    trainer_type: ppo
+
+    hyperparameters:
+      batch_size: 256
+      buffer_size: 4096
+      learning_rate: 0.0002
+      beta: 0.01
+      epsilon: 0.2
+      lambd: 0.95
+      num_epoch: 3
+      learning_rate_schedule: linear
+
+    network_settings:
+      normalize: false
+      hidden_units: 512
+      num_layers: 2
+      vis_encode_type: simple
+
+    reward_signals:
+      extrinsic:
+        gamma: 0.99
+        strength: 1.0
+
+    keep_checkpoints: 5
+    max_steps: 30e6
+    time_horizon: 128
+    summary_freq: 30000
+
+
+engine_settings:
+  width: 84
+  height: 84
+  quality_level: 0
+  time_scale: 10
+  target_frame_rate: -1
+  capture_frame_rate: 60
+  no_graphics: true
