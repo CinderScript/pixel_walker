@@ -145,8 +145,11 @@ public class RuntimeGUI : MonoBehaviour
                 Debug.Log(finalStr);
                 SetCurrentBehavior(finalStr.Trim());
             }
-        }
-        
+            else if (gptParseOutput.value == "ERROR"){
+                errorLabel.text ="ERROR: " + parsedReply.Item2;
+                infoWindow.style.display = DisplayStyle.Flex;
+            }
+        }  
     }
     
     //Determines what happens when menu ui button is clicked
@@ -203,7 +206,7 @@ public class RuntimeGUI : MonoBehaviour
     IEnumerator SetApiKey(){
         GPTHandler.keyString = apiInput.value;
         apiWindow.style.display = DisplayStyle.None;
-        errorLabel.text = "Success!";
+        errorLabel.text = "Key has been set.";
         infoWindow.style.display = DisplayStyle.Flex;
         yield return new WaitForSeconds(1);
         infoWindow.style.display = DisplayStyle.None;
