@@ -28,8 +28,7 @@ public class NavigateAgent : Agent
 	public CharacterMovementInput movementValues;
 	public Room currentRoom;
 	public Room targetRoom;
-
-	[Header("Debugging Values")]
+	public bool isCurrentlyColliding = false;
 	public float distanceToTarget;
 
 	// REWARD WEIGHTS
@@ -42,6 +41,10 @@ public class NavigateAgent : Agent
 	private Vector3 startPos;
 	private VectorSensorComponent targetRoomSensorComponent;
 	int numberOfRooms;
+
+	// used to detect if the agent is currently colliding
+	// with an obstical so it can be used as an observation
+	private ControllerColliderHit lastHit;
 
 	private void Awake()
 	{
@@ -123,6 +126,25 @@ public class NavigateAgent : Agent
 		// add one hot encoding for the room of the target
 		sensor.AddOneHotObservation((int)currentRoom.RoomName, numberOfRooms);
 		sensor.AddOneHotObservation((int)targetRoom.RoomName, numberOfRooms); // make goal-signal?
+
+		// report and consume any collisions
+		Vector2 collisionVector;
+		if (lastHit != null)
+		{
+			// isCurrentlyColliding is true
+			var point = agentBody.transform.InverseTransformPoint(lastHit.point);
+			collisionVector = new Vector2(point.x, point.z);
+			lastHit = null; // consume
+		}
+		else
+		{
+			collisionVector = Vector2.zero;
+			isCurrentlyColliding = false;
+		}
+
+		sensor.AddObservation(collisionVector);
+		sensor.AddObservation(isCurrentlyColliding);
+
 	}
 	public override void OnActionReceived(ActionBuffers actions)
 	{
@@ -177,7 +199,8 @@ public class NavigateAgent : Agent
 	{
 		if (hitInfo.gameObject.layer == LayerMask.NameToLayer("Structure"))
 		{
-			Debug.Log(collisionPenalty);
+			lastHit = hitInfo;
+			isCurrentlyColliding = true;
 			AddReward(collisionPenalty);
 		}
 		// penalize

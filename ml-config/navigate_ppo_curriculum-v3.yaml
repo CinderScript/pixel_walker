@@ -51,7 +51,7 @@ environment_parameters:
           signal_smoothing: true
           min_lesson_length: 20
           threshold: 3.0
-        value: -0.004
+        value: -0.005
 
       - name: Lesson3
         completion_criteria:
@@ -60,7 +60,7 @@ environment_parameters:
           signal_smoothing: true
           min_lesson_length: 20
           threshold: 4.0
-        value: -0.001
+        value: -0.01
 
       - name: Lesson4
         completion_criteria:
