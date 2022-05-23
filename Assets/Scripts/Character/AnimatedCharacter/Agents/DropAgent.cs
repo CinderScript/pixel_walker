@@ -1,6 +1,6 @@
 ﻿using Unity.MLAgents;
 
-public class PickUpAgent : Agent
+public class DropAgent : Agent
 {
 	
 }

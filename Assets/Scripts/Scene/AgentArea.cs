@@ -1,5 +1,5 @@
 using UnityEngine;
 
-public class PlayerArea : MonoBehaviour
+public class AgentArea : MonoBehaviour
 { 
 }
