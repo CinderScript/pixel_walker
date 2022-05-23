@@ -10,9 +10,12 @@ using UnityEngine;
 public class GPTHandler 
 {
     public static string keyString = "";
-    public static string CallOpenAI(int tokens, string input, string engine,
+    public static Tuple<string, Exception> CallOpenAI(int tokens, string input, string engine,
         double temperature, int topP, int frequencyPenalty, int presencePenalty)
         {
+            Exception e = null;
+            Tuple<string, Exception> replywithException = null;
+
             var openAiKey = keyString; 
             var apiCall = "https://api.openai.com/v1/engines/" + engine + "/completions";
             try
@@ -37,15 +40,16 @@ public class GPTHandler
 
                         if (json != null)
                         {
-                            return replyText.ToString();
+                            replywithException = Tuple.Create(replyText.ToString().Trim(), e);
+                            
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                Debug.Log(ex.Message);
+                replywithException = Tuple.Create("ERROR: " + ex.Message, ex);
             }
-            return null;
+        return replywithException;
     }
 }

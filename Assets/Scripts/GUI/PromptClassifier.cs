@@ -11,32 +11,38 @@ public class PromptClassifier
         Prompt prompt = new Prompt();
         var holder = prompt.getResponse(input, prompt.classifyPrompt);
 
-        string replyStr = GPTHandler.CallOpenAI(250, holder, "text-davinci-002", 0.7, 1, 0, 0);
-        replyStr = replyStr.Trim();
-        string newReply = "";
+        Tuple<string,Exception> replyTup = GPTHandler.CallOpenAI(250, holder, "text-davinci-002", 0.7, 1, 0, 0);
+        Tuple<string,Exception> newReplyTup;
 
+        string replyStr = replyTup.Item1.Trim();
+        string newReplyStr = "";
+
+        Exception ex = replyTup.Item2;
+        
         if (replyStr == "Command")
         {
             prompt.Type = Prompt.promptType.Command;
             holder = prompt.getResponse(input, prompt.CommandPrompt);
-            newReply = GPTHandler.CallOpenAI(250, holder, "text-davinci-002", 0.7, 1, 0, 0);
-            Debug.Log(newReply);
+            newReplyTup = GPTHandler.CallOpenAI(250, holder, "text-davinci-002", 0.7, 1, 0, 0);
+            newReplyStr = newReplyTup.Item1;
+            Debug.Log(newReplyTup);
 
         }
         else if (replyStr == "Question")
         {
             prompt.Type = Prompt.promptType.Question;
             holder = prompt.getResponse(input, prompt.QuestionPrompt);
-            newReply = GPTHandler.CallOpenAI(250, holder, "text-davinci-002", 0.7, 1, 0, 0);
-            Debug.Log(newReply);
+            newReplyTup = GPTHandler.CallOpenAI(250, holder, "text-davinci-002", 0.7, 1, 0, 0);
+            newReplyStr = newReplyTup.Item1;
+            Debug.Log(newReplyTup);
         }
         else
         {
             prompt.Type = Prompt.promptType.Unknown;
             Debug.Log("Unknown");
-            newReply = GPTHandler.CallOpenAI(250, input, "text-davinci-002", 0.7, 1, 0, 0);;
+            newReplyStr = replyTup.Item2.Message;
         }
-        return Tuple.Create(replyStr, newReply);
+        return Tuple.Create(replyStr, newReplyStr);
     }
 }
 
@@ -87,7 +93,7 @@ public class Prompt
                            "Input: Set down the lamp" +
                            "Output: {behavior: SetDown, object: book, location: null}" +
                            "Input: Locate the water bottle" +
-                           "Output: {behavior: WalkTo, object: water-bottle}" +
+                           "Output: {behavior: WalkTo, object: water_bottle}" +
                            "Input: Put down the saw" +
                            "Output: {behavior: SetDown, object: saw, location: null}" +
                            "Input: Open the backdoor" +
@@ -97,7 +103,7 @@ public class Prompt
                            "Input: Throw the ball into the bucket" +
                            "Output: {behavior: Throw, object: ball, location: bucket}" +
                            "Input: Stack the cardboard boxes" +
-                           "Output: {behavior: Stack, object: cardboard boxes, location: null}" +
+                           "Output: {behavior: Stack, object: cardboard_boxes, location: null}" +
                            "Input: Navigate the toolbox" +
                            "Output: {behavior: WalkTo, object: toolbox}" +
                            "Input: Obtain the wrench" +
