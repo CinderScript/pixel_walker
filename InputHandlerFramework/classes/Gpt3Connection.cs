@@ -1,4 +1,7 @@
-﻿using Newtonsoft.Json.Linq;
+//**Instructions on getting 'Newtonsoft.Json' from NuGet on Visual Studio  
+//https://docs.microsoft.com/en-us/nuget/quickstart/install-and-use-a-package-in-visual-studio
+
+using Newtonsoft.Json.Linq; // <-- Get 'Newtonsoft.Json' if unidentified namespace**
 using System;
 using System.Collections.Generic;
 using System.Linq;
