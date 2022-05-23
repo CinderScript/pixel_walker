@@ -179,7 +179,6 @@ public class NavigateAgent : Agent
 			Vector3 targetPos = new Vector3(target.position.x, 0, target.position.z);
 
 			distanceToTarget = Vector3.Distance(charPos, targetPos);
-			//Debug.Log(distance);
 			if (distanceToTarget < success_distance)
 			{
 				wasRewarded = true;
