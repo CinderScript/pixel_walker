@@ -14,7 +14,7 @@ public class SpawnPointReferences : MonoBehaviour
 	private void Awake()
 	{
 		// all props should be children of this object's PlayerArea
-		var playerArea = GetComponentInParent<PlayerArea>().transform;
+		var playerArea = GetComponentInParent<AgentArea>().transform;
 
 		// get all spawn points
 		var spawnPoints = playerArea.GetComponentsInChildren<SpawnPoint>();
