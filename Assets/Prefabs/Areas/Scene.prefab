@@ -30,7 +30,7 @@ Transform:
   m_Children:
   - {fileID: 1970948474465470600}
   - {fileID: 1970948474516515977}
-  - {fileID: 1970948474563512775}
+  - {fileID: 925421897167430148}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -164,7 +164,7 @@ MonoBehaviour:
   CameraAngleOverride: 0
   LockCameraPosition: 0
   cinemachineTarget: {fileID: 0}
---- !u!1 &1970948474563512776
+--- !u!1 &5080565735083016873
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -172,22 +172,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1970948474563512775}
-  - component: {fileID: 1970948474563512774}
+  - component: {fileID: 925421897167430148}
+  - component: {fileID: 8628815513046081643}
   m_Layer: 0
-  m_Name: BehaviorController
+  m_Name: BehaviorSelector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1970948474563512775
+--- !u!4 &925421897167430148
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1970948474563512776}
+  m_GameObject: {fileID: 5080565735083016873}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -196,19 +196,16 @@ Transform:
   m_Father: {fileID: 1970948473211942122}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1970948474563512774
+--- !u!114 &8628815513046081643
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1970948474563512776}
+  m_GameObject: {fileID: 5080565735083016873}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0502a63c01102da42861dc43f81761e5, type: 3}
+  m_Script: {fileID: 11500000, guid: ce8933323c65c4f4b820bb2d242ccf88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Navigate: {fileID: 0}
-  Open: {fileID: 0}
-  PickUpObject: {fileID: 0}
-  PlaceObject: {fileID: 0}
+  sceneArea: {fileID: 0}

@@ -1,5 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 using Unity.MLAgents;
 
@@ -7,52 +7,77 @@ using UnityEngine;
 
 public class BehaviorController : MonoBehaviour
 {
-	[Header("Behaviors Location")]
-	public GameObject behaviorRoot;
+	[Header("Decision Requests")]
+	[Range(1, 10)]
+	[SerializeField]
+	private int decisionPeriod = 5;
 
-	[Header("Behaviors")]
-	public List<GameObject> Behaviors;
+	[SerializeField]
+	private Agent currentActiveAgent;
 
-	public void InitiateBehavior(AgentBehaviorProperties behavior)
+	[SerializeField]
+	[Header("Loaded Agents")]
+	private List<Agent> Agents;
+
+	private void Awake()
 	{
-		switch (behavior.Type)
+		Agents = GetComponentsInChildren<Agent>().ToList();
+		Academy.Instance.AgentPreStep += AcademyStepHandler;
+	}
+
+	public void StartBehavior(AgentBehaviorProperties behavior)
+	{
+		switch (behavior.Behavior)
 		{
 			case BehaviorType.None:
-				StopBehaviors();
+				StopBehavior();
 				break;
+
 			case BehaviorType.Navigate:
-
+				currentActiveAgent = Agents.Find( (agent) => agent is NavigateAgent );
 				break;
+
 			case BehaviorType.PickUp:
+				currentActiveAgent = Agents.Find((agent) => agent is PickUpAgent);
 				break;
+
 			case BehaviorType.Drop:
+				currentActiveAgent = Agents.Find((agent) => agent is DropAgent);
 				break;
+
 			case BehaviorType.Activate:
+				currentActiveAgent = Agents.Find((agent) => agent is ActivateAgent);
 				break;
+
 			default:
-				Debug.Log($"Behavior type {behavior.Type} not recognized");
+				Debug.Log($"Behavior type {behavior.Behavior} not recognized");
 				break;
 		}
 	}
 
-	public void StopBehaviors()
+	public void StopBehavior()
 	{
-		foreach (var behavior in Behaviors)
-		{
-			behavior.SetActive(false);
-		}
+		currentActiveAgent = null;
 	}
 
-	private void Navigate()
+	void AcademyStepHandler(int academyStepCount)
 	{
-		StopBehaviors();
-		var navigateAgent = GetComponentInChildren<NavigateAgent>();
-		navigateAgent.gameObject.SetActive(true);
+		// is it time for Agent to make a descision?
+		if (academyStepCount % decisionPeriod == 0)
+		{
+			currentActiveAgent?.RequestDecision();
+		}
+
+		// Act on last decision if there is an active agent
+		currentActiveAgent?.RequestAction();
 	}
-	private void PickUp()
-	{
-		StopBehaviors();
-		var navigateAgent = GetComponentInChildren<NavigateAgent>();
-		navigateAgent.gameObject.SetActive(true);
+
+	void OnDestroy()
+	{	
+		// if the agent is removed AcademyStepHandler cannot be called
+		if (Academy.IsInitialized)
+		{
+			Academy.Instance.AgentPreStep -= AcademyStepHandler;
+		}
 	}
 }

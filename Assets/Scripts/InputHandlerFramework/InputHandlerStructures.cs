@@ -19,7 +19,7 @@ public enum InputType
 
 public enum BehaviorType
 {
-	None, Navigate, PickUp, Drop, Activate, SetDown, Open
+	Unknown, None, Navigate, PickUp, Drop, Activate, SetDown, Open
 }
 
 public class GptResponse

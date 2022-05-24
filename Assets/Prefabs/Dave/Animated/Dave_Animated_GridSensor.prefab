@@ -1191,7 +1191,6 @@ GameObject:
   - component: {fileID: 2300376171901991563}
   - component: {fileID: 2300376171901991566}
   - component: {fileID: 2300376171901991561}
-  - component: {fileID: 2300376171901991560}
   - component: {fileID: 509989018333443176}
   - component: {fileID: 1570630950922999094}
   m_Layer: 9
@@ -1232,20 +1231,19 @@ MonoBehaviour:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
   MaxStep: 4000
-  agentReference: {fileID: 1732989905121701311}
   agentBody: {fileID: 8801338994503678042}
-  collisionThrower: {fileID: 4458497212548917227}
-  success_distance: 0.7
   playerArea: {fileID: 0}
-  spawnPoints: {fileID: 0}
-  areaProps: {fileID: 0}
   target: {fileID: 0}
   userInputValues: {fileID: 0}
   movementValues: {fileID: 8173878857353339622}
+  success_distance: 0.7
+  spawnPoints: {fileID: 0}
+  areaProps: {fileID: 0}
   currentRoom: {fileID: 0}
   targetRoom: {fileID: 0}
   isCurrentlyColliding: 0
   distanceToTarget: 0
+  collisionThrower: {fileID: 4458497212548917227}
 --- !u!114 &2300376171901991561
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1276,20 +1274,6 @@ MonoBehaviour:
   m_UseChildSensors: 1
   m_UseChildActuators: 1
   m_ObservableAttributeHandling: 0
---- !u!114 &2300376171901991560
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2300376171901991562}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a5c9d521e5ef4759a8246a07d52221e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DecisionPeriod: 5
-  TakeActionsBetweenDecisions: 1
 --- !u!114 &509989018333443176
 MonoBehaviour:
   m_ObjectHideFlags: 0
