@@ -1,23 +1,40 @@
-using Newtonsoft.Json.Linq;
+//**Instructions on getting 'Newtonsoft.Json' from NuGet on Visual Studio  
+//https://docs.microsoft.com/en-us/nuget/quickstart/install-and-use-a-package-in-visual-studio
+
+using Newtonsoft.Json.Linq; // <-- Get 'Newtonsoft.Json' if unidentified namespace**
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Globalization;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using UnityEngine;
 
-//[DEPRECATED: Now handled by the InputHandlerFramework] - SHUB 5/23/22
-public class GPTHandler
+public class Gpt3Connection
 {
-    public static string keyString = "";
-    public static Tuple<string, Exception> CallOpenAI(int tokens, string input, string engine,
+    public string ApiKey { get; }
+
+    // any other relevent properties
+
+    public Gpt3Connection(string apiKey)
+    {
+        ApiKey = apiKey;
+    }
+
+    public Tuple<string, Exception> GenerateText(string prompt)
+    {
+        Tuple<string, Exception> res = CallOpenAI(250, prompt, "text-davinci-002", 0.7, 1, 0, 0);
+        return res;
+    }
+
+    public Tuple<string, Exception> CallOpenAI(int tokens, string input, string engine,
         double temperature, int topP, int frequencyPenalty, int presencePenalty)
     {
         Exception e = null;
         Tuple<string, Exception> replywithException = null;
 
-        var openAiKey = keyString;
+        var openAiKey = ApiKey;
         var apiCall = "https://api.openai.com/v1/engines/" + engine + "/completions";
         try
         {
@@ -42,14 +59,13 @@ public class GPTHandler
                     if (json != null)
                     {
                         replywithException = Tuple.Create(replyText.ToString().Trim(), e);
-
                     }
                 }
             }
         }
         catch (Exception ex)
         {
-            replywithException = Tuple.Create("ERROR: " + ex.Message, ex);
+            replywithException = Tuple.Create("ERROR", ex);
         }
         return replywithException;
     }
