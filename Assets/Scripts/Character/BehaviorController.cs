@@ -13,19 +13,23 @@ public class BehaviorController : MonoBehaviour
 	private int decisionPeriod = 5;
 
 	[SerializeField]
-	private Agent currentActiveAgent;
+	private AgentBase currentActiveAgent;
 
 	[SerializeField]
 	[Header("Loaded Agents")]
-	private List<Agent> Agents;
+	private List<AgentBase> agents;
 
 	private void Awake()
 	{
-		Agents = GetComponentsInChildren<Agent>().ToList();
 		Academy.Instance.AgentPreStep += AcademyStepHandler;
+		agents = GetComponentsInChildren<AgentBase>().ToList();
+		foreach (var agent in agents)
+		{
+			agent.OnBehaviorFinished += OnBehaviorFinishHandler;
+		}
 	}
 
-	public void StartBehavior(AgentBehaviorProperties behavior)
+	public AgentBase StartBehavior(AgentBehaviorProperties behavior)
 	{
 		switch (behavior.Behavior)
 		{
@@ -34,25 +38,32 @@ public class BehaviorController : MonoBehaviour
 				break;
 
 			case BehaviorType.Navigate:
-				currentActiveAgent = Agents.Find( (agent) => agent is NavigateAgent );
+				currentActiveAgent = agents.Find( (agent) => agent is NavigateAgent );
 				break;
 
 			case BehaviorType.PickUp:
-				currentActiveAgent = Agents.Find((agent) => agent is PickUpAgent);
+				currentActiveAgent = agents.Find((agent) => agent is PickUpAgent);
 				break;
 
 			case BehaviorType.Drop:
-				currentActiveAgent = Agents.Find((agent) => agent is DropAgent);
+				currentActiveAgent = agents.Find((agent) => agent is DropAgent);
 				break;
 
 			case BehaviorType.Activate:
-				currentActiveAgent = Agents.Find((agent) => agent is ActivateAgent);
+				currentActiveAgent = agents.Find((agent) => agent is ActivateAgent);
 				break;
 
 			default:
 				Debug.Log($"Behavior type {behavior.Behavior} not recognized");
 				break;
 		}
+
+		return currentActiveAgent;
+	}
+
+	public void OnBehaviorFinishHandler(AgentBase agent)
+	{
+		currentActiveAgent = null;
 	}
 
 	public void StopBehavior()

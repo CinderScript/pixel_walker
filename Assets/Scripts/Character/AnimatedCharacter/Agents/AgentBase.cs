@@ -18,6 +18,8 @@ public class AgentBase : Agent
 	public UserInputValues userInputValues;
 	public CharacterMovementInput movementValues;
 
+	public Action<AgentBase> OnBehaviorFinished;
+	
 	private void Awake()
 	{
 		// GET USER INPUT SCRIPT

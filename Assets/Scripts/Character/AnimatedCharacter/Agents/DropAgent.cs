@@ -1,6 +1,6 @@
 ﻿using Unity.MLAgents;
 
-public class DropAgent : Agent
+public class DropAgent : AgentBase
 {
 	
 }
