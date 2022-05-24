@@ -123,6 +123,26 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &94064463 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8640877246600581134, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
+  m_PrefabInstance: {fileID: 7529525660460480106}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &94064465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 94064463}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0502a63c01102da42861dc43f81761e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  decisionPeriod: 5
+  currentActiveAgent: {fileID: 0}
+  Agents: []
 --- !u!1 &745675435
 GameObject:
   m_ObjectHideFlags: 0
@@ -238,11 +258,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!1 &1542840480 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8640877248077517448, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
-  m_PrefabInstance: {fileID: 7529525660460480106}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1774891076 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7529525658719209006, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
@@ -260,13 +275,14 @@ GameObject:
   - component: {fileID: 1923331912}
   - component: {fileID: 1923331911}
   - component: {fileID: 1923331910}
+  - component: {fileID: 1923331914}
   m_Layer: 0
-  m_Name: Camera
+  m_Name: FlyCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1923331910
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -366,6 +382,47 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1923331914
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1923331909}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be76e5f14cfee674cb30b491fb72b09b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boost: 3.5
+  positionLerpTime: 0.2
+  mouseSensitivity: 80
+  mouseSensitivityCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.5
+      inSlope: 0
+      outSlope: 5
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 2.5
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  rotationLerpTime: 0.01
+  invertY: 1
 --- !u!1001 &470719535855650148
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -425,10 +482,14 @@ PrefabInstance:
       propertyPath: sceneArea
       value: 
       objectReference: {fileID: 1774891076}
-    - target: {fileID: 1970948474563512774, guid: 97f1d3f5100e756428bfebc57434b597, type: 3}
-      propertyPath: Navigate
+    - target: {fileID: 5080565735083016873, guid: 97f1d3f5100e756428bfebc57434b597, type: 3}
+      propertyPath: m_Name
+      value: Scene-GUI Interface
+      objectReference: {fileID: 0}
+    - target: {fileID: 8628815513046081643, guid: 97f1d3f5100e756428bfebc57434b597, type: 3}
+      propertyPath: sceneArea
       value: 
-      objectReference: {fileID: 1542840480}
+      objectReference: {fileID: 1774891076}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 97f1d3f5100e756428bfebc57434b597, type: 3}
 --- !u!1 &2148889774887594478 stripped
@@ -461,7 +522,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1074135842055565209, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
       propertyPath: DisableObjects
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1074135842055565209, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
       propertyPath: objects.Array.data[0]

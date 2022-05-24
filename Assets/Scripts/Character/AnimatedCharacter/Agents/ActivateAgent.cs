@@ -1,6 +1,6 @@
 ﻿using Unity.MLAgents;
 
-public class ActiveAgent : Agent
+public class ActivateAgent : Agent
 {
 	
 }
