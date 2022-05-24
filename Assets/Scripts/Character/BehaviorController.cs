@@ -56,21 +56,3 @@ public class BehaviorController : MonoBehaviour
 		navigateAgent.gameObject.SetActive(true);
 	}
 }
-
-public class AgentBehaviorProperties
-{
-	public BehaviorType Type { get; }
-	public string Object { get; set; }
-	public string Location { get; }
-
-	public AgentBehaviorProperties(BehaviorType behavior, string sceneObject, string location)
-	{
-		Type = behavior;
-		Object = sceneObject;
-		Location = location;
-	}
-}
-public enum BehaviorType
-{
-	None, Navigate, PickUp, Drop, Activate, SetDown, Open
-}

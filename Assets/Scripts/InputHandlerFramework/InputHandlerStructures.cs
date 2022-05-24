@@ -1,10 +1,10 @@
 ﻿public class AgentBehaviorProperties
 {
-	public string Behavior { get; }
+	public BehaviorType Behavior { get; }
 	public string Object { get; set; }
 	public string Location { get; }
 	
-	public AgentBehaviorProperties(string behavior, string sceneObject, string location)
+	public AgentBehaviorProperties(BehaviorType behavior, string sceneObject, string location)
 	{
 		Behavior = behavior;
 		Object = sceneObject;
@@ -19,7 +19,7 @@ public enum InputType
 
 public enum BehaviorType
 {
-	Unknown, Navigate, PickUp, Drop, SetDown, Open
+	None, Navigate, PickUp, Drop, Activate, SetDown, Open
 }
 
 public class GptResponse
