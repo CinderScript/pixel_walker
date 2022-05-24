@@ -70,6 +70,7 @@ environment_parameters:
           min_lesson_length: 20
           threshold: 4.5
         value: -0.015
+        
       - name: Lesson5
         value: -0.04
 
