@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using System.Text.RegularExpressions;
+//susing InputManager;
 
 
 public class RuntimeGUI : MonoBehaviour
@@ -39,7 +40,7 @@ public class RuntimeGUI : MonoBehaviour
     private VisualElement apiWindow;
     private Button apiSubmitBtn;
 
-   
+
     //Elements for error pop up screen
     private VisualElement infoWindow;
     private Label errorLabel;
@@ -48,6 +49,9 @@ public class RuntimeGUI : MonoBehaviour
     //Variables to store input and current selected action
     string currentAction;
     string commandInput;
+    string keyString = "";
+
+    Exception ex;
 
     //List used to fill actions radio button group
     List<string> actionlist = new List<String>();
@@ -65,7 +69,7 @@ public class RuntimeGUI : MonoBehaviour
         userInput = rootVE.Q<TextField>("user-input");
         daveOutput = rootVE.Q<TextField>("dave-text-out");
         gptParseOutput = rootVE.Q<TextField>("gpt-parsed-words");
-        
+
         //Initialize Menu window elements
         menuWindow = rootVE.Q<VisualElement>("menu-pane");
         levelSelectBtn = rootVE.Q<Button>("scene");
@@ -96,17 +100,17 @@ public class RuntimeGUI : MonoBehaviour
         {
             actionlist.Add(option);
         }
-        
+
         Debug.Log(actionRadioGroup.choices.ToString()); // prints action list to console
-        
+
         //Fuctionality of all buttons added here
         submit.clicked += ParseGPT3Reply;
-        menuBtn.clicked += OnMainMenuClicked;       
+        menuBtn.clicked += ToggleMenu;
         resetBtn.clicked += ReloadScene;
         menuResetBtn.clicked += ReloadScene;
         levelSelectBtn.clicked += OpenSceneMenu;
         apiKeyBtn.clicked += OpenApiInputMenu;
-        apiSubmitBtn.clicked += () => StartCoroutine(SetApiKey());
+        apiSubmitBtn.clicked += SetApiKey;
 
         levelOneBtn.clicked += () => SceneManager.LoadScene(0);
         levelthreeBtn.clicked += () => SceneManager.LoadScene(1);
@@ -115,105 +119,151 @@ public class RuntimeGUI : MonoBehaviour
     }
 
     public void SetCurrentBehavior(string behavior)
-	{
-       if(!actionlist.Contains(behavior)){
-           Debug.Log("Error: Action not in list"); 
-       }
-       else{ 
-           actionRadioGroup.value = actionlist.IndexOf(behavior);
-       }
-	}
+    {
+        if (!actionlist.Contains(behavior))
+        {
+            Debug.Log("Error: Action not in list");
+        }
+        else
+        {
+            actionRadioGroup.value = actionlist.IndexOf(behavior);
+        }
+    }
 
-    //Calls upon GPTHandler.cs to send and parse user input, sends error if API key is missing.
-    void ParseGPT3Reply(){
+    //Calls upon The InputHandlerFramework's UserInputHandler.cs  to send and parse user input, sends error if API key is missing.
+    void ParseGPT3Reply()
+    {
         //Prints error if there is no API Key present
-        if(GPTHandler.keyString == ""){
-            errorLabel.text = "ERROR: NO KEY API PROVIDED. \n Submit one to Menu > API key.";
-            infoWindow.style.display = DisplayStyle.Flex;
+        if (keyString == "")
+        {
+            ex = new Exception("No Key Provided: Menu > API Key to add.");
+            StartCoroutine(CreatePopUp(ex.Message, 3));
             Debug.Log("ERROR: NO KEY API PROVIDED");
         }
-        else{
-            Tuple<string,string> parsedReply = PromptClassifier.ClassifyString(userInput.value);
-            Debug.Log(parsedReply);
-            gptParseOutput.value = parsedReply.Item1;
-            daveOutput.value = parsedReply.Item2;
-            string convertedToStr = parsedReply.Item2;
-            if (gptParseOutput.value == "Command"){
-                int Pos1 = convertedToStr.IndexOf("behavior: ") + "behavior: ".Length;
-                int Pos2 = convertedToStr.IndexOf(",");
-                string finalStr = convertedToStr.Substring(Pos1, Pos2-Pos1);
-                Debug.Log(finalStr);
-                SetCurrentBehavior(finalStr.Trim());
+        else
+        {
+            UserInputHandler handler = new UserInputHandler(keyString, "TODO: *fileprompts.txt*");
+            GptResponse responce = handler.GetGptResponce(userInput.value, out ex);
+            Debug.Log(responce.GeneratedText);
+            var responceProperties = responce.BehaviorProperties;
+
+
+            if (responce.Type == InputType.Command)
+            {
+                gptParseOutput.value = "\nBehavior:\n\t " + responceProperties.Behavior + "\nObject:\n\t " + responceProperties.Object
+                            + "\nLocation:\n\t " + responceProperties.Location;
             }
-            else if (gptParseOutput.value == "ERROR"){
-                errorLabel.text ="ERROR: " + parsedReply.Item2;
-                infoWindow.style.display = DisplayStyle.Flex;
+            else if (responce.Type == InputType.Question)
+            {
+                daveOutput.value = responce.GeneratedText.ToString();
             }
-        }  
+            else
+            {
+                StartCoroutine(CreatePopUp(ex.Message, 3));
+            }
+        }
     }
-    
-    //Determines what happens when menu ui button is clicked
-    //Turns display  attribute for the 'menu-pane' ve in 
-    //RuntimeUI.uxml on and off (Flex or None).
-	void OnMainMenuClicked()
-	{
-        infoWindow.style.display = DisplayStyle.None;
-		if(menuWindow.style.display != DisplayStyle.Flex){
+
+    //Toggles menu on or off(Flex or None) 
+    void ToggleMenu()
+    {
+        if (menuWindow.style.display != DisplayStyle.Flex)
+        {
+            CloseMenuElements();
             menuWindow.style.display = DisplayStyle.Flex;
-            apiWindow.style.display = DisplayStyle.None;
-            levelSelectWindow.style.display = DisplayStyle.None;
-            daveInGroup.style.display = DisplayStyle.None;
-            daveOutGroup.style.display = DisplayStyle.None;
-            actionRadioGroup.style.display = DisplayStyle.None;
-        } else {
-            menuWindow.style.display = DisplayStyle.None;
+            ToggleMainUI(false);
+        }
+        else
+        {
+            CloseMenuElements();
+            ToggleMainUI(true);
+        }
+    }
+
+    //Calls Unity.SceneManager to get current scene and loads it when called
+    void ReloadScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    //Opens Level Select, does not need a None as ui is disabled on new level load
+    //or is closed when the menu button is pressed
+    void OpenSceneMenu()
+    {
+        CloseMenuElements();
+        levelSelectWindow.style.display = DisplayStyle.Flex;
+
+    }
+
+    //Opens Input Text Field for API key, 
+    //toggles off when other menu element is selected
+    //or when api-submit button is pressed
+    void OpenApiInputMenu()
+    {
+        CloseMenuElements();
+        apiWindow.style.display = DisplayStyle.Flex;
+    }
+
+
+    //Sets keystring variable to entered the API key
+    //Pops up window on excution to say key has been entered
+    //Will pop up cautionary message if left empty
+    void SetApiKey()
+    {
+        string tempText;
+        keyString = apiInput.value;
+        if(apiInput.value == ""){
+            ex = new Exception("Field cannot Be left blank.");
+            tempText = ex.Message;
+        }
+        else{
+            tempText = "Key has been entered";
+            ToggleMainUI(true);
+        }
+        StartCoroutine(CreatePopUp(tempText, 2));
+        //ToggleMainUI(true);
+
+    }
+
+    //Creates a pop up window to display system dialogue
+    //in: string 'message' to be displayed as message on pop up
+    //in: integer 'secondsVisible' is the number of 
+    //    seconds pop up will be displayed
+    //out: IEnumerator coroutine object which delays by secondsVisible
+    IEnumerator CreatePopUp(string message, int secondsVisible)
+    {
+        errorLabel.text = message;
+        infoWindow.style.display = DisplayStyle.Flex;
+        yield return new WaitForSeconds(secondsVisible);
+        infoWindow.style.display = DisplayStyle.None;
+    }
+
+    //Toggles the main UI visibility on or off
+    //in: bool (true for visible and false for invisble);
+    void ToggleMainUI(bool toggle)
+    {
+        if (toggle)
+        {
+            CloseMenuElements();
             daveInGroup.style.display = DisplayStyle.Flex;
             daveOutGroup.style.display = DisplayStyle.Flex;
             actionRadioGroup.style.display = DisplayStyle.Flex;
         }
-	}
-
-    //Calls Unity.SceneManager to get current scene and loads it on execution
-    void ReloadScene(){
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        else
+        {
+            daveInGroup.style.display = DisplayStyle.None;
+            daveOutGroup.style.display = DisplayStyle.None;
+            actionRadioGroup.style.display = DisplayStyle.None;
+        }
     }
 
-    void SetCurrentActionHelper(){
-        currentAction = userInput.value;
-        SetCurrentBehavior(currentAction);
-    }
-
-    void OpenSceneMenu(){
-        if(levelSelectWindow.style.display == DisplayStyle.Flex){
-            levelSelectWindow.style.display = DisplayStyle.None;
-        } else {
-            levelSelectWindow.style.display = DisplayStyle.Flex;
-            apiWindow.style.display = DisplayStyle.None;
-            menuWindow.style.display = DisplayStyle.None;
-        }  
-    }
-
-    void OpenApiInputMenu(){
-        if(apiWindow.style.display != DisplayStyle.Flex){
-            apiWindow.style.display = DisplayStyle.Flex;
-            menuWindow.style.display = DisplayStyle.None;
-            levelSelectWindow.style.display = DisplayStyle.None;
-        } else {
-            apiWindow.style.display = DisplayStyle.None;
-        }  
-    }
-
-    IEnumerator SetApiKey(){
-        GPTHandler.keyString = apiInput.value;
+    //Closes all non Main UI Elements such as menu elements
+    //Popup windows not handled here
+    void CloseMenuElements()
+    {
         apiWindow.style.display = DisplayStyle.None;
-        errorLabel.text = "Key has been set.";
-        infoWindow.style.display = DisplayStyle.Flex;
-        yield return new WaitForSeconds(1);
-        infoWindow.style.display = DisplayStyle.None;
-        daveInGroup.style.display = DisplayStyle.Flex;
-        daveOutGroup.style.display = DisplayStyle.Flex;
-        actionRadioGroup.style.display = DisplayStyle.Flex;
-
+        menuWindow.style.display = DisplayStyle.None;
+        levelSelectWindow.style.display = DisplayStyle.None;
     }
 
 }
