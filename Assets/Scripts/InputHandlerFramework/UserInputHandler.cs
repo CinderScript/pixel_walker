@@ -105,6 +105,8 @@ public class UserInputHandler
 
         Tuple<string, Exception> responce = connection.GenerateText(fullPrompt);
 
+        // TODO: HANDLE EXCEPTION
+
         string answer = responce.Item1;
 
         return answer;
@@ -120,40 +122,67 @@ public class UserInputHandler
 
         Tuple<string, Exception> responce = connection.GenerateText(fullPrompt);
 
-        string answer = responce.Item1;
+		// TODO: HANDLE EXCEPTION
 
-        string behavior = null;
+        string responceText = responce.Item1;
+
+        BehaviorType behavior = BehaviorType.Unknown;
         string sceneObject = null;
         string location = null;
 
-        if (answer.Contains("behavior"))
+        if ( responceText.Contains("behavior") )
         {
-            int startIndex = answer.IndexOf("behavior: ") + "behavior: ".Length;
-            int endIndex = answer.IndexOf(",");
-            behavior = answer.Substring(startIndex, endIndex - startIndex).Trim();
+            int startIndex = responceText.IndexOf("behavior: ") + "behavior: ".Length;
+            int endIndex = responceText.IndexOf(",");
+            var behaviorString = responceText.Substring(startIndex, endIndex - startIndex).Trim();
+
+			if (behaviorString == "Navigate")
+			{
+                behavior = BehaviorType.Navigate;
+			}
+            else if (behaviorString == "PickUp")
+			{
+                behavior = BehaviorType.PickUp;
+			}
+			else if (behaviorString == "Drop")
+			{
+                behavior = BehaviorType.Drop;
+			}
+            else if (behaviorString == "Activate") {
+				behavior = BehaviorType.Activate;
+			}
+            else if (behaviorString == "SetDown")
+            {
+                behavior = BehaviorType.SetDown;
+            }
+            else if (behaviorString == "Open")
+            {
+                behavior = BehaviorType.Open;
+            }
         }
 
-        if (answer.Contains("object"))
+        if (responceText.Contains("object"))
         {
-            int startIndex = answer.IndexOf("object: ") + "object: ".Length;
+            int startIndex = responceText.IndexOf("object: ") + "object: ".Length;
             int endIndex = 0;
-            if (answer.Contains("location"))
+			
+            if (responceText.Contains("location"))
             {
-                endIndex = answer.IndexOf(',', answer.IndexOf(',') + 1);
+                endIndex = responceText.IndexOf(',', responceText.IndexOf(',') + 1);
             }
             else 
             { 
-                endIndex = answer.IndexOf('}'); 
+                endIndex = responceText.IndexOf('}'); 
             }   
 
-            sceneObject = answer.Substring(startIndex, endIndex - startIndex).Trim();
+            sceneObject = responceText.Substring(startIndex, endIndex - startIndex).Trim();
         }
 
-        if (answer.Contains("location"))
+        if (responceText.Contains("location"))
         {
-            int startIndex = answer.IndexOf("location: ") + "location: ".Length;
-            int endIndex = answer.IndexOf('}');
-            location = answer.Substring(startIndex, endIndex - startIndex).Trim();
+            int startIndex = responceText.IndexOf("location: ") + "location: ".Length;
+            int endIndex = responceText.IndexOf('}');
+            location = responceText.Substring(startIndex, endIndex - startIndex).Trim();
         }
 
         // TODO: use jsonFormattedText to create object.  need to deserialize responce
@@ -181,16 +210,18 @@ public class UserInputHandler
 
         Tuple<string, Exception> responce = connection.GenerateText(fullPrompt);
 
+        // TODO: HANDLE EXCEPTION
+
         string answer = responce.Item1.Trim();
 
         //we dont have list yet so List for now
-        string[] tools = { "Hammer", "Saw",
+        string[] props = { "Hammer", "Saw",
                         "Gun", "Knife" };
         // TODO: if the responce is not a valid object, try sending to GPT-3 3 more times before returning ""
         int trial = 1;
         //Loop if responce not in tool and trial under 4, (so we can do 3 times)
 
-        while (!((tools.Contains(answer)) || (trial < 4)))
+        while (!((props.Contains(answer)) || (trial < 4)))
         {
             responce = connection.GenerateText(fullPrompt);
             answer = responce.Item1.Trim();

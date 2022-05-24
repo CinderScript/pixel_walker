@@ -24,7 +24,6 @@ public class SceneGuiInterface : MonoBehaviour
 		
 		var behavior = new AgentBehaviorProperties(BehaviorType.Navigate, "", "");
 		SelectBehavior(behavior);
-		Debug.Log(GetPropsList());
 	}
 
 	public void SelectBehavior(AgentBehaviorProperties properties)

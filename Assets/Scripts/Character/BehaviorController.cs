@@ -27,7 +27,7 @@ public class BehaviorController : MonoBehaviour
 
 	public void StartBehavior(AgentBehaviorProperties behavior)
 	{
-		switch (behavior.Type)
+		switch (behavior.Behavior)
 		{
 			case BehaviorType.None:
 				StopBehavior();
@@ -50,7 +50,7 @@ public class BehaviorController : MonoBehaviour
 				break;
 
 			default:
-				Debug.Log($"Behavior type {behavior.Type} not recognized");
+				Debug.Log($"Behavior type {behavior.Behavior} not recognized");
 				break;
 		}
 	}
