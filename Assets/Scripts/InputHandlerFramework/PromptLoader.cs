@@ -16,26 +16,42 @@ public class PromptLoader
         StreamReader r = new StreamReader(filePath);
         string jsonString = r.ReadToEnd();
 
-        // This creates a new instance of prompt to be deserialized, then output out
-        GptPrompts prompts;
+        // This will create a new instance of prompt to be deserialized
+        GptPrompts prompts = new GptPrompts();
         prompts = JsonConvert.DeserializeObject<GptPrompts>(jsonString);
-        GptPrompts output = new GptPrompts(prompts.InputClassifier, prompts.QuestionResponder, prompts.CommandParser, prompts.BestMatchSelector);
-        return output;
+
+        // This will join the string array's elements into one single output string 
+        prompts.InputClassifier = String.Join("", prompts.InputList);
+        prompts.QuestionResponder = String.Join("", prompts.QuestionList);
+        prompts.CommandParser = String.Join("", prompts.CommandList);
+        prompts.BestMatchSelector = String.Join("", prompts.BestMatchList);
+        return prompts;
     }
 }
 
 public class GptPrompts
 {
-    public string InputClassifier { get; }
-    public string QuestionResponder { get; }
-    public string CommandParser { get; }
-    public string BestMatchSelector { get; }
+    // initialize the string[] to hold the string object in arrays
+    public string[] InputList { get; set; }
+    public string[] QuestionList { get; set; }
+    public string[] CommandList { get; set; }
+    public string[] BestMatchList { get; set; }
 
-    public GptPrompts(string inputClassifier, string questionResponder, string commandParser, string bestMatchSelector)
+    // string object to output with the input handler framework
+    public string InputClassifier { get; set; }
+    public string QuestionResponder { get; set; }
+    public string CommandParser { get; set; }
+    public string BestMatchSelector { get; set; }
+}
+
+// A testing class with a pre-defined file path to validate the prompt loading
+public class PromptLoaderTestDriver
+{
+    static void Main()
     {
-        InputClassifier = inputClassifier;
-        QuestionResponder = questionResponder;
-        CommandParser = commandParser;
-        BestMatchSelector = bestMatchSelector;
+        PromptLoader example = new PromptLoader();
+        GptPrompts prompts = example.GetPromptsFromFile("C:/development/pixel_walker/GPT-3Handler/FIleBasedPrompt/Prompt.json");
+
+        System.Diagnostics.Debug.WriteLine(prompts.InputClassifier);
     }
 }
