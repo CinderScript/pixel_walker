@@ -50,7 +50,7 @@ public class PromptLoaderTestDriver
     static void Main()
     {
         PromptLoader example = new PromptLoader();
-        GptPrompts prompts = example.GetPromptsFromFile("C:/development/pixel_walker/GPT-3Handler/FIleBasedPrompt/Prompt.json");
+        GptPrompts prompts = example.GetPromptsFromFile("C:/development/pixel_walker/Assets/Scripts/InputHandlerFramework/Prompt.json");
 
         System.Diagnostics.Debug.WriteLine(prompts.InputClassifier);
     }
