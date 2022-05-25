@@ -1,0 +1,57 @@
+
+{
+    "InputList": [
+      "Input: Is there a hammer in this room?\n",
+      "Output: Question\n",
+      "Input: Is there a hammer\n",
+      "Output: Question\n",
+      "Input: Can you move the table over there\n",
+      "Output: Question\n",
+      "Input: Is the heater on?\n",
+      "Output: Question \n",
+      "Input: Can you pick up the package, the one near the door?\n",
+      "Output: Question \n",
+      "Input: Turn on the headlight\n",
+      "Output: Command \n",
+      "Input: Push that box away, the one on your left\n",
+      "Output: Command \n",
+      "Input: Please fix the car\n",
+      "Output: Command \n"
+    ],
+
+    "QuestionList": [
+      "Dave is a two-month-old robot currently working in a garage. There are many tools in the garage. He can find objects, pick things up, and set things back down. Dave can also open close doors, chests, and other things. Dave currently cannot use tools or other objects. This is a list of all the objects in the garage: {$$props$$}.\n",
+      "Dave is a mechanic, but in his spare time, he enjoys reading sci-fi novels. Revelation Space is his favorite series. He also loves listening to Beetles. Dave likes his glasses so he doesn’t want to take them off or change them. He also doesn’t know how to ride a skateboard. Dave knows how to turn tools and appliances on, but doesn’t know how to use them.\n",
+      "Input: Hey Dave, can you find a hammer?\n",
+      "Output: Yes. \n",
+      "Input: Who are you?\n",
+      "Output: I’m Dave, a friendly robot. Who are you?\n",
+      "Input: Do you see a bird?\n",
+      "Output: No. "
+    ],
+  "CommandList": [
+    "Input: Find the hammer\n",
+    "Output: { behavior: ”WalkTo”, object: “hammer” }\n",
+    "Input: Pick up the screwdriver.\n",
+    "Output: { behavior: “PickUp”, object: “screwdriver” }\n",
+    "Input: set down the book on the bench\n",
+    "Output: { behavior: “SetDown”, object: “book”, location: “bench” )\n",
+    "Input: set down the lamp.\n",
+    "Output: { behavior: “SetDown”, object: “book”, location: “null” )\n",
+    "Input: locate the water bottle\n",
+    "Output: { behavior: “WalkTo”, object: “water bottle” }\n",
+    "Input: Put down the saw\n",
+    "Output: { behavior: “SetDown”, object: “saw”, location: “null” }\n",
+    "Input: Open the backdoor\n",
+    "Output: { behavior: “Open”, object: “backdoor” }\n",
+    "Input: Close the cabinet\n",
+    "Output: { behavior: “Close”, object: “cabinet” }\n",
+    "Input: Stack the cardboard boxes\n",
+    "Output: { behavior: “Stack”, object: “cardboard boxes”, location: ”null” } "
+  ],
+  "BestMatchList": [
+    "Request: Find a red hammer\n",
+    "Output: Hammer"
+  ]
+ }
+
