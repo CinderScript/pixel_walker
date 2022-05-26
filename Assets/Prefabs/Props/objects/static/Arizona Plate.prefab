@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0292f36871c1c65459ff979a81d5f49b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: Arazona License Plate
+  Name: Arizona License Plate
   Description: 
   room: {fileID: 0}
 --- !u!1001 &7297150355034961672

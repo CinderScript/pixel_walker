@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Linq;
+using System.Threading.Tasks;
 
 using UnityEngine;
 
@@ -10,9 +12,8 @@ public class SceneGuiInterface : MonoBehaviour
     public GameObject sceneArea;
 
 	private BehaviorController behaviorController;
-	private PropInfo[] props;
+	private AreaPropReferences propReferences;
 
-	// Start is called before the first frame update
 	void Awake()
     {
         behaviorController = sceneArea.GetComponentInChildren<BehaviorController>();
@@ -20,25 +21,52 @@ public class SceneGuiInterface : MonoBehaviour
 
 	private void Start()
 	{
-		props = sceneArea.GetComponentInChildren<AreaProps>().Props;
-		
-		var behavior = new AgentBehaviorProperties(BehaviorType.Navigate, "", "");
-		SelectBehavior(behavior);
+		propReferences = sceneArea.GetComponent<AreaPropReferences>();
+
+		StartNavigationTraining();
+		//TestNavigation()
 	}
 
-	public void SelectBehavior(AgentBehaviorProperties properties)
+	public async void TestNavigation()
 	{
-		behaviorController.StartBehavior(properties);
+		var properties = new AgentBehaviorProperties(BehaviorType.Navigate, "Workshop Light Switch", "");
+		await SelectBehavior(properties);
+		Debug.Log("Done Navigating!");
+	}
+
+	public async Task SelectBehavior(AgentBehaviorProperties properties)
+	{
+		var target = propReferences.GetProp(properties.Object).transform;
+		var propName = target.GetComponent<PropInfo>().Name;
+
+		if (target)
+		{
+			await behaviorController.StartBehavior(properties.Behavior, target);
+		}
+		else
+		{
+			throw new Exception( $"{propName} not found!" );
+		}
+
+	}
+
+	public void StartNavigationTraining()
+	{
+		// get each behavior controller and start them all on training.
+		var controllers = FindObjectsOfType<BehaviorController>();
+		foreach (var controller in controllers)
+		{
+			controller.TrainNavigation();
+		}
 	}
 
 	public void StopBehavior()
 	{
-		behaviorController.StopBehavior();
+		behaviorController.StopCurrentBehavior();
 	}
 
 	public string GetPropsList()
 	{
-		string[] names = props.Select(prop => prop.Name).ToArray();
-		return string.Join(", ", names);
+		return propReferences.GetAllPropNames();
 	}
 }

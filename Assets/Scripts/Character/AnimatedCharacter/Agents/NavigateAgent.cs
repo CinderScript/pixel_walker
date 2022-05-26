@@ -13,13 +13,16 @@ public class NavigateAgent : AgentBase
 	public float success_distance = 0.35f;
 
 	[Header("Assigned at RTime")]
-	public SpawnPointReferences spawnPoints;
-	public AreaProps areaProps;
-	public Room currentRoom;
-	public Room targetRoom;
-	public bool isCurrentlyColliding = false;
-	public float distanceToTarget;
-	public CollisionThrower collisionThrower;
+	[SerializeField]
+	private RoomName currentRoom;
+	[SerializeField]
+	private Room targetRoom;
+	[SerializeField]
+	private bool isCurrentlyColliding = false;
+	[SerializeField]
+	private float distanceToTarget;
+	[SerializeField]
+	private CollisionThrower collisionThrower;
 
 	// REWARD WEIGHTS
 	private const float SUCCESS_REWARD = 5;
@@ -28,8 +31,6 @@ public class NavigateAgent : AgentBase
 	private const float COLLISION_PENALTY_DEFAULT = -0.002f;
 	private float collisionPenalty;
 
-	private Vector3 startPos;
-	private VectorSensorComponent targetRoomSensorComponent;
 	int numberOfRooms;
 
 	// used to detect if the agent is currently colliding
@@ -41,39 +42,21 @@ public class NavigateAgent : AgentBase
 		collisionThrower = agentBody.GetComponent<CollisionThrower>();
 		collisionThrower.OnCharacterCollision += CharacterCollisionHandler;
 
-		var root = GetComponentInParent<CharacterRoot>();
-		startPos = root.gameObject.transform.position;
-
 		// GET SCENE REFERENCES - spawn points, props, controller movement value input location
 		playerArea = GetComponentInParent<AgentArea>().transform;
 
-		spawnPoints = playerArea.GetComponentInChildren<SpawnPointReferences>();
-		areaProps = playerArea.GetComponentInChildren<AreaProps>();
-
 		numberOfRooms = Enum.GetValues(typeof(RoomName)).Length;
-
-		targetRoomSensorComponent = transform.GetComponent<VectorSensorComponent>();
 	}
 
-	public override void OnEpisodeBegin()
+	protected override void initializeBehavior()
 	{
-		// Randomly place the agent at one of the spawn locations
-		var spawn = spawnPoints.SelectRandomLocation();
-		var spawnPos = spawn.transform.position;
-		spawnPos.y = startPos.y; // preserve starting height
-		agentBody.transform.position = spawnPos;
-
-		// select a random prop to find
-		target = areaProps.SelectRandomProp().transform;
 		targetRoom = target.GetComponent<PropInfo>().room;
 
-		// get the starting room
-		currentRoom = spawn.room;
-
-		// get penalty for this lesson in curriculum
+		// get penalty for this lesson in curriculum - only used during training
 		collisionPenalty = Academy.Instance.EnvironmentParameters
 			.GetWithDefault("collision_penalty", COLLISION_PENALTY_DEFAULT);
 	}
+
 	public override void CollectObservations(VectorSensor sensor)
 	{
 		//Position of target relative to character's position
@@ -92,7 +75,7 @@ public class NavigateAgent : AgentBase
 
 		// add one hot encoding for the current room of player
 		// add one hot encoding for the room of the target
-		sensor.AddOneHotObservation((int)currentRoom.RoomName, numberOfRooms);
+		sensor.AddOneHotObservation((int)currentRoom, numberOfRooms);
 		sensor.AddOneHotObservation((int)targetRoom.RoomName, numberOfRooms); // make goal-signal?
 
 		// report and consume any collisions
@@ -114,30 +97,17 @@ public class NavigateAgent : AgentBase
 		sensor.AddObservation(isCurrentlyColliding);
 
 	}
+
 	public override void OnActionReceived(ActionBuffers actions)
 	{
 		movementValues.bodyForwardMovement = actions.DiscreteActions[0];
 		movementValues.bodyRotation = actions.DiscreteActions[1];
-
 		AssignRewards();
-	}
-	/// <summary>
-	/// Heuristic is called where there is not Model assigned and
-	/// ML-Agents is not training. Heuristic checks for user input
-	/// and assignes that input to the agents action buffer, which
-	/// the OnActionsRecieved base method will use to move the agent.
-	/// </summary>
-	/// <param name="actionsOut">action buffer to populate</param>
-	public override void Heuristic(in ActionBuffers actionsOut)
-	{
-		var actions = actionsOut.DiscreteActions;
-		actions[0] = userInputValues.forward;
-		actions[1] = userInputValues.rotate;
 	}
 	
 	public void SetCurrentRoom(Room room)
 	{
-		currentRoom = room;
+		currentRoom = room.RoomName;
 	}
 
 	private void AssignRewards()
@@ -147,7 +117,7 @@ public class NavigateAgent : AgentBase
 		
 		// don't let the agent trigger the reward based on distance if the agent
 		// is not in the target's room.
-		if (currentRoom.RoomName == targetRoom.RoomName)
+		if (currentRoom == targetRoom.RoomName)
 		{
 			// get distance to target - ignore height displacement
 			Vector3 charPos = new Vector3(transform.position.x, 0, transform.position.z);
@@ -156,9 +126,9 @@ public class NavigateAgent : AgentBase
 			distanceToTarget = Vector3.Distance(charPos, targetPos);
 			if (distanceToTarget < success_distance)
 			{
+				StopBehavior();		// we are finished
 				wasRewarded = true;
 				AddReward(SUCCESS_REWARD);
-				//Debug.Log("Reward: " + GetCumulativeReward());
 				EndEpisode();
 			}
 		}

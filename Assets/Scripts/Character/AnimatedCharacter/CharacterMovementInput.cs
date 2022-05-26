@@ -15,6 +15,8 @@
  *	Date:			05-23-2022
  */
 
+using System;
+
 using UnityEngine;
 
 [DisallowMultipleComponent]
@@ -28,4 +30,13 @@ public class CharacterMovementInput : MonoBehaviour
 	public int handForwardMovement;
 	public int handSideMovement;
 	public int handVerticalMovement;
+
+	internal void ClearValues()
+	{
+		bodyForwardMovement = 0;
+		bodyRotation = 0;
+		handForwardMovement = 0;
+		handSideMovement = 0;
+		handVerticalMovement = 0;
+	}
 }
