@@ -252,6 +252,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: InGameMenu
       objectReference: {fileID: 0}
+<<<<<<< Updated upstream
+=======
+    - target: {fileID: 4561720922364505256, guid: 43cfa7986a874404f8bbbe65ad999985, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4561720922364505257, guid: 43cfa7986a874404f8bbbe65ad999985, type: 3}
+      propertyPath: sourceAsset
+      value: 
+      objectReference: {fileID: 9197481963319205126, guid: 5f8bfc868908cd44dbbbe8c6bc500b97, type: 3}
+>>>>>>> Stashed changes
     - target: {fileID: 4561720922364505262, guid: 43cfa7986a874404f8bbbe65ad999985, type: 3}
       propertyPath: m_RootOrder
       value: 0

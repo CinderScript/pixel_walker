@@ -1,4 +1,7 @@
-using Newtonsoft.Json.Linq;
+//**Instructions on getting 'Newtonsoft.Json' from NuGet on Visual Studio  
+//https://docs.microsoft.com/en-us/nuget/quickstart/install-and-use-a-package-in-visual-studio
+
+using Newtonsoft.Json.Linq; // <-- Get 'Newtonsoft.Json' if unidentified namespace**
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,27 +10,44 @@ using System.Threading.Tasks;
 using System.Globalization;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using UnityEngine;
 
 public class Gpt3Connection
 {
     public string ApiKey { get; }
 
-    public string Engine;
+    public EngineType GptEngine{ get;}
 
     // any other relevent properties
 
-    public Gpt3Connection(string apiKey)
+    public Gpt3Connection(string apiKey, EngineType gptEngine)
     {
         ApiKey = apiKey;
+        GptEngine = gptEngine;
     }
 
-    public Tuple<string, Exception> GenerateText(string prompt, string engine)
+    
+    public Tuple<string, Exception> GenerateText(string prompt)
     {
-        Tuple<string, Exception> result = CallOpenAI(250, prompt, engine, 0.7, 1, 0, 0);
-        return result;
+        string engineUsed = "";
+        if(GptEngine == EngineType.Curie){
+            engineUsed = "text-curie-001";
+        }
+        else if(GptEngine == EngineType.Babbage){
+            engineUsed = "text-babbage-001";
+        }
+        else if(GptEngine == EngineType.Ada){
+            engineUsed = "text-ada-001";
+        }
+        else{
+            engineUsed = "text-davinci-002";
+        }
+
+        Tuple<string, Exception> res = CallOpenAI(250, prompt, engineUsed, 0.7, 1, 0, 0);
+        return res;
     }
 
-    public Tuple<string, Exception> CallOpenAI(int tokens, string input, string engine,
+    private Tuple<string, Exception> CallOpenAI(int tokens, string input, string engine,
         double temperature, int topP, int frequencyPenalty, int presencePenalty)
     {
         Exception e = null;
@@ -49,15 +69,18 @@ public class Gpt3Connection
 
                     request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
 
-                    var response = await httpClient.SendAsync(request).Result;
-                    var json =  response.Content.ReadAsStringAsync().Result;
+                    var response = httpClient.SendAsync(request).Result;
+                    string json = response.Content.ReadAsStringAsync().Result;
 
                     var parsedJSON = JObject.Parse(json);
+                    var modelType = parsedJSON["model"];
                     var replyText = parsedJSON["choices"][0]["text"];
 
                     if (json != null)
                     {
+                        //string fullResoponse =  + " \nmodel used: " + modelType.ToString().Trim();
                         replywithException = Tuple.Create(replyText.ToString().Trim(), e);
+                        Debug.Log(modelType.ToString());
                     }
                 }
             }
