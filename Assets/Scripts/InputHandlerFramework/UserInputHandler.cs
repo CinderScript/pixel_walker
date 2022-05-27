@@ -58,6 +58,7 @@ public class UserInputHandler
 				try
 				{
                     agentBehaviorProperties = await parseCommand(userInput);
+                    
                 }
                 catch (Exception)
 				{
@@ -78,6 +79,7 @@ public class UserInputHandler
 					try
 					{
                         objectBestMatch = await getObjectBestMatch(nameOfUserRequestedObject);
+                        generatedText = objectBestMatch;
                     }
                     catch (Exception)
 					{
