@@ -1,3 +1,19 @@
+/**
+* Project: Pixel Walker
+*
+* Description: PromptLoader is a class that holds the json object
+* read by the GetPromptsFromFile to access the prompts within the object 
+* so the input handler can use them.
+* 
+* Author: Pixel Walker -
+* Maynard, Gregory
+* Shubhajeet, Baral
+* Do, Khuong
+* Nguyen, Thuong
+*
+* Date: 05-26-2022
+*/
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,9 +22,11 @@ using System.IO;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
+/** class PromptLoader takes in a filepath that contains prompts 
+*   and send that to input handler.
+*/
 public class PromptLoader
 {
-
     // This will read Prompts from file and deserialize them into C# objects
     public GptPrompts GetPromptsFromFile(string filePath)
     {
@@ -29,6 +47,10 @@ public class PromptLoader
     }
 }
 
+/** Class GptPrompts will have string array properties to get the array from
+*   json object, string properties so the prompts can be accessed after going through
+*   the String.Join process. 
+*/
 public class GptPrompts
 {
     // initialize the string[] to hold the string object in arrays
