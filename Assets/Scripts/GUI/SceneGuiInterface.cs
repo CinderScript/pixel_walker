@@ -37,7 +37,7 @@ public class SceneGuiInterface : MonoBehaviour
 
 	public async void Test()
 	{
-		var properties = new AgentBehaviorProperties(BehaviorType.PickUp, "Workshop Light Switch", "");
+		var properties = new AgentBehaviorProperties(BehaviorType.Activate, "Workshop Light Switch", "");
 		var result = await StartBehavior(properties);
 		if (result.Cancelled)
 		{

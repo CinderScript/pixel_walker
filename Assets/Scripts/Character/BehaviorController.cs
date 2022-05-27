@@ -59,6 +59,19 @@ public class BehaviorController : MonoBehaviour
 					return await Navigate(target);
 				}
 
+			case BehaviorType.Activate:
+				{
+					var result = await Navigate(target);
+					if (result.Success)
+					{
+						return await Activate(target);
+					}
+					else
+					{
+						return result;
+					}
+				}
+
 			case BehaviorType.PickUp:
 				{
 					var result = await Navigate(target);
@@ -73,19 +86,11 @@ public class BehaviorController : MonoBehaviour
 				}
 
 			case BehaviorType.Drop:
-				currentActiveAgent = agents.Find((agent) => agent is DropAgent);
-				break;
-
-			case BehaviorType.Activate:
-				currentActiveAgent = agents.Find((agent) => agent is ActivateAgent);
-				break;
+					return await Drop();
 
 			default:
-				Debug.Log($"Behavior type {behavior} not recognized");
-				break;
+				throw new System.Exception("Behavior not implemented");
 		}
-
-		return null;
 	}
 
 	private async Task<BehaviorResult> Navigate(Transform target)
@@ -93,10 +98,20 @@ public class BehaviorController : MonoBehaviour
 		currentActiveAgent = agents.Find((agent) => agent is NavigateAgent);
 		return await currentActiveAgent?.PerformeBehavior(target);
 	}
+	private async Task<BehaviorResult> Activate(Transform target)
+	{
+		currentActiveAgent = agents.Find((agent) => agent is ActivateAgent);
+		return await currentActiveAgent?.PerformeBehavior(target);
+	}
 	private async Task<BehaviorResult> PickUp(Transform target)
 	{
 		currentActiveAgent = agents.Find((agent) => agent is PickUpAgent);
 		return await currentActiveAgent?.PerformeBehavior(target);
+	}
+	private async Task<BehaviorResult> Drop()
+	{
+		currentActiveAgent = agents.Find((agent) => agent is DropAgent);
+		return await currentActiveAgent?.PerformeBehavior();
 	}
 
 	public void CancelCurrentBehavior()
