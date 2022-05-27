@@ -19,42 +19,70 @@ public class UserInputHandler
         prompts = PromptLoader.GetPromptsFromFile(gptPromptsFilePath);
     }
 
-    public GptResponse GetGptResponce(string userInput, out Exception exception)
+    public async Task<GptResponse> GetGptResponce(string userInput)
     {
-        //Exception ex;
-        InputType inputType = classifyText(userInput, out exception);
+        InputType inputType;
+
+        try
+		{
+            inputType = await classifyText(userInput);
+        }
+        catch (Exception)
+		{
+
+			throw;
+		}
         string generatedText = "Error: No Responce Saved";
 
         AgentBehaviorProperties agentBehaviorProperties = null;
+        string objectBestMatch = "";
 
         switch (inputType)
         {
             case InputType.Unknown:
                 // TODO: send back responce or check again
-                exception = new Exception("The user's input could not be classified.");
-                //exception = ex;
-                return null;
+                throw new Exception("The user's input could not be classified.");
 
             case InputType.Question:
-                generatedText = answerQuestion(userInput, out exception);
+				try
+				{
+                    generatedText = await answerQuestion(userInput);
+                }
+                catch (Exception)
+				{
+					throw;
+				}
                 break;
 
             case InputType.Command:
-                agentBehaviorProperties = parseCommand(userInput, out exception);
+				try
+				{
+                    agentBehaviorProperties = await parseCommand(userInput);
+                }
+                catch (Exception)
+				{
+					throw;
+				}
 
                 // error checking - if this is null (couldn't parse) then send exception
                 if (agentBehaviorProperties == null)
                 {
                     //exception = new Exception("Couldn't parse command");
-                    //exception = ex;
                     return null;
                 }
                 else
                 {   // COMMAND WAS PARSED
                     string nameOfUserRequestedObject = agentBehaviorProperties.Object;
 
-                    // TODO: GET BEST MATCH TO ITEM IN SCENE IF COMMAND
-                    string objectBestMatch = getObjectBestMatch(nameOfUserRequestedObject, out exception);
+					// TODO: GET BEST MATCH TO ITEM IN SCENE IF COMMAND
+					try
+					{
+                        objectBestMatch = await getObjectBestMatch(nameOfUserRequestedObject);
+                    }
+                    catch (Exception)
+					{
+						throw;
+					}
                 }
                 break;
         }
@@ -64,11 +92,10 @@ public class UserInputHandler
             generatedText,
             agentBehaviorProperties);
 
-        exception = null;
         return gptResponce;
     }
 
-    private InputType classifyText(string userInput, out Exception ex)
+    private async Task<InputType> classifyText(string userInput)
     {
         string promptStart = prompts.InputClassifier;
 
@@ -76,11 +103,17 @@ public class UserInputHandler
         string fullPrompt = promptStart + "Input: " + userInput;
         fullPrompt = fullPrompt + "Output:";
 
-        Tuple<string, Exception> responce = connection.GenerateText(fullPrompt);
+        string responce;
+        try
+		{
+            responce = await connection.GenerateText(fullPrompt);
+        }
+        catch (Exception)
+		{
+			throw;
+		}
 
-        string answer = responce.Item1.Trim();
-
-        ex = responce.Item2;
+        string answer = responce;
 
         // TODO: CODE TO SELECT CORRECT INPUT CLASSIFICATION
         InputType type; // todo
@@ -100,7 +133,7 @@ public class UserInputHandler
         return type;
     }
 
-    private string answerQuestion(string userInput, out Exception ex)
+    private async Task<string> answerQuestion(string userInput)
     {
         string promptStart = prompts.QuestionResponder;
 
@@ -108,17 +141,20 @@ public class UserInputHandler
         string fullPrompt = promptStart + "Input: " + userInput;
         fullPrompt = fullPrompt + "Output:";
 
-        Tuple<string, Exception> responce = connection.GenerateText(fullPrompt);
+        string responce;
+		try
+		{
+            responce = await connection.GenerateText(fullPrompt);
+        }
+        catch (Exception)
+		{
+			throw;
+		}
 
-        // TODO: HANDLE EXCEPTION
-
-        string answer = responce.Item1;
-        ex = responce.Item2;
-
-        return answer;
+        return responce;
     }
-
-    private AgentBehaviorProperties parseCommand(string userInput, out Exception ex)
+	
+    private async Task<AgentBehaviorProperties> parseCommand(string userInput)
     {
         string promptStart = prompts.CommandParser;
 
@@ -126,22 +162,28 @@ public class UserInputHandler
         string fullPrompt = promptStart + "Input: " + userInput;
         fullPrompt = fullPrompt + "Output:";
 
-        Tuple<string, Exception> responce = connection.GenerateText(fullPrompt);
+        string responce;
+		try
+		{
+            responce = await connection.GenerateText(fullPrompt);
+
+		}
+		catch (Exception)
+		{
+			throw;
+		}
 
         // TODO: HANDLE EXCEPTION
-
-        string responceText = responce.Item1;
-        ex = responce.Item2;
 
         BehaviorType behavior = BehaviorType.Unknown;
         string sceneObject = null;
         string location = null;
 
-        if (responceText.Contains("behavior"))
+        if (responce.Contains("behavior"))
         {
-            int startIndex = responceText.IndexOf("behavior: ") + "behavior: ".Length;
-            int endIndex = responceText.IndexOf(",");
-            var behaviorString = responceText.Substring(startIndex, endIndex - startIndex).Trim();
+            int startIndex = responce.IndexOf("behavior: ") + "behavior: ".Length;
+            int endIndex = responce.IndexOf(",");
+            var behaviorString = responce.Substring(startIndex, endIndex - startIndex).Trim();
 
             if (behaviorString == "Navigate")
             {
@@ -169,28 +211,28 @@ public class UserInputHandler
             }
         }
 
-        if (responceText.Contains("object"))
+        if (responce.Contains("object"))
         {
-            int startIndex = responceText.IndexOf("object: ") + "object: ".Length;
+            int startIndex = responce.IndexOf("object: ") + "object: ".Length;
             int endIndex = 0;
 
-            if (responceText.Contains("location"))
+            if (responce.Contains("location"))
             {
-                endIndex = responceText.IndexOf(',', responceText.IndexOf(',') + 1);
+                endIndex = responce.IndexOf(',', responce.IndexOf(',') + 1);
             }
             else
             {
-                endIndex = responceText.IndexOf('}');
+                endIndex = responce.IndexOf('}');
             }
 
-            sceneObject = responceText.Substring(startIndex, endIndex - startIndex).Trim();
+            sceneObject = responce.Substring(startIndex, endIndex - startIndex).Trim();
         }
 
-        if (responceText.Contains("location"))
+        if (responce.Contains("location"))
         {
-            int startIndex = responceText.IndexOf("location: ") + "location: ".Length;
-            int endIndex = responceText.IndexOf('}');
-            location = responceText.Substring(startIndex, endIndex - startIndex).Trim();
+            int startIndex = responce.IndexOf("location: ") + "location: ".Length;
+            int endIndex = responce.IndexOf('}');
+            location = responce.Substring(startIndex, endIndex - startIndex).Trim();
         }
 
         // TODO: use jsonFormattedText to create object.  need to deserialize responce
@@ -200,15 +242,15 @@ public class UserInputHandler
         // IF THERE IS AN ERROR AND WE CAN'T SERIALIZE, RETURN NULL - FAILED, Try again?
         if (!success)
         {
-            return null;
-        }
+			throw new Exception("Error: Couldn't parse command");
+		}
 
         AgentBehaviorProperties parse = new AgentBehaviorProperties(behavior, sceneObject, location);
 
         return parse;
     }
 
-    private string getObjectBestMatch(string sceneObject, out Exception exception)
+    private async Task<string> getObjectBestMatch(string sceneObject)
     {
         string promptStart = prompts.BestMatchSelector;
 
@@ -216,12 +258,18 @@ public class UserInputHandler
         string fullPrompt = promptStart + "Input: " + sceneObject;
         fullPrompt = fullPrompt + "Output:";
 
-        Tuple<string, Exception> responce = connection.GenerateText(fullPrompt);
+        string responce;
+        try
+        {
+            responce = await connection.GenerateText(fullPrompt);
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
 
         // TODO: HANDLE EXCEPTION
-
-        string answer = responce.Item1.Trim();
-        exception = responce.Item2;
 
         //we dont have list yet so List for now
         string[] props = { "Hammer", "Saw",
@@ -230,14 +278,13 @@ public class UserInputHandler
         int trial = 1;
         //Loop if responce not in tool and trial under 4, (so we can do 3 times)
 
-        while (!((props.Contains(answer)) || (trial < 4)))
+        while (!((props.Contains(responce)) || (trial < 4)))
         {
-            responce = connection.GenerateText(fullPrompt);
-            answer = responce.Item1.Trim();
+            responce = await connection.GenerateText(fullPrompt);
             trial++;
         }
 
-        return answer;
+        return responce;
     }
 
 }

@@ -152,7 +152,7 @@ public class RuntimeGUI : MonoBehaviour
     }
 
     //Calls upon The InputHandlerFramework's UserInputHandler.cs  to send and parse user input, sends error if API key is missing.
-    void SendToGPT()
+    async void SendToGPT()
     {
         gptParseOutput.value = "Output Here...";
         daveOutput.value = "Output Here...";
@@ -166,7 +166,19 @@ public class RuntimeGUI : MonoBehaviour
         else
         {
             handler = new UserInputHandler(keyString, "TODO: *fileprompts.txt*", engine);
-            GptResponse responce = handler.GetGptResponce(userInput.value, out ex);
+
+            GptResponse responce;
+            try
+			{
+                responce = await handler.GetGptResponce(userInput.value);
+            }
+			catch (Exception)
+			{
+
+				throw;
+			}
+            
+            
             Debug.Log(responce.GeneratedText);
             var responceProperties = responce.BehaviorProperties;
             if (responce.Type == InputType.Command)
@@ -243,7 +255,7 @@ public class RuntimeGUI : MonoBehaviour
     //Sets keystring variable to entered the API key
     //Pops up window on excution to say key has been entered
     //Will pop up cautionary message if left empty
-    void SetApiKey()
+    async void SetApiKey()
     {
         string tempText = "";
         keyString = apiInput.value;
@@ -255,7 +267,17 @@ public class RuntimeGUI : MonoBehaviour
             Debug.Log(keyString);
             engine = EngineType.Ada;
             handler = new UserInputHandler(keyString, "TODO: *fileprompts.txt*", engine);
-            GptResponse responce = handler.GetGptResponce("-+-", out ex);
+
+            GptResponse responce;
+            try
+			{
+                responce = await handler.GetGptResponce("-+-");
+            }
+            catch (Exception)
+			{
+				throw;
+			}
+			
             if (ex != null){
                 tempText = "Key not valid. Try again\n";
                 Debug.Log(ex.Message);

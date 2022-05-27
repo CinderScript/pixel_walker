@@ -11,6 +11,7 @@ using System.Globalization;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using UnityEngine;
+using System.Threading;
 
 public class Gpt3Connection
 {
@@ -27,7 +28,7 @@ public class Gpt3Connection
     }
 
     
-    public Tuple<string, Exception> GenerateText(string prompt)
+    public async Task<string> GenerateText(string prompt)
     {
         string engineUsed = "text-davinci-002";
         if(GptEngine == EngineType.Curie){
@@ -46,15 +47,14 @@ public class Gpt3Connection
             engineUsed = "text-davinci-002";
         }
 
-        Tuple<string, Exception> res = CallOpenAI(250, prompt, engineUsed, 0.7, 1, 0, 0);
+        var res = await CallOpenAI(250, prompt, engineUsed, 0.7, 1, 0, 0);
         return res;
     }
 
-    private Tuple<string, Exception> CallOpenAI(int tokens, string input, string engine,
+    private async Task<string> CallOpenAI(int tokens, string input, string engine,
         double temperature, int topP, int frequencyPenalty, int presencePenalty)
     {
-        Exception e = null;
-        Tuple<string, Exception> replywithException = null;
+        string reply = null;
 
         var openAiKey = ApiKey;
         var apiCall = "https://api.openai.com/v1/engines/" + engine + "/completions";
@@ -72,26 +72,26 @@ public class Gpt3Connection
 
                     request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
 
-                    var response = httpClient.SendAsync(request).Result;
-                    string json = response.Content.ReadAsStringAsync().Result;
+                    var response = await httpClient.SendAsync(request);					
+                    var json = await response.Content.ReadAsStringAsync();
 
-                    var parsedJSON = JObject.Parse(json);
+					var parsedJSON = JObject.Parse(json);
                     var modelType = parsedJSON["model"];
                     var replyText = parsedJSON["choices"][0]["text"];
-
+					
                     if (json != null)
                     {
                         //string fullResoponse =  + " \nmodel used: " + modelType.ToString().Trim();
-                        replywithException = Tuple.Create(replyText.ToString().Trim(), e);
+                        reply = replyText.ToString().Trim();
                         Debug.Log(modelType.ToString());
                     }
                 }
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            replywithException = Tuple.Create("ERROR", ex);
+            throw;
         }
-        return replywithException;
+        return reply;
     }
 }
