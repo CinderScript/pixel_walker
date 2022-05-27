@@ -29,7 +29,7 @@ public class Gpt3Connection
     
     public Tuple<string, Exception> GenerateText(string prompt)
     {
-        string engineUsed = "";
+        string engineUsed = "text-davinci-002";
         if(GptEngine == EngineType.Curie){
             engineUsed = "text-curie-001";
         }
@@ -38,6 +38,9 @@ public class Gpt3Connection
         }
         else if(GptEngine == EngineType.Ada){
             engineUsed = "text-ada-001";
+        }
+        else if(GptEngine == EngineType.Davinci){
+            engineUsed = "text-davinci-002";
         }
         else{
             engineUsed = "text-davinci-002";

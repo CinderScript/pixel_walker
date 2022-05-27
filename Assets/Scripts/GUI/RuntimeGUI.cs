@@ -5,10 +5,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using System.Text.RegularExpressions;
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 
 public class RuntimeGUI : MonoBehaviour
 {
@@ -43,10 +39,6 @@ public class RuntimeGUI : MonoBehaviour
     private VisualElement apiWindow;
     private Button apiSubmitBtn;
 
-<<<<<<< Updated upstream
-   
-    //Elements for error pop up screen
-=======
     
     //Elements for GPT-3 Engine Selection Window (Invisible at Runtime)
     private VisualElement engineWindow;
@@ -56,20 +48,14 @@ public class RuntimeGUI : MonoBehaviour
     
 
     //Elements for error pop up screen (Invisible at Runtime)
->>>>>>> Stashed changes
     private VisualElement infoWindow;
     private Label errorLabel;
 
 
     //Variables to store input and current selected action
-<<<<<<< Updated upstream
-    string currentAction;
-    string commandInput;
-=======
     
 
     Exception ex;
->>>>>>> Stashed changes
 
     //List used to fill actions radio button group
     List<string> actionlist = new List<String>();
@@ -134,24 +120,15 @@ public class RuntimeGUI : MonoBehaviour
         Debug.Log(actionRadioGroup.choices.ToString()); // prints action list to console
         
         //Fuctionality of all buttons added here
-<<<<<<< Updated upstream
-        submit.clicked += ParseGPT3Reply;
-        menuBtn.clicked += OnMainMenuClicked;       
-=======
         submit.clicked += SendToGPT;
-        menuBtn.clicked += ToggleMenu;
->>>>>>> Stashed changes
+        menuBtn.clicked += OnMainMenuClicked;
         resetBtn.clicked += ReloadScene;
         menuResetBtn.clicked += ReloadScene;
         levelSelectBtn.clicked += OpenSceneMenu;
         apiKeyBtn.clicked += OpenApiInputMenu;
-<<<<<<< Updated upstream
-        apiSubmitBtn.clicked += () => StartCoroutine(SetApiKey());
-=======
         apiSubmitBtn.clicked += SetApiKey;
         engineMenuBtn.clicked += OpenEngineMenu;
         engineConfirmBtn.clicked += SelectEngine;
->>>>>>> Stashed changes
 
         //Level select buttons -- refer to scene build order
         levelOneBtn.clicked += () => SceneManager.LoadScene(0);
@@ -163,41 +140,6 @@ public class RuntimeGUI : MonoBehaviour
 
     }
     public void SetCurrentBehavior(string behavior)
-<<<<<<< Updated upstream
-	{
-       if(!actionlist.Contains(behavior)){
-           Debug.Log("Error: Action not in list"); 
-       }
-       else{ 
-           actionRadioGroup.value = actionlist.IndexOf(behavior);
-       }
-	}
-
-    //Calls upon GPTHandler.cs to send and parse user input, sends error if API key is missing.
-    void ParseGPT3Reply(){
-        //Prints error if there is no API Key present
-        if(GPTHandler.keyString == ""){
-            errorLabel.text = "ERROR: NO KEY API PROVIDED. \n Submit one to Menu > API key.";
-            infoWindow.style.display = DisplayStyle.Flex;
-            Debug.Log("ERROR: NO KEY API PROVIDED");
-        }
-        else{
-            Tuple<string,string> parsedReply = PromptClassifier.ClassifyString(userInput.value);
-            Debug.Log(parsedReply);
-            gptParseOutput.value = parsedReply.Item1;
-            daveOutput.value = parsedReply.Item2;
-            string convertedToStr = parsedReply.Item2;
-            if (gptParseOutput.value == "Command"){
-                int Pos1 = convertedToStr.IndexOf("behavior: ") + "behavior: ".Length;
-                int Pos2 = convertedToStr.IndexOf(",");
-                string finalStr = convertedToStr.Substring(Pos1, Pos2-Pos1);
-                Debug.Log(finalStr);
-                SetCurrentBehavior(finalStr.Trim());
-            }
-            else if (gptParseOutput.value == "ERROR"){
-                errorLabel.text ="ERROR: " + parsedReply.Item2;
-                infoWindow.style.display = DisplayStyle.Flex;
-=======
     {
         if (!actionlist.Contains(behavior))
         {
@@ -239,7 +181,6 @@ public class RuntimeGUI : MonoBehaviour
             else
             {
                 StartCoroutine(CreatePopUp(ex.Message, DELAY));
->>>>>>> Stashed changes
             }
         }  
     }
@@ -270,11 +211,6 @@ public class RuntimeGUI : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
-    void SetCurrentActionHelper(){
-        currentAction = userInput.value;
-        SetCurrentBehavior(currentAction);
-    }
-
     void OpenSceneMenu(){
         if(levelSelectWindow.style.display == DisplayStyle.Flex){
             levelSelectWindow.style.display = DisplayStyle.None;
@@ -290,7 +226,7 @@ public class RuntimeGUI : MonoBehaviour
         engineWindow.style.display = DisplayStyle.Flex;
     }
 
-<<<<<<< Updated upstream
+    
     void OpenApiInputMenu(){
         if(apiWindow.style.display != DisplayStyle.Flex){
             apiWindow.style.display = DisplayStyle.Flex;
@@ -301,11 +237,7 @@ public class RuntimeGUI : MonoBehaviour
         }  
     }
 
-    IEnumerator SetApiKey(){
-        GPTHandler.keyString = apiInput.value;
-        apiWindow.style.display = DisplayStyle.None;
-        errorLabel.text = "Key has been set.";
-=======
+
 
     //Sets keystring variable to entered the API key
     //Pops up window on excution to say key has been entered
@@ -314,7 +246,6 @@ public class RuntimeGUI : MonoBehaviour
     {
         string tempText = "";
         keyString = apiInput.value;
-        var temp = EngineType.Davinci;
         if(apiInput.value == ""){
             ex = new Exception("Field cannot Be left blank.");
             tempText = ex.Message;
@@ -323,7 +254,7 @@ public class RuntimeGUI : MonoBehaviour
             Debug.Log(keyString);
             engine = EngineType.Ada;
             handler = new UserInputHandler(keyString, "TODO: *fileprompts.txt*", engine);
-            GptResponse responce = handler.GetGptResponce("{stop}", out ex);
+            GptResponse responce = handler.GetGptResponce("-+-", out ex);
             if (ex != null){
                 tempText = "Key not valid. Try again\n";
                 Debug.Log(ex.Message);
@@ -331,11 +262,10 @@ public class RuntimeGUI : MonoBehaviour
             else{
                 tempText = "Success";
                 ToggleMainUI(true);
-                engine = temp;
-                handler = new UserInputHandler(keyString, "TODO: *fileprompts.txt*", engine);
-            }
-            
+            }    
         }
+        engine = EngineType.Davinci;
+        handler = new UserInputHandler(keyString, "TODO: *fileprompts.txt*", engine);
         StartCoroutine(CreatePopUp(tempText, DELAY));
         Debug.Log(ex.Message);
         //ToggleMainUI(true);
@@ -350,16 +280,14 @@ public class RuntimeGUI : MonoBehaviour
     IEnumerator CreatePopUp(string message, float secondsVisible)
     {
         errorLabel.text = message;
->>>>>>> Stashed changes
         infoWindow.style.display = DisplayStyle.Flex;
         yield return new WaitForSeconds(1);
         infoWindow.style.display = DisplayStyle.None;
         daveInGroup.style.display = DisplayStyle.Flex;
         daveOutGroup.style.display = DisplayStyle.Flex;
         actionRadioGroup.style.display = DisplayStyle.Flex;
+    }
 
-<<<<<<< Updated upstream
-=======
     //Toggles the main UI visibility on or off
     //in: bool (true for visible and false for invisble);
     void ToggleMainUI(bool toggle)
@@ -387,7 +315,6 @@ public class RuntimeGUI : MonoBehaviour
         menuWindow.style.display = DisplayStyle.None;
         levelSelectWindow.style.display = DisplayStyle.None;
         engineWindow.style.display = DisplayStyle.None;
->>>>>>> Stashed changes
     }
     
 
