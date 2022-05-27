@@ -1,9 +1,28 @@
-
+/**
+* Project: Pixel Walker
+*
+* Description: 
+* GptApiKey is a class that saves a key to a file then encrypt it,
+* then if anyone wants to access the program, they need to 
+* decrypt the key file and then they can get the pass key.
+*
+* Author: Pixel Walker -
+* Maynard, Gregory
+* Shubhajeet, Baral
+* Do, Khuong
+* Nguyen, Thuong
+*
+* Date: 05-26-2022
+*/
 using System;
 using System.IO;
 using System.Security.AccessControl;
 
-// the main ApiKey-Handler class
+/** the main ApiKey-Handler class that contains:
+* A method to save the key to file, encrypt it;
+* A method to decrypt the file, get the key;
+* A file path property.
+*/
 class GptApiKey
 {
     public string FilePath { get; }
@@ -37,20 +56,21 @@ class GptApiKey
         }
     }
 
-    // Decrypt a file.
+    // Get the pass key from the encrypted file.
     public string GetKeyFromFile()
     {
         string LockedKey;
         try
         {
-            // The built-in decryption method of System
+            // Decrypt the file
             File.Decrypt(FilePath);
-
+            
+            // Open stream Reader
             using (StreamReader r = new StreamReader(FilePath))
             {
+                // store the key as the string to output
                 LockedKey = r.ReadLine();
             }
-
             return LockedKey;
         }
         catch (Exception)
@@ -59,6 +79,7 @@ class GptApiKey
         }
     }
 
+    // constructor of GptApiKey class with the file path
     public GptApiKey(string filePath)
     {
         FilePath = filePath;
@@ -81,7 +102,6 @@ class GptApiKeyTestDriver
 
             Console.WriteLine("Done");
         }
-        // Catch any thrown error, most likely the UnAuthorizedAccess exception error
         catch (Exception)
         {
             throw;
