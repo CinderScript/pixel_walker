@@ -23,25 +23,42 @@ public class SceneGuiInterface : MonoBehaviour
 	{
 		propReferences = sceneArea.GetComponent<AreaPropReferences>();
 
-		StartNavigationTraining();
-		//TestNavigation()
+		//StartNavigationTraining();
+		Test();
+
+		//StartCoroutine(TriggerAfterSeconds(4));
 	}
 
-	public async void TestNavigation()
+	IEnumerator TriggerAfterSeconds(float sec)
 	{
-		var properties = new AgentBehaviorProperties(BehaviorType.Navigate, "Workshop Light Switch", "");
-		await SelectBehavior(properties);
-		Debug.Log("Done Navigating!");
+		yield return new WaitForSeconds(sec);
+		CancelBehavior();
 	}
 
-	public async Task SelectBehavior(AgentBehaviorProperties properties)
+	public async void Test()
+	{
+		var properties = new AgentBehaviorProperties(BehaviorType.PickUp, "Workshop Light Switch", "");
+		var result = await StartBehavior(properties);
+		if (result.Cancelled)
+		{
+			Debug.Log($"Behavior was cancelled while performing {result.Behavior}.");
+		}
+		else if (result.Success)
+		{
+			Debug.Log($"{result.Behavior} successfully finished!");
+		}
+		else
+			Debug.Log($"{result.Behavior} finished, but without success.");
+	}
+
+	public async Task<BehaviorResult> StartBehavior(AgentBehaviorProperties properties)
 	{
 		var target = propReferences.GetProp(properties.Object).transform;
 		var propName = target.GetComponent<PropInfo>().Name;
 
 		if (target)
 		{
-			await behaviorController.StartBehavior(properties.Behavior, target);
+			return await behaviorController.StartBehavior(properties.Behavior, target);
 		}
 		else
 		{
@@ -60,9 +77,9 @@ public class SceneGuiInterface : MonoBehaviour
 		}
 	}
 
-	public void StopBehavior()
+	public void CancelBehavior()
 	{
-		behaviorController.StopCurrentBehavior();
+		behaviorController.CancelCurrentBehavior();
 	}
 
 	public string GetPropsList()

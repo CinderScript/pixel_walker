@@ -24,6 +24,8 @@ public class NavigateAgent : AgentBase
 	[SerializeField]
 	private CollisionThrower collisionThrower;
 
+	public override BehaviorType MyBehaviorType => BehaviorType.Navigate;
+
 	// REWARD WEIGHTS
 	private const float SUCCESS_REWARD = 5;
 	private const float TIME_PENALTY = -0.001f;
@@ -37,8 +39,10 @@ public class NavigateAgent : AgentBase
 	// with an obstical so it can be used as an observation
 	private ControllerColliderHit lastHit;
 
-	private void Awake()
+	protected override void Awake()
 	{
+		base.Awake();
+		
 		collisionThrower = agentBody.GetComponent<CollisionThrower>();
 		collisionThrower.OnCharacterCollision += CharacterCollisionHandler;
 
@@ -46,6 +50,8 @@ public class NavigateAgent : AgentBase
 		playerArea = GetComponentInParent<AgentArea>().transform;
 
 		numberOfRooms = Enum.GetValues(typeof(RoomName)).Length;
+		
+		
 	}
 
 	protected override void initializeBehavior()
@@ -126,10 +132,9 @@ public class NavigateAgent : AgentBase
 			distanceToTarget = Vector3.Distance(charPos, targetPos);
 			if (distanceToTarget < success_distance)
 			{
-				StopBehavior();		// we are finished
 				wasRewarded = true;
 				AddReward(SUCCESS_REWARD);
-				EndEpisode();
+				StopBehavior(true);			// base class signal stop
 			}
 		}
 
@@ -150,7 +155,20 @@ public class NavigateAgent : AgentBase
 		// penalize
 	}
 
-	
+	/// <summary>
+	/// Heuristic is called where there is not Model assigned and
+	/// ML-Agents is not training. Heuristic checks for user input
+	/// and assignes that input to the agents action buffer, which
+	/// the OnActionsRecieved base method will use to move the agent.
+	/// </summary>
+	/// <param name="actionsOut">action buffer to populate</param>
+	public override void Heuristic(in ActionBuffers actionsOut)
+	{
+		var actions = actionsOut.DiscreteActions;
+		actions[0] = userInputValues.forward;
+		actions[1] = userInputValues.rotate;
+	}
+
 	void OnDrawGizmos()
 	{
 		// Draw a yellow sphere at the transform's position

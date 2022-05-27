@@ -5211,10 +5211,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Dave_Animated_GridSensor
       objectReference: {fileID: 0}
-    - target: {fileID: 2300376171901991561, guid: 7df67cb08d519ea41af2f9c64badbc89, type: 3}
-      propertyPath: m_Model
-      value: 
-      objectReference: {fileID: 5022602860645237092, guid: f09e7f2679b504a498b516266e7d0291, type: 3}
     - target: {fileID: 7624586084986249150, guid: 7df67cb08d519ea41af2f9c64badbc89, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.19999981

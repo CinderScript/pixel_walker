@@ -50,22 +50,27 @@ public class BehaviorController : MonoBehaviour
 		startingPositionHeight = agentBody.transform.position.y;
 	}
 
-	public async Task StartBehavior(BehaviorType behavior, Transform target = null, GameObject location = null)
+	public async Task<BehaviorResult> StartBehavior(BehaviorType behavior, Transform target = null, GameObject location = null)
 	{
 		switch (behavior)
 		{
-			case BehaviorType.None:
-				StopCurrentBehavior();
-				break;
-				
 			case BehaviorType.Navigate:
-				await Navigate(target);
-				break;
+				{
+					return await Navigate(target);
+				}
 
 			case BehaviorType.PickUp:
-				await Navigate(target);
-				await PickUp(target);
-				break;
+				{
+					var result = await Navigate(target);
+					if (result.Success)
+					{
+						return await PickUp(target);
+					}
+					else
+					{
+						return result;
+					}
+				}
 
 			case BehaviorType.Drop:
 				currentActiveAgent = agents.Find((agent) => agent is DropAgent);
@@ -79,29 +84,28 @@ public class BehaviorController : MonoBehaviour
 				Debug.Log($"Behavior type {behavior} not recognized");
 				break;
 		}
+
+		return null;
 	}
 
-	private async Task Navigate(Transform target)
+	private async Task<BehaviorResult> Navigate(Transform target)
 	{
 		currentActiveAgent = agents.Find((agent) => agent is NavigateAgent);
-		await currentActiveAgent?.PerformeBehavior(target);
+		return await currentActiveAgent?.PerformeBehavior(target);
 	}
-	private async Task PickUp(Transform target)
+	private async Task<BehaviorResult> PickUp(Transform target)
 	{
 		currentActiveAgent = agents.Find((agent) => agent is PickUpAgent);
-		await currentActiveAgent?.PerformeBehavior(target);
+		return await currentActiveAgent?.PerformeBehavior(target);
 	}
 
-	public void StopCurrentBehavior()
+	public void CancelCurrentBehavior()
 	{
-		StopBehavior(currentActiveAgent);
+		CancelBehavior(currentActiveAgent);
 	}
-
-	void StopBehavior(AgentBase agent)
+	void CancelBehavior(AgentBase agent)
 	{
-		agent.StopBehavior();
-		currentActiveAgent = null;
-
+		agent.CancelBehavior();
 		// stop training in case this is a training session
 		IsTraining = false;
 	}
@@ -111,7 +115,13 @@ public class BehaviorController : MonoBehaviour
 		// is it time for Agent to make a descision?
 		if (academyStepCount % decisionPeriod == 0)
 		{
-			currentActiveAgent?.RequestDecision();
+			if (currentActiveAgent)
+			{
+				if (currentActiveAgent.RequestAcademyStep)
+				{
+					currentActiveAgent.RequestDecision();
+				}
+			}
 		}
 
 		// Act on last decision if there is an active agent
@@ -148,6 +158,7 @@ public class BehaviorController : MonoBehaviour
 				SpawnInRandomLocation();
 			}
 			var randomProp = areaProps.SelectRandomProp().transform;
+
 			await Navigate(randomProp);
 		}
 	}
@@ -165,6 +176,7 @@ public class BehaviorController : MonoBehaviour
 			
 			var randomProp = areaProps.SelectRandomProp().transform;
 			await Navigate(randomProp);
+			await PickUp(randomProp);
 		}
 	}
 

@@ -1,16 +1,16 @@
-using System;
 using System.Collections;
 using System.Threading.Tasks;
 
 using Unity.MLAgents;
-using Unity.MLAgents.Actuators;
-using Unity.MLAgents.Sensors;
-
 using UnityEngine;
 
 [DisallowMultipleComponent]
 public abstract class AgentBase : Agent
 {
+	public abstract BehaviorType MyBehaviorType { get; }
+
+	public bool RequestAcademyStep { get; private set; }
+
 	[Header("Agent")]
 	public GameObject agentBody;
 
@@ -25,9 +25,11 @@ public abstract class AgentBase : Agent
 	protected CharacterMovementInput movementValues;
 
 	// signlals BehaviorFinishAwaiter to return
-	private bool isBehaviorFinished = true;
+	private bool isFinished = false;
+	private bool isCancelled = false;
+	private bool isSuccess = false;
 
-	private void Awake()
+	protected virtual void Awake()
 	{
 		// GET USER INPUT SCRIPT
 		UserInputValues[] userInputScripts = FindObjectsOfType(typeof(UserInputValues)) as UserInputValues[];
@@ -50,43 +52,59 @@ public abstract class AgentBase : Agent
 		// GET SCENE REFERENCES - spawn points, props, controller movement value input location
 		playerArea = GetComponentInParent<AgentArea>().transform;
 		movementValues = playerArea.GetComponentInChildren<CharacterMovementInput>();
+
+		RequestAcademyStep = false;
 	}
 
-	public async Task PerformeBehavior(Transform target = null)
+	public async Task<BehaviorResult> PerformeBehavior(Transform target = null)
 	{
-		isBehaviorFinished = false;
+		isFinished = false;
+		isCancelled = false;
+		isSuccess = false;
+
 		this.target = target;
 		initializeBehavior();
+
+		RequestAcademyStep = true;
 		await BehaviorFinishAwaiter();
-		StopBehavior();
+		RequestAcademyStep = false;
+
+		return new BehaviorResult(MyBehaviorType, isSuccess, isCancelled);
 	}
 	protected abstract void initializeBehavior();
 
-	public void StopBehavior()
+	public void CancelBehavior()
 	{
-		isBehaviorFinished = true;
+		isCancelled = true;
+		StopBehavior(false);  // sets isSuccess true/false
+	}
+
+	protected void StopBehavior(bool success)
+	{
+		isFinished = true;
+		isSuccess = success;
 		movementValues.ClearValues();
+		EndEpisode();
 	}
 
 	IEnumerator BehaviorFinishAwaiter()
 	{
-		while (!isBehaviorFinished)
+		while (!isFinished)
 		{
 			yield return new WaitForFixedUpdate();
 		}
 	}
+}
 
-	/// <summary>
-	/// Heuristic is called where there is not Model assigned and
-	/// ML-Agents is not training. Heuristic checks for user input
-	/// and assignes that input to the agents action buffer, which
-	/// the OnActionsRecieved base method will use to move the agent.
-	/// </summary>
-	/// <param name="actionsOut">action buffer to populate</param>
-	public override void Heuristic(in ActionBuffers actionsOut)
+public class BehaviorResult
+{
+	public BehaviorType Behavior { get; }
+	public bool Success { get; }
+	public bool Cancelled { get; }
+	public BehaviorResult(BehaviorType behavior, bool success, bool cancelled)
 	{
-		var actions = actionsOut.DiscreteActions;
-		actions[0] = userInputValues.forward;
-		actions[1] = userInputValues.rotate;
+		Behavior = behavior;
+		Success = success;
+		Cancelled = cancelled;
 	}
 }
