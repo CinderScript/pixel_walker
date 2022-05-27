@@ -33,8 +33,11 @@ public class CharacterMovementInput : MonoBehaviour
 
 	internal void ClearValues()
 	{
+		// body movements
 		bodyForwardMovement = 0;
 		bodyRotation = 0;
+
+		// hand target movements
 		handForwardMovement = 0;
 		handSideMovement = 0;
 		handVerticalMovement = 0;
