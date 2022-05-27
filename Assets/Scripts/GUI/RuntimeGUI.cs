@@ -61,7 +61,7 @@ public class RuntimeGUI : MonoBehaviour
     List<string> actionlist = new List<String>();
 
     private UserInputHandler handler; 
-    private EngineType engine = EngineType.Davinci;
+    private EngineType engine;
 
     private const int DELAY = 1;
     private string keyString = "";
@@ -165,6 +165,7 @@ public class RuntimeGUI : MonoBehaviour
         }
         else
         {
+            handler = new UserInputHandler(keyString, "TODO: *fileprompts.txt*", engine);
             GptResponse responce = handler.GetGptResponce(userInput.value, out ex);
             Debug.Log(responce.GeneratedText);
             var responceProperties = responce.BehaviorProperties;
