@@ -24,6 +24,11 @@ behaviors:
       num_layers: 3
       vis_encode_type: simple
 
+      # recurrent network
+      memory:
+        sequence_length: 16
+        memory_size: 32
+
     reward_signals:
       extrinsic:
         gamma: 0.995

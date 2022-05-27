@@ -118,8 +118,8 @@ public class NavigateAgent : AgentBase
 
 	private void AssignRewards()
 	{
-		// Sparce reward given?
-		bool wasRewarded = false;
+		// done with episode?
+		bool giveTimePenalty = true;
 		
 		// don't let the agent trigger the reward based on distance if the agent
 		// is not in the target's room.
@@ -132,14 +132,14 @@ public class NavigateAgent : AgentBase
 			distanceToTarget = Vector3.Distance(charPos, targetPos);
 			if (distanceToTarget < success_distance)
 			{
-				wasRewarded = true;
+				giveTimePenalty = false;
 				AddReward(SUCCESS_REWARD);
 				StopBehavior(true);			// base class signal stop
 			}
 		}
 
 		// make agent work quickly
-		if (!wasRewarded)
+		if (!giveTimePenalty)
 		{
 			AddReward(TIME_PENALTY);
 		}
