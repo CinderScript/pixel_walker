@@ -112,3 +112,4 @@ crashlytics-build.properties
 /python-env-mlagents/Scripts/activate
 /InputHandlerFramework/obj/Debug
 /InputHandlerFramework/obj/Release
+/NAVIGATION_TRAINING_BUILD
