@@ -1,7 +1,6 @@
 //**Instructions on getting 'Newtonsoft.Json' from NuGet on Visual Studio  
 //https://docs.microsoft.com/en-us/nuget/quickstart/install-and-use-a-package-in-visual-studio
-
-using Newtonsoft.Json.Linq; // <-- Get 'Newtonsoft.Json' if unidentified namespace**
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,8 +15,7 @@ using System.Threading;
 public class Gpt3Connection
 {
     public string ApiKey { get; }
-
-    public EngineType GptEngine{ get;}
+    public EngineType GptEngine { get; }
 
     // any other relevent properties
 
@@ -27,24 +25,28 @@ public class Gpt3Connection
         GptEngine = gptEngine;
     }
 
-    
+
     public async Task<string> GenerateText(string prompt)
     {
-        string engineUsed = "text-davinci-002";
-        if(GptEngine == EngineType.Curie){
-            engineUsed = "text-curie-001";
-        }
-        else if(GptEngine == EngineType.Babbage){
-            engineUsed = "text-babbage-001";
-        }
-        else if(GptEngine == EngineType.Ada){
-            engineUsed = "text-ada-001";
-        }
-        else if(GptEngine == EngineType.Davinci){
-            engineUsed = "text-davinci-002";
-        }
-        else{
-            engineUsed = "text-davinci-002";
+        string engineUsed;
+        switch (GptEngine)
+        {
+            case EngineType.Curie:
+                engineUsed = "text-curie-001";
+                break;
+            case EngineType.Babbage:
+                engineUsed = "text-babbage-001";
+                break;
+            case EngineType.Ada:
+                engineUsed = "text-ada-001";
+                break;
+            case EngineType.Davinci:
+                engineUsed = "text-davinci-002";
+                break;
+            default:
+                engineUsed = "text-davinci-002";
+                break;
+
         }
 
         var res = await CallOpenAI(250, prompt, engineUsed, 0.7, 1, 0, 0);
@@ -72,13 +74,13 @@ public class Gpt3Connection
 
                     request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
 
-                    var response = await httpClient.SendAsync(request);					
+                    var response = await httpClient.SendAsync(request);
                     var json = await response.Content.ReadAsStringAsync();
 
-					var parsedJSON = JObject.Parse(json);
+                    var parsedJSON = JObject.Parse(json);
                     var modelType = parsedJSON["model"];
                     var replyText = parsedJSON["choices"][0]["text"];
-					
+
                     if (json != null)
                     {
                         //string fullResoponse =  + " \nmodel used: " + modelType.ToString().Trim();

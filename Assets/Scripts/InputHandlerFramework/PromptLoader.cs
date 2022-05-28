@@ -32,7 +32,23 @@ public static class PromptLoader
                        "Input: Is the right-front tire fixed?" +
                        "Output: Question {stop}" +
                        "Input: Did you have lunch?" +
-                       "Output: Question {stop}";
+                       "Output: Question {stop}" +
+                       "Input: Hello Dave" +
+                       "Output: Conversation {stop}" +
+                       "Input: The weather is very nice" +
+                       "Output: Conversation {stop}" +
+                       "Input: You are not a robot" +
+                       "Output: Conversation {stop}" +
+                       "Input: There are a lot of human in the world" +
+                       "Output: Conversation {stop}" +
+                       "Input: Your home is very nice Dave" +
+                       "Output: Conversation {stop}" +
+                       "Input: I'm the Terminator" +
+                       "Output: Conversation {stop}" +
+                       "Input: Nice to meet you" +
+                       "Output: Conversation {stop}" +
+                       "Input: I'm so sad" +
+                       "Output: Conversation {stop}";
 
         var questionClassifier = "Dave is a two-month-old robot currently working in a garage." +
             "There are many tools in the garage. He can find objects, pick things up, and set things back down." +
@@ -45,6 +61,20 @@ public static class PromptLoader
             "Output: Yes. {stop}" +
             "Input: Who are you?" +
             "Output: I'm Dave, a friendly robot. Who are you? {stop}";
+
+        var conversationClassifier = "Dave is a two-month-old robot currently working in a garage." +
+            "There are many tools in the garage. He can find objects, pick things up, and set things back down." +
+            "Dave can also open close doors, chests, and other things. Dave currently cannot use tools or other objects." +
+            "This is a list of all the objects in the garage: {$$props$$}." +
+            "Dave is a mechanic, but in his spare time, he enjoys reading sci-fi novels. Revelation Space is his favorite series." +
+            "He also loves listening to Beetles. Dave likes his glasses so he doesn’t want to take them off or change them." +
+            "He also doesn’t know how to ride a skateboard. Dave knows how to turn tools and appliances on, but doesn’t know how to use them." +
+            "Input: My house is on fire" +
+            "Output: You should call the firefighter. {stop}" +
+            "Input: You are so cool Dave" +
+            "Output: So are you {stop}" +
+            "Input: I'm the Spiderman" +
+            "Output: Woah Spidey, brag much?{stop}";
         ;
         var responseClassifier =
                             "Input: Find the hammer" +
@@ -78,12 +108,22 @@ public static class PromptLoader
                            "Input: Drop the nail in the toolbox" +
                            "Output: {behavior: SetDown, object: nail, location: toolbox}";
 
-        var BestMatchSelector = "Prompt: Response BestMatchSelector";
+        var BestMatchSelector = "The objects in inventory are: {$$props$$}." +
+                                "A customer has requested an item." +
+                                "Find the closest match in our inventory to the customers request." +
+                                "Request: red hammer" +
+                                "Output: Hammer {stop}" +
+                                "Request: Light" +
+                                "Output: Light Switch Workshop {stop}" +
+                                "Request: Phone" +
+                                "Output: item not in list {stop}";
+
+
 
         GptPrompts prompts;
         // TODO: load json from file, deserialize json into Prompts object
 
-        prompts = new GptPrompts(inputClassifier, questionClassifier, responseClassifier, BestMatchSelector);
+        prompts = new GptPrompts(inputClassifier, questionClassifier, conversationClassifier, responseClassifier, BestMatchSelector);
         return prompts;
     }
 }
@@ -92,13 +132,15 @@ public class GptPrompts
 {
     public string InputClassifier { get; }
     public string QuestionResponder { get; }
+    public string ConversationResponder { get; }
     public string CommandParser { get; }
     public string BestMatchSelector { get; }
 
-    public GptPrompts(string inputClassifier, string questionResponder, string commandParser, string bestMatchSelector)
+    public GptPrompts(string inputClassifier, string questionResponder, string conversationResponder, string commandParser, string bestMatchSelector)
     {
         InputClassifier = inputClassifier;
         QuestionResponder = questionResponder;
+        ConversationResponder = conversationResponder;
         CommandParser = commandParser;
         BestMatchSelector = bestMatchSelector;
     }

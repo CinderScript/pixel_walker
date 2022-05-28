@@ -24,14 +24,14 @@ public class UserInputHandler
         InputType inputType;
 
         try
-		{
+        {
             inputType = await classifyText(userInput);
         }
         catch (Exception)
-		{
+        {
 
-			throw;
-		}
+            throw;
+        }
         string generatedText = "Error: No Responce Saved";
 
         AgentBehaviorProperties agentBehaviorProperties = null;
@@ -44,26 +44,36 @@ public class UserInputHandler
                 throw new Exception("The user's input could not be classified.");
 
             case InputType.Question:
-				try
-				{
+                try
+                {
                     generatedText = await answerQuestion(userInput);
                 }
                 catch (Exception)
-				{
-					throw;
-				}
+                {
+                    throw;
+                }
                 break;
 
-            case InputType.Command:
-				try
-				{
-                    agentBehaviorProperties = await parseCommand(userInput);
-                    
+            case InputType.Conversation:
+                try
+                {
+                    generatedText = await respondConversation(userInput);
                 }
                 catch (Exception)
-				{
-					throw;
-				}
+                {
+                    throw;
+                }
+                break;
+            case InputType.Command:
+                try
+                {
+                    agentBehaviorProperties = await parseCommand(userInput);
+
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
 
                 // error checking - if this is null (couldn't parse) then send exception
                 if (agentBehaviorProperties == null)
@@ -75,16 +85,16 @@ public class UserInputHandler
                 {   // COMMAND WAS PARSED
                     string nameOfUserRequestedObject = agentBehaviorProperties.Object;
 
-					// TODO: GET BEST MATCH TO ITEM IN SCENE IF COMMAND
-					try
-					{
+                    // TODO: GET BEST MATCH TO ITEM IN SCENE IF COMMAND
+                    try
+                    {
                         objectBestMatch = await getObjectBestMatch(nameOfUserRequestedObject);
                         generatedText = objectBestMatch;
                     }
                     catch (Exception)
-					{
-						throw;
-					}
+                    {
+                        throw;
+                    }
                 }
                 break;
         }
@@ -107,13 +117,13 @@ public class UserInputHandler
 
         string responce;
         try
-		{
+        {
             responce = await connection.GenerateText(fullPrompt);
         }
         catch (Exception)
-		{
-			throw;
-		}
+        {
+            throw;
+        }
 
         string answer = responce;
 
@@ -123,6 +133,10 @@ public class UserInputHandler
         if (answer == "Question")
         {
             type = InputType.Question;
+        }
+        else if (answer == "Conversation")
+        {
+            type = InputType.Conversation;
         }
         else if (answer == "Command")
         {
@@ -134,28 +148,49 @@ public class UserInputHandler
         }
         return type;
     }
+    private async Task<string> respondConversation(string userInput)
+    {
+        string promptStart = prompts.ConversationResponder;
+        promptStart = promptStart.Replace("{$$props$$}", "Light Switch Workshop, Bench Grinder, 5 Gallon Bucket, Lid of Paint Can, Can of Blue Paint, Wood Box, Garden Rake, Unnamed, Red Plastic Bin, Orange Handled Pliers, Unnamed, Red Pipe Wrench, Unnamed, Yellow Level, Wooden Workbench, Small Portable Workbench, Head of Welding Torch, Blue Spray Paint, Brown Spray Paint, Yellow Spray Paint, Red Spray Paint, Green Spray Paint, White Paint Can, C Clamp, Sound System, Map of New Mexico, Drill Press, Arizona License Plate, Light Switch Tool Room, Acetylene Tank, Oxygen Tank, Plastic Safety Goggles, Blue Level, Blue Plastic Crate, Unnamed, Blue Paint Can, Bench Vice, Paint Thinner, Large Phillips Screwdriver, Small Phillips Screwdriver, Small Stool, Yellow Claw Hammer, Handsaw, Tree on Rock");
 
+        // TODO: COMPLETE THE PROMPT WITH USER INPUT
+        string fullPrompt = promptStart + "Input: " + userInput;
+        fullPrompt = fullPrompt + "Output:";
+        
+        string responce;
+        try
+        {
+            responce = await connection.GenerateText(fullPrompt);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+
+        return responce;
+    }
     private async Task<string> answerQuestion(string userInput)
     {
         string promptStart = prompts.QuestionResponder;
+        promptStart = promptStart.Replace("{$$props$$}", "Light Switch Workshop, Bench Grinder, 5 Gallon Bucket, Lid of Paint Can, Can of Blue Paint, Wood Box, Garden Rake, Unnamed, Red Plastic Bin, Orange Handled Pliers, Unnamed, Red Pipe Wrench, Unnamed, Yellow Level, Wooden Workbench, Small Portable Workbench, Head of Welding Torch, Blue Spray Paint, Brown Spray Paint, Yellow Spray Paint, Red Spray Paint, Green Spray Paint, White Paint Can, C Clamp, Sound System, Map of New Mexico, Drill Press, Arizona License Plate, Light Switch Tool Room, Acetylene Tank, Oxygen Tank, Plastic Safety Goggles, Blue Level, Blue Plastic Crate, Unnamed, Blue Paint Can, Bench Vice, Paint Thinner, Large Phillips Screwdriver, Small Phillips Screwdriver, Small Stool, Yellow Claw Hammer, Handsaw, Tree on Rock");
 
         // TODO: COMPLETE THE PROMPT WITH USER INPUT
         string fullPrompt = promptStart + "Input: " + userInput;
         fullPrompt = fullPrompt + "Output:";
 
         string responce;
-		try
-		{
+        try
+        {
             responce = await connection.GenerateText(fullPrompt);
         }
         catch (Exception)
-		{
-			throw;
-		}
+        {
+            throw;
+        }
 
         return responce;
     }
-	
+
     private async Task<AgentBehaviorProperties> parseCommand(string userInput)
     {
         string promptStart = prompts.CommandParser;
@@ -165,15 +200,15 @@ public class UserInputHandler
         fullPrompt = fullPrompt + "Output:";
 
         string responce;
-		try
-		{
+        try
+        {
             responce = await connection.GenerateText(fullPrompt);
 
-		}
-		catch (Exception)
-		{
-			throw;
-		}
+        }
+        catch (Exception)
+        {
+            throw;
+        }
 
         // TODO: HANDLE EXCEPTION
 
@@ -244,8 +279,8 @@ public class UserInputHandler
         // IF THERE IS AN ERROR AND WE CAN'T SERIALIZE, RETURN NULL - FAILED, Try again?
         if (!success)
         {
-			throw new Exception("Error: Couldn't parse command");
-		}
+            throw new Exception("Error: Couldn't parse command");
+        }
 
         AgentBehaviorProperties parse = new AgentBehaviorProperties(behavior, sceneObject, location);
 
@@ -255,6 +290,8 @@ public class UserInputHandler
     private async Task<string> getObjectBestMatch(string sceneObject)
     {
         string promptStart = prompts.BestMatchSelector;
+        
+        promptStart = promptStart.Replace("{$$props$$}", "Light Switch Workshop, Bench Grinder, 5 Gallon Bucket, Lid of Paint Can, Can of Blue Paint, Wood Box, Garden Rake, Unnamed, Red Plastic Bin, Orange Handled Pliers, Unnamed, Red Pipe Wrench, Unnamed, Yellow Level, Wooden Workbench, Small Portable Workbench, Head of Welding Torch, Blue Spray Paint, Brown Spray Paint, Yellow Spray Paint, Red Spray Paint, Green Spray Paint, White Paint Can, C Clamp, Sound System, Map of New Mexico, Drill Press, Arizona License Plate, Light Switch Tool Room, Acetylene Tank, Oxygen Tank, Plastic Safety Goggles, Blue Level, Blue Plastic Crate, Unnamed, Blue Paint Can, Bench Vice, Paint Thinner, Large Phillips Screwdriver, Small Phillips Screwdriver, Small Stool, Yellow Claw Hammer, Handsaw, Tree on Rock");
 
         // TODO: COMPLETE THE PROMPT WITH USER INPUT
         string fullPrompt = promptStart + "Input: " + sceneObject;
@@ -274,8 +311,7 @@ public class UserInputHandler
         // TODO: HANDLE EXCEPTION
 
         //we dont have list yet so List for now
-        string[] props = { "Hammer", "Saw",
-                        "Gun", "Knife" };
+        string[] props = { "Light Switch Workshop, Bench Grinder, 5 Gallon Bucket, Lid of Paint Can, Can of Blue Paint, Wood Box, Garden Rake, Unnamed, Red Plastic Bin, Orange Handled Pliers, Unnamed, Red Pipe Wrench, Unnamed, Yellow Level, Wooden Workbench, Small Portable Workbench, Head of Welding Torch, Blue Spray Paint, Brown Spray Paint, Yellow Spray Paint, Red Spray Paint, Green Spray Paint, White Paint Can, C Clamp, Sound System, Map of New Mexico, Drill Press, Arizona License Plate, Light Switch Tool Room, Acetylene Tank, Oxygen Tank, Plastic Safety Goggles, Blue Level, Blue Plastic Crate, Unnamed, Blue Paint Can, Bench Vice, Paint Thinner, Large Phillips Screwdriver, Small Phillips Screwdriver, Small Stool, Yellow Claw Hammer, Handsaw, Tree on Rock" };
         // TODO: if the responce is not a valid object, try sending to GPT-3 3 more times before returning ""
         int trial = 1;
         //Loop if responce not in tool and trial under 4, (so we can do 3 times)

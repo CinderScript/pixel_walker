@@ -6,6 +6,9 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json.Linq;
+using System.IO;
+using System.Security.AccessControl;
+using System.Threading.Tasks;
 
 public class RuntimeGUI : MonoBehaviour
 {
@@ -15,7 +18,8 @@ public class RuntimeGUI : MonoBehaviour
     private VisualElement daveInGroup;
     private Button menuBtn;
     private Button resetBtn;
-    private Button submit;
+    private Button submitBtn;
+    private Button cancelBtn;
     private TextField userInput;
     private TextField daveOutput;
     private TextField gptParseOutput;
@@ -58,13 +62,15 @@ public class RuntimeGUI : MonoBehaviour
     private EngineType engine;
 
 
+
+
     //CONSTANTS
     private const int DELAY = 1;
+    private const string FILEPATH = "key.txt";
 
     //Variables for saving
-    private string keyString = "";
-    private string errorString = "";
-
+    private string debugMessage = "";
+    private string keyPath;
 
 
     //List used to fill actions radio button group
@@ -73,8 +79,18 @@ public class RuntimeGUI : MonoBehaviour
 
 
 
-    void OnEnable()
+    async void OnEnable()
     {
+
+        keyPath = Application.persistentDataPath + "/" + FILEPATH;
+
+        if (File.Exists(keyPath))
+        {
+            File.SetAttributes(keyPath, FileAttributes.Hidden);
+            string key = await LoadApiKey(keyPath);
+            handler = new UserInputHandler(key, "TODO: *fileprompts.txt*", engine);
+        }
+
 
         //Root visual element of the UI Document
         var rootVE = GetComponent<UIDocument>().rootVisualElement;
@@ -83,7 +99,8 @@ public class RuntimeGUI : MonoBehaviour
         //Initialize Main UI elements
         menuBtn = rootVE.Q<Button>("menu");
         resetBtn = rootVE.Q<Button>("reset");
-        submit = rootVE.Q<Button>("submit");
+        submitBtn = rootVE.Q<Button>("submit");
+        cancelBtn = rootVE.Q<Button>("cancel");
         userInput = rootVE.Q<TextField>("user-input");
         daveOutput = rootVE.Q<TextField>("dave-text-out");
         gptParseOutput = rootVE.Q<TextField>("gpt-parsed-words");
@@ -131,7 +148,7 @@ public class RuntimeGUI : MonoBehaviour
         Debug.Log(actionRadioGroup.choices.ToString()); // prints action list to console
 
         //Fuctionality of all buttons added here
-        submit.clicked += SendToGPT;
+        submitBtn.clicked += SendToGPT;
         menuBtn.clicked += OnMainMenuClicked;
         resetBtn.clicked += ReloadScene;
         menuResetBtn.clicked += ReloadScene;
@@ -168,19 +185,19 @@ public class RuntimeGUI : MonoBehaviour
     /// </summary>
     async void SendToGPT()
     {
-        gptParseOutput.value = "Output Here...";
-        daveOutput.value = "Output Here...";
-
-        if (keyString == "")
+        string replyForGptWindow = "...";
+        string replyForDaveWindow = "...";
+        string key = "";
+        if (!File.Exists(keyPath))
         {
-            errorString = "No API key on record";
-            StartCoroutine(CreatePopUp(errorString, DELAY));
+            debugMessage = "No API key on record";
+            StartCoroutine(CreatePopUp(debugMessage, DELAY));
             Debug.Log("ERROR: NO KEY API PROVIDED");
         }
-        else
+        else if (File.Exists(keyPath))
         {
-            handler = new UserInputHandler(keyString, "TODO: *fileprompts.txt*", engine);
-
+            key = await LoadApiKey(keyPath);
+            //string testHandle = await TestGptResponse(key);
             GptResponse responce;
             try
             {
@@ -188,29 +205,33 @@ public class RuntimeGUI : MonoBehaviour
             }
             catch (Exception)
             {
-
                 throw;
             }
-
 
             Debug.Log(responce.GeneratedText);
             var responceProperties = responce.BehaviorProperties;
             if (responce.Type == InputType.Command)
             {
-                gptParseOutput.value = "\nBehavior:\n\t " + responceProperties.Behavior
+                replyForGptWindow = "\nBehavior:\n\t " + responceProperties.Behavior
                                         + "\nObject:\n\t " + responceProperties.Object
                                         + "\nLocation:\n\t " + responceProperties.Location;
 
-                daveOutput.value = responce.GeneratedText.ToString();
+                replyForDaveWindow = responce.GeneratedText.ToString();
             }
             else if (responce.Type == InputType.Question)
             {
-                daveOutput.value = responce.GeneratedText.ToString();
+                replyForDaveWindow = responce.GeneratedText.ToString();
+            }
+            else if (responce.Type == InputType.Conversation)
+            {
+                replyForDaveWindow = responce.GeneratedText.ToString();
             }
             else
             {
                 throw new Exception();
             }
+            gptParseOutput.value = replyForGptWindow;
+            daveOutput.value = replyForDaveWindow;
         }
     }
 
@@ -221,21 +242,15 @@ public class RuntimeGUI : MonoBehaviour
     void OnMainMenuClicked()
     {
         infoWindow.style.display = DisplayStyle.None;
-        if (menuWindow.style.display != DisplayStyle.Flex)
+        if (menuWindow.style.display == DisplayStyle.Flex)
         {
-            menuWindow.style.display = DisplayStyle.Flex;
-            apiWindow.style.display = DisplayStyle.None;
-            levelSelectWindow.style.display = DisplayStyle.None;
-            daveInGroup.style.display = DisplayStyle.None;
-            daveOutGroup.style.display = DisplayStyle.None;
-            actionRadioGroup.style.display = DisplayStyle.None;
+            ToggleMainUI(true);
         }
         else
         {
-            menuWindow.style.display = DisplayStyle.None;
-            daveInGroup.style.display = DisplayStyle.Flex;
-            daveOutGroup.style.display = DisplayStyle.Flex;
-            actionRadioGroup.style.display = DisplayStyle.Flex;
+            ToggleMainUI(false);
+            menuWindow.style.display = DisplayStyle.Flex;
+
         }
     }
 
@@ -254,13 +269,12 @@ public class RuntimeGUI : MonoBehaviour
     {
         if (levelSelectWindow.style.display == DisplayStyle.Flex)
         {
-            levelSelectWindow.style.display = DisplayStyle.None;
+            ToggleMainUI(true);
         }
         else
         {
+            ToggleMainUI(false);
             levelSelectWindow.style.display = DisplayStyle.Flex;
-            apiWindow.style.display = DisplayStyle.None;
-            menuWindow.style.display = DisplayStyle.None;
         }
     }
 
@@ -270,7 +284,7 @@ public class RuntimeGUI : MonoBehaviour
     /// </summary>
     void OpenEngineMenu()
     {
-        CloseMenuElements();
+        ToggleMainUI(false);
         engineWindow.style.display = DisplayStyle.Flex;
     }
 
@@ -280,15 +294,14 @@ public class RuntimeGUI : MonoBehaviour
     /// </summary>
     void OpenApiInputMenu()
     {
-        if (apiWindow.style.display != DisplayStyle.Flex)
+        if (apiWindow.style.display == DisplayStyle.Flex)
         {
-            apiWindow.style.display = DisplayStyle.Flex;
-            menuWindow.style.display = DisplayStyle.None;
-            levelSelectWindow.style.display = DisplayStyle.None;
+            ToggleMainUI(true);
         }
         else
         {
-            apiWindow.style.display = DisplayStyle.None;
+            ToggleMainUI(false);
+            apiWindow.style.display = DisplayStyle.Flex;
         }
     }
 
@@ -302,37 +315,47 @@ public class RuntimeGUI : MonoBehaviour
     /// </summary>
     async void SetApiKey()
     {
-        keyString = apiInput.value;
-        engine = EngineType.Ada;
-        Gpt3Connection testConnection;
         if (apiInput.value == "")
         {
-            errorString = "Field cannot be left blank";
-            StartCoroutine(CreatePopUp(errorString, DELAY));
+            debugMessage = "Field cannot be left blank";
+            StartCoroutine(CreatePopUp(debugMessage, DELAY));
         }
         else
         {
-            Debug.Log(keyString);
-            testConnection = new Gpt3Connection(keyString, engine);
-            string testResponse;
-            try
-            {
-                testResponse = await testConnection.GenerateText("Say one word {stop}");
-                errorString = "Validation Successful!";
-                engine = EngineType.Davinci;
-                handler = new UserInputHandler(keyString, "TODO: *fileprompts.txt*", engine);
-                StartCoroutine(CreatePopUp(errorString, DELAY));
-                ToggleMainUI(true);
+            string key = apiInput.value;
+            string test = await TestGptResponse(key);
+            Debug.Log(test);
+            if(test != null){
+                SaveApiKey(key, keyPath);
+            }else{
+                throw new Exception("Key not valid");
             }
-            catch (Exception)
-            {
-                errorString = "Key not Valid. Enter another one and try again.";
-                StartCoroutine(CreatePopUp(errorString, DELAY));
-                throw;
-            }
-            Debug.Log(testResponse);
-            Debug.Log("errorString: " + errorString);
         }
+
+    }
+
+    async Task<string> TestGptResponse(string key)
+    {
+        string testResponse;
+        engine = EngineType.Ada;
+        Gpt3Connection testConnection = new Gpt3Connection(key, engine); ;
+        try
+        {
+            testResponse = await testConnection.GenerateText("Say one word {stop}");
+            debugMessage = "Validation Successful!";
+            engine = EngineType.Davinci;
+            handler = new UserInputHandler(key, "TODO: *fileprompts.txt*", engine);
+        }
+        catch (Exception)
+        {
+            debugMessage = "Key not Valid. Enter another one and try again.";
+            StartCoroutine(CreatePopUp(debugMessage, DELAY));
+            throw;
+        }
+        ToggleMainUI(true);
+        StartCoroutine(CreatePopUp(debugMessage, DELAY));
+        return testResponse;
+
     }
 
     /// <summary>
@@ -358,9 +381,9 @@ public class RuntimeGUI : MonoBehaviour
     /// false for other wise</param>
     void ToggleMainUI(bool toggle)
     {
+        CloseMenuElements();
         if (toggle)
         {
-            CloseMenuElements();
             daveInGroup.style.display = DisplayStyle.Flex;
             daveOutGroup.style.display = DisplayStyle.Flex;
             actionRadioGroup.style.display = DisplayStyle.Flex;
@@ -383,6 +406,7 @@ public class RuntimeGUI : MonoBehaviour
         menuWindow.style.display = DisplayStyle.None;
         levelSelectWindow.style.display = DisplayStyle.None;
         engineWindow.style.display = DisplayStyle.None;
+
     }
 
     /// <summary>
@@ -390,7 +414,7 @@ public class RuntimeGUI : MonoBehaviour
     /// Selected via radio buttons.
     /// Defaults to Davinci
     /// </summary>
-    void SelectEngine()
+    async void SelectEngine()
     {
         if (engineRadioGroup.value == 1)
         {
@@ -409,8 +433,38 @@ public class RuntimeGUI : MonoBehaviour
             engine = EngineType.Davinci;
         }
 
-        handler = new UserInputHandler(keyString, "TODO: *fileprompts.txt*", engine);
+        string key = await LoadApiKey(keyPath);
+        handler = new UserInputHandler(key, "TODO: *fileprompts.txt*", engine);
         Debug.Log(engineRadioGroup.value.ToString());
         ToggleMainUI(true);
     }
+    async void SaveApiKey(string key, string path)
+    {
+        try
+        {
+            await File.WriteAllTextAsync(path, key);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+        //ApiCrypt.AddEncryption(path);
+        Debug.Log(path);
+    }
+
+    async Task<string> LoadApiKey(string path)
+    {
+        //ApiCrypt.RemoveEncryption(path);
+        try
+        {
+            
+            string key = await File.ReadAllTextAsync(path);
+            //ApiCrypt.AddEncryption(path);
+            return key;
+        }
+        catch (Exception) { throw; }
+    }
+
+
+
 }
