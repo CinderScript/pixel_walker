@@ -11,12 +11,16 @@ public class UserInputHandler
 {
     private Gpt3Connection connection;
     private GptPrompts prompts;
-    private int Test;
+
+    private PromptLoader classifer;
+    private const int MAX_RETRIES = 3;
+    private int retries = MAX_RETRIES;
 
     public UserInputHandler(string apiKey, string gptPromptsFilePath, EngineType engine)
     {
         connection = new Gpt3Connection(apiKey, engine);
-        prompts = PromptLoader.GetPromptsFromFile(gptPromptsFilePath);
+        classifer = new PromptLoader();
+        prompts = classifer.GetPromptsFromFile(gptPromptsFilePath);
     }
 
     public async Task<GptResponse> GetGptResponce(string userInput)
@@ -35,13 +39,21 @@ public class UserInputHandler
         string generatedText = "Error: No Responce Saved";
 
         AgentBehaviorProperties agentBehaviorProperties = null;
+
+
         string objectBestMatch = "";
 
         switch (inputType)
         {
             case InputType.Unknown:
-                // TODO: send back responce or check again
-                throw new Exception("The user's input could not be classified.");
+                --retries;
+                GptResponse temp = new GptResponse(inputType, generatedText, agentBehaviorProperties);
+                if (retries > 0)
+                {
+                    temp = await GetGptResponce(userInput);
+                }
+                retries = MAX_RETRIES;
+                return temp;
 
             case InputType.Question:
                 try
@@ -156,7 +168,7 @@ public class UserInputHandler
         // TODO: COMPLETE THE PROMPT WITH USER INPUT
         string fullPrompt = promptStart + "Input: " + userInput;
         fullPrompt = fullPrompt + "Output:";
-        
+
         string responce;
         try
         {
@@ -203,7 +215,6 @@ public class UserInputHandler
         try
         {
             responce = await connection.GenerateText(fullPrompt);
-
         }
         catch (Exception)
         {
@@ -290,7 +301,7 @@ public class UserInputHandler
     private async Task<string> getObjectBestMatch(string sceneObject)
     {
         string promptStart = prompts.BestMatchSelector;
-        
+
         promptStart = promptStart.Replace("{$$props$$}", "Light Switch Workshop, Bench Grinder, 5 Gallon Bucket, Lid of Paint Can, Can of Blue Paint, Wood Box, Garden Rake, Unnamed, Red Plastic Bin, Orange Handled Pliers, Unnamed, Red Pipe Wrench, Unnamed, Yellow Level, Wooden Workbench, Small Portable Workbench, Head of Welding Torch, Blue Spray Paint, Brown Spray Paint, Yellow Spray Paint, Red Spray Paint, Green Spray Paint, White Paint Can, C Clamp, Sound System, Map of New Mexico, Drill Press, Arizona License Plate, Light Switch Tool Room, Acetylene Tank, Oxygen Tank, Plastic Safety Goggles, Blue Level, Blue Plastic Crate, Unnamed, Blue Paint Can, Bench Vice, Paint Thinner, Large Phillips Screwdriver, Small Phillips Screwdriver, Small Stool, Yellow Claw Hammer, Handsaw, Tree on Rock");
 
         // TODO: COMPLETE THE PROMPT WITH USER INPUT

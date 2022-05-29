@@ -60,6 +60,7 @@ public class RuntimeGUI : MonoBehaviour
     //Variables to store input and current selected action
     private UserInputHandler handler;
     private EngineType engine;
+    private const string PROMPT_FILE = "prompt.JSON"; 
 
 
 
@@ -82,13 +83,13 @@ public class RuntimeGUI : MonoBehaviour
     async void OnEnable()
     {
 
-        keyPath = Application.persistentDataPath + "/" + FILEPATH;
+        keyPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/" + FILEPATH;
 
         if (File.Exists(keyPath))
         {
-            File.SetAttributes(keyPath, FileAttributes.Hidden);
+            //File.SetAttributes(keyPath, FileAttributes.Hidden);
             string key = await LoadApiKey(keyPath);
-            handler = new UserInputHandler(key, "TODO: *fileprompts.txt*", engine);
+            handler = new UserInputHandler(key, PROMPT_FILE, engine);
         }
 
 
@@ -203,12 +204,9 @@ public class RuntimeGUI : MonoBehaviour
             {
                 responce = await handler.GetGptResponce(userInput.value);
             }
-            catch (Exception)
-            {
-                throw;
-            }
 
-            Debug.Log(responce.GeneratedText);
+            catch (Exception){throw;}
+
             var responceProperties = responce.BehaviorProperties;
             if (responce.Type == InputType.Command)
             {
@@ -228,7 +226,7 @@ public class RuntimeGUI : MonoBehaviour
             }
             else
             {
-                throw new Exception();
+                replyForGptWindow = responce.GeneratedText.ToString();
             }
             gptParseOutput.value = replyForGptWindow;
             daveOutput.value = replyForDaveWindow;
@@ -344,7 +342,7 @@ public class RuntimeGUI : MonoBehaviour
             testResponse = await testConnection.GenerateText("Say one word {stop}");
             debugMessage = "Validation Successful!";
             engine = EngineType.Davinci;
-            handler = new UserInputHandler(key, "TODO: *fileprompts.txt*", engine);
+            handler = new UserInputHandler(key, PROMPT_FILE, engine);
         }
         catch (Exception)
         {
@@ -434,7 +432,7 @@ public class RuntimeGUI : MonoBehaviour
         }
 
         string key = await LoadApiKey(keyPath);
-        handler = new UserInputHandler(key, "TODO: *fileprompts.txt*", engine);
+        handler = new UserInputHandler(key, PROMPT_FILE, engine);
         Debug.Log(engineRadioGroup.value.ToString());
         ToggleMainUI(true);
     }

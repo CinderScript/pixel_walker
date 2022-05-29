@@ -11,6 +11,8 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using UnityEngine;
 using System.Threading;
+using System.IO;
+using System.Security.AccessControl;
 
 public class Gpt3Connection
 {
@@ -49,7 +51,7 @@ public class Gpt3Connection
 
         }
 
-        var res = await CallOpenAI(250, prompt, engineUsed, 0.7, 1, 0, 0);
+        var res = await CallOpenAI(400, prompt, engineUsed, 0.7, 1, 0, 0);
         return res;
     }
 
@@ -96,4 +98,6 @@ public class Gpt3Connection
         }
         return reply;
     }
+
+
 }
