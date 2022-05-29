@@ -1,13 +1,18 @@
 /**
+ *	Project:		Pixel Walker
+ *	
  *	Description:	CharacterMovementValues is a class that holds the values
  *					read by the CharacterController to signal that movement
  *					should be performed for both body movement and hand
  *					movement.
  *					
  *	Author:			Pixel Walker -
- *					Developed by member Gregory Maynard			
+ *						Maynard, Gregory
+ *						Shubhajeet, Baral
+ *						Do, Khuong
+ *						Nguyen, Thuong						
  *					
- *	Date:			05-09-2022
+ *	Date:			05-23-2022
  */
 
 using UnityEngine;
