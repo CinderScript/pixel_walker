@@ -1589,7 +1589,7 @@ Transform:
   - {fileID: 2300376171949622107}
   - {fileID: 2300376172459680382}
   m_Father: {fileID: 8173878857353339616}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6370973766736051607
 MonoBehaviour:
@@ -1681,7 +1681,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3c430f382484144e925c097c2d33cfe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Weight: 1
+  m_Weight: 0.5
   m_Data:
     m_ConstrainedObject: {fileID: 7121716928412373635}
     m_SourceObjects:
@@ -1720,7 +1720,7 @@ MonoBehaviour:
     m_WorldUpAxis: 2
     m_MaintainOffset: 0
     m_ConstrainedAxes:
-      x: 0
+      x: 1
       y: 1
       z: 0
 --- !u!1 &2360365104969043860
@@ -2275,7 +2275,7 @@ GameObject:
   - component: {fileID: 6081935432520812201}
   - component: {fileID: 6195426644979895422}
   m_Layer: 0
-  m_Name: Arm_Mover_Rig
+  m_Name: ArmMover_Rig
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2298,7 +2298,7 @@ Transform:
   - {fileID: 4456064392840629680}
   - {fileID: 3258122591236487734}
   m_Father: {fileID: 8173878857353339616}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6195426644979895422
 MonoBehaviour:
@@ -4676,6 +4676,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 175de4fcd8acd2b46ad3d3af0d67dea5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hand: {fileID: 5845922817359659908}
 --- !u!54 &673786985419253396
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4812,7 +4813,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8156950507781343383}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.343, z: 0}
+  m_LocalPosition: {x: 0, y: -0.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5112,8 +5113,8 @@ MonoBehaviour:
     m_Tip: {fileID: 3521593660482410040}
     m_Target: {fileID: 3258122591236487734}
     m_ChainRotationWeight: 1
-    m_TipRotationWeight: 1
-    m_MaxIterations: 15
+    m_TipRotationWeight: 0
+    m_MaxIterations: 16
     m_Tolerance: 0.0001
     m_MaintainTargetPositionOffset: 0
     m_MaintainTargetRotationOffset: 0
@@ -5218,8 +5219,8 @@ Transform:
   - {fileID: 3806307060247331078}
   - {fileID: 2910856591293261362}
   - {fileID: 4945352795014438009}
-  - {fileID: 6081935432520812201}
   - {fileID: 2300376172442824554}
+  - {fileID: 6081935432520812201}
   - {fileID: 2300376172304136205}
   m_Father: {fileID: 7695357664465193098}
   m_RootOrder: 0
@@ -5314,6 +5315,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84fe7ba3aa551df44ae32939776b4560, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  horizontalDot: 0
+  depthDot: 0
+  verticalDot: 0
 --- !u!114 &8173878857353339622
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5345,7 +5349,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_RigLayers:
   - m_Rig: {fileID: 6370973766736051607}
-    m_Active: 0
+    m_Active: 1
   - m_Rig: {fileID: 6195426644979895422}
     m_Active: 1
   m_Effectors: []
@@ -5731,7 +5735,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8944336655422409503, guid: f6d148d888ffbf54b9afe9936dfaec1f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -3.75877
+      value: -3.7587695
       objectReference: {fileID: 0}
     - target: {fileID: 8944336655422409503, guid: f6d148d888ffbf54b9afe9936dfaec1f, type: 3}
       propertyPath: m_LocalRotation.w
@@ -5793,7 +5797,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2070925441746177912, guid: a1a802ecaf6775746bb2a929fb554ad8, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -3.75877
+      value: -3.7587695
       objectReference: {fileID: 0}
     - target: {fileID: 2070925441746177912, guid: a1a802ecaf6775746bb2a929fb554ad8, type: 3}
       propertyPath: m_LocalRotation.w
@@ -5829,7 +5833,7 @@ PrefabInstance:
       objectReference: {fileID: 3806307060247331078}
     - target: {fileID: 2070925441746177913, guid: a1a802ecaf6775746bb2a929fb554ad8, type: 3}
       propertyPath: m_Lens.m_SensorSize.x
-      value: 1.7131474
+      value: 1.627247
       objectReference: {fileID: 0}
     - target: {fileID: 2070925442191277752, guid: a1a802ecaf6775746bb2a929fb554ad8, type: 3}
       propertyPath: CameraCollisionFilter.m_Bits

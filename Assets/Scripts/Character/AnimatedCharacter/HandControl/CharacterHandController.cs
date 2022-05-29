@@ -5,6 +5,15 @@ public class CharacterHandController : MonoBehaviour
 	private const float HAND_SPEED = 1f;
 
 	[Header("Dot product constraints")]
+	private float leftDotConstraint = 0.12f;
+	private float rightDotConstraint = 0.62f;
+
+	private float forwardDotConstraint = 0.66f;
+	private float backwardDotConstraint = 0.08f;
+
+	private float upDotConstraint = 1.8f;
+	private float downDotConstraint = 0.8f;
+
 	public float horizontalDot;
 	public float depthDot;
 	public float verticalDot;
@@ -36,33 +45,53 @@ public class CharacterHandController : MonoBehaviour
 		// transform.forward is the current agent direction
 		// dot product of agent's right direction and target direction
 		horizontalDot = Vector3.Dot(dirFromReferenceToTarget, transform.right);
+		depthDot = Vector3.Dot(dirFromReferenceToTarget, transform.forward);
+		verticalDot = Vector3.Dot(dirFromReferenceToTarget, transform.up);
 
-		
+
 		if (input.handForwardMovement == 1)
 		{
-			currentVelocity += bodyReference.forward * HAND_SPEED;
+			if (depthDot < forwardDotConstraint)
+			{
+				currentVelocity += bodyReference.forward * HAND_SPEED;
+			}
 		}
 		else if (input.handForwardMovement == 2)
 		{
-			currentVelocity += bodyReference.forward * -HAND_SPEED;
+			if (depthDot > backwardDotConstraint)
+			{
+				currentVelocity += bodyReference.forward * -HAND_SPEED;
+			}
 		}
 
 		if (input.handSideMovement == 1)
 		{
-			currentVelocity += bodyReference.right * HAND_SPEED;
+			if (horizontalDot < rightDotConstraint)
+			{
+				currentVelocity += bodyReference.right * HAND_SPEED;
+			}
 		}
 		else if (input.handSideMovement == 2)
 		{
-			currentVelocity += bodyReference.right * -HAND_SPEED;
+			if (horizontalDot > leftDotConstraint)
+			{
+				currentVelocity += bodyReference.right * -HAND_SPEED;
+			}
 		}
 
 		if (input.handVerticalMovement == 1)
 		{
-			currentVelocity += bodyReference.up * HAND_SPEED;
+			if (verticalDot < upDotConstraint)
+			{
+				currentVelocity += bodyReference.up * HAND_SPEED;
+			}
 		}
 		else if (input.handVerticalMovement == 2)
 		{
-			currentVelocity += bodyReference.up * -HAND_SPEED;
+			if (verticalDot > downDotConstraint)
+			{
+				currentVelocity += bodyReference.up * -HAND_SPEED;
+			}
 		}
 
 		
