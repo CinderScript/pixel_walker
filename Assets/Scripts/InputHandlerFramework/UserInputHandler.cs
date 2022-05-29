@@ -16,6 +16,8 @@ public class UserInputHandler
     private const int MAX_RETRIES = 3;
     private int retries = MAX_RETRIES;
 
+    private int bestMatchRetries = MAX_RETRIES;
+
     public UserInputHandler(string apiKey, string gptPromptsFilePath, EngineType engine)
     {
         connection = new Gpt3Connection(apiKey, engine);
@@ -300,9 +302,10 @@ public class UserInputHandler
 
     private async Task<string> getObjectBestMatch(string sceneObject)
     {
+        string props = prompts.PropsListLoader;
         string promptStart = prompts.BestMatchSelector;
 
-        promptStart = promptStart.Replace("{$$props$$}", "Light Switch Workshop, Bench Grinder, 5 Gallon Bucket, Lid of Paint Can, Can of Blue Paint, Wood Box, Garden Rake, Unnamed, Red Plastic Bin, Orange Handled Pliers, Unnamed, Red Pipe Wrench, Unnamed, Yellow Level, Wooden Workbench, Small Portable Workbench, Head of Welding Torch, Blue Spray Paint, Brown Spray Paint, Yellow Spray Paint, Red Spray Paint, Green Spray Paint, White Paint Can, C Clamp, Sound System, Map of New Mexico, Drill Press, Arizona License Plate, Light Switch Tool Room, Acetylene Tank, Oxygen Tank, Plastic Safety Goggles, Blue Level, Blue Plastic Crate, Unnamed, Blue Paint Can, Bench Vice, Paint Thinner, Large Phillips Screwdriver, Small Phillips Screwdriver, Small Stool, Yellow Claw Hammer, Handsaw, Tree on Rock");
+        promptStart = promptStart.Replace("{$$props$$}", props);
 
         // TODO: COMPLETE THE PROMPT WITH USER INPUT
         string fullPrompt = promptStart + "Input: " + sceneObject;
@@ -315,24 +318,14 @@ public class UserInputHandler
         }
         catch (Exception)
         {
-
             throw;
         }
 
-        // TODO: HANDLE EXCEPTION
-
-        //we dont have list yet so List for now
-        string[] props = { "Light Switch Workshop, Bench Grinder, 5 Gallon Bucket, Lid of Paint Can, Can of Blue Paint, Wood Box, Garden Rake, Unnamed, Red Plastic Bin, Orange Handled Pliers, Unnamed, Red Pipe Wrench, Unnamed, Yellow Level, Wooden Workbench, Small Portable Workbench, Head of Welding Torch, Blue Spray Paint, Brown Spray Paint, Yellow Spray Paint, Red Spray Paint, Green Spray Paint, White Paint Can, C Clamp, Sound System, Map of New Mexico, Drill Press, Arizona License Plate, Light Switch Tool Room, Acetylene Tank, Oxygen Tank, Plastic Safety Goggles, Blue Level, Blue Plastic Crate, Unnamed, Blue Paint Can, Bench Vice, Paint Thinner, Large Phillips Screwdriver, Small Phillips Screwdriver, Small Stool, Yellow Claw Hammer, Handsaw, Tree on Rock" };
-        // TODO: if the responce is not a valid object, try sending to GPT-3 3 more times before returning ""
-        int trial = 1;
-        //Loop if responce not in tool and trial under 4, (so we can do 3 times)
-
-        while (!((props.Contains(responce)) || (trial < 4)))
+        bool matchObj = props.Contains(responce);
+        if (!matchObj)
         {
             responce = await connection.GenerateText(fullPrompt);
-            trial++;
         }
-
         return responce;
     }
 
