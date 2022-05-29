@@ -45,14 +45,26 @@ About commands, the virtual actor can walk to objects, pick up objects, set obje
 
 ### Manual - How To Use Pixel Walker<a name="manual"/>
 <section>
-    <strong># Program Menu: </strong> <br>
-    - Give the user options to load the virual environment to interact with the AI agent <br> 
-    - Or Store the api key from the server so that only the main user can access the app <br> <br>
-    <strong> App Display: </strong> <br>
-    - User can type in input at the bottom bar so that the agent can either answer a question or perform an action <br>
-    - The answer text will be display at the top right box with an indication <br>
-    - User can move around the view to follow the agent by click and drag the screen <br>
-    
+    <strong># App Startup: </strong> <br>
+    - User will be requested to provide an API key to load a virtual environment. 
+      Any invalid key will not load up the app to ensure that user's data is secured. <br>
+    ![image not found](/others/AppStartupScreen.png) <br> <br>
+    <strong># App Home Screen: </strong> <br>
+    - User will be loaded into an empty space for the first time and there will be a menu and a reset button to the top left.<br> 
+    - User will be able to enter any input into the bottom bar and will receive the output depend on the type. <br>
+    - - If it is a command, there will be a command report at the first box to the top right <br>
+    - - If it is a question or conversation, there will be a response from Dave in the second box to the right <br>
+    ![image not found](/others/AppHomeScreen(empty).jpg) <br> <br>
+    - The Menu button will lead to another screen presenting options to load the scene, reset, change API key or the engine <br>
+    - The reset button will simply reset the environment along with any object present similarly to the reload the scene option. <br>
+    ![image not found](/others/AppMenuScreen.png) <br> <br>
+    <strong># App Home Screen (with agent): </strong> <br>
+    - After user has select a scene, a virtual environment will be loaded with many objects and an AI agent. This environment will stay on 
+      even after the app is closed provided that user has the same API key. <br>
+    - Here any command entered will set the agent to initiate the requested action. If the command is too difficult, the agent will respond
+      with an excuse of not knowing how to do it. <br>
+    - The Cancel button is meant to stop any current action and put the agent in place. <br>
+    ![image not found](/others/AppHomeScreen(loaded).png) <br> <br>
 </section>
 
 ### Application Content<a name="content"/>
