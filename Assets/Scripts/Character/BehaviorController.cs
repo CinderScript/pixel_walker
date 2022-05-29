@@ -135,6 +135,7 @@ public class BehaviorController : MonoBehaviour
 				if (currentActiveAgent.RequestAcademyStep)
 				{
 					currentActiveAgent.RequestDecision();
+					// RequestDescision also calls RequestAction()
 				}
 			}
 		}
@@ -177,21 +178,22 @@ public class BehaviorController : MonoBehaviour
 			await Navigate(randomProp);
 		}
 	}
-	public async void TrainPickUp()
+	public async void TrainPickUp(Transform target)
+	{
+		IsTraining = true;
+		while (IsTraining)
+		{		
+			await Navigate(target);
+			await PickUp(target);
+		}
+	}
+	public async void TrainActivate(Transform target)
 	{
 		IsTraining = true;
 		while (IsTraining)
 		{
-			// half the time pick a random location, half the time use last location
-			var random = Random.Range(0, 2);
-			if (random == 1)
-			{
-				SpawnInRandomLocation();
-			}
-			
-			var randomProp = areaProps.SelectRandomProp().transform;
-			await Navigate(randomProp);
-			await PickUp(randomProp);
+			//await Navigate(target);
+			await Activate(target);
 		}
 	}
 

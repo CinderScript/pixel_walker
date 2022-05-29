@@ -20,7 +20,7 @@ using System;
 using UnityEngine;
 
 [DisallowMultipleComponent]
-public class CharacterMovementInput : MonoBehaviour
+public class CharacterMovementValues : MonoBehaviour
 {
 	[Header("Base Movement Values")]
 	public int bodyForwardMovement;

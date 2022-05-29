@@ -22,7 +22,7 @@ public abstract class AgentBase : Agent
 	[SerializeField]
 	protected UserInputValues userInputValues;
 	[SerializeField]
-	protected CharacterMovementInput movementValues;
+	protected CharacterMovementValues movementValues;
 
 	// signlals BehaviorFinishAwaiter to return
 	private bool isFinished = false;
@@ -51,7 +51,7 @@ public abstract class AgentBase : Agent
 
 		// GET SCENE REFERENCES - spawn points, props, controller movement value input location
 		playerArea = GetComponentInParent<AgentArea>().transform;
-		movementValues = playerArea.GetComponentInChildren<CharacterMovementInput>();
+		movementValues = playerArea.GetComponentInChildren<CharacterMovementValues>();
 
 		RequestAcademyStep = false;
 	}

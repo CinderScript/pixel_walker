@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
@@ -21,8 +22,6 @@ public class NavigateAgent : AgentBase
 	private bool isCurrentlyColliding = false;
 	[SerializeField]
 	private float distanceToTarget;
-	[SerializeField]
-	private CollisionThrower collisionThrower;
 
 	public override BehaviorType MyBehaviorType => BehaviorType.Navigate;
 
@@ -35,6 +34,8 @@ public class NavigateAgent : AgentBase
 
 	int numberOfRooms;
 
+	bool areActionsOverriden = false;
+
 	// used to detect if the agent is currently colliding
 	// with an obstical so it can be used as an observation
 	private ControllerColliderHit lastHit;
@@ -43,15 +44,10 @@ public class NavigateAgent : AgentBase
 	{
 		base.Awake();
 		
-		collisionThrower = agentBody.GetComponent<CollisionThrower>();
+		var collisionThrower = agentBody.GetComponent<CollisionThrower>();
 		collisionThrower.OnCharacterCollision += CharacterCollisionHandler;
 
-		// GET SCENE REFERENCES - spawn points, props, controller movement value input location
-		playerArea = GetComponentInParent<AgentArea>().transform;
-
 		numberOfRooms = Enum.GetValues(typeof(RoomName)).Length;
-		
-		
 	}
 
 	protected override void initializeBehavior()
@@ -106,9 +102,12 @@ public class NavigateAgent : AgentBase
 
 	public override void OnActionReceived(ActionBuffers actions)
 	{
-		movementValues.bodyForwardMovement = actions.DiscreteActions[0];
-		movementValues.bodyRotation = actions.DiscreteActions[1];
-		AssignRewards();
+		if (!areActionsOverriden)
+		{
+			movementValues.bodyForwardMovement = actions.DiscreteActions[0];
+			movementValues.bodyRotation = actions.DiscreteActions[1];
+			AssignRewards();
+		}
 	}
 	
 	public void SetCurrentRoom(Room room)
@@ -133,8 +132,7 @@ public class NavigateAgent : AgentBase
 			if (distanceToTarget < success_distance)
 			{
 				giveTimePenalty = false;
-				AddReward(SUCCESS_REWARD);
-				StopBehavior(true);			// base class signal stop
+				Finished_Success();
 			}
 		}
 
@@ -142,6 +140,46 @@ public class NavigateAgent : AgentBase
 		if (!giveTimePenalty)
 		{
 			AddReward(TIME_PENALTY);
+		}
+	}
+	private async void Finished_Success() {
+		AddReward(SUCCESS_REWARD);
+
+		areActionsOverriden = true;
+		await FaceTargetAsync();
+		areActionsOverriden = false;
+
+		StopBehavior(true);         // base class signal stop
+	}
+	IEnumerator FaceTargetAsync()
+	{
+		bool isFacingTarget = false;
+		while (!isFacingTarget)
+		{
+			// direction the agent should be facing
+			Vector3 dirFromAgentToTarget = target.position - transform.position;
+
+			// transform.forward is the current agent direction
+			// dot product of agent's right direction and target direction
+			var dotProduct = Vector3.Dot(dirFromAgentToTarget, transform.right);
+
+			// is target to the right of the agent?
+			if (dotProduct > 0)
+			{
+				// turn right
+				movementValues.bodyRotation = 1;
+			}
+			else
+			{
+				// turn left
+				movementValues.bodyRotation = 2;
+			}
+
+			if ( Mathf.Abs(dotProduct) < 0.1f )
+			{
+				isFacingTarget = true;
+			}
+			yield return new WaitForFixedUpdate();
 		}
 	}
 	private void CharacterCollisionHandler(GameObject thrower, ControllerColliderHit hitInfo)

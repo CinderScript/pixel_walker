@@ -14,6 +14,9 @@ public class SceneGuiInterface : MonoBehaviour
 	private BehaviorController behaviorController;
 	private AreaPropReferences propReferences;
 
+	[Header("Training Objects")]
+	public Transform activateObject;
+
 	void Awake()
     {
         behaviorController = sceneArea.GetComponentInChildren<BehaviorController>();
@@ -24,6 +27,8 @@ public class SceneGuiInterface : MonoBehaviour
 		propReferences = sceneArea.GetComponent<AreaPropReferences>();
 
 		//StartNavigationTraining();
+		StartActivateTraining();
+		
 		//Test();
 
 		//StartCoroutine(TriggerAfterSeconds(4));
@@ -37,7 +42,7 @@ public class SceneGuiInterface : MonoBehaviour
 
 	public async void Test()
 	{
-		var properties = new AgentBehaviorProperties(BehaviorType.Activate, "Workshop Light Switch", "");
+		var properties = new AgentBehaviorProperties(BehaviorType.Activate, "Yellow Claw Hammer", "");
 		
 		var result = await StartBehavior(properties);
 		if (result.Cancelled)
@@ -75,6 +80,16 @@ public class SceneGuiInterface : MonoBehaviour
 		foreach (var controller in controllers)
 		{
 			controller.TrainNavigation();
+		}
+	}
+
+	public void StartActivateTraining()
+	{
+		// get each behavior controller and start them all on training.
+		var controllers = FindObjectsOfType<BehaviorController>();
+		foreach (var controller in controllers)
+		{
+			controller.TrainActivate(activateObject);
 		}
 	}
 
