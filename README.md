@@ -92,11 +92,11 @@ About commands, the virtual actor can walk to objects, pick up objects, set obje
   <strong>------------------------------------ Unity3D -----------------------------------</strong> <br>
   - Build the environment, objects, UI <br>
   - <br>
-  --- <strong>ML-agents</strong> --- <br>
+  <strong>------------------------------------ ML-agents -----------------------------------</strong> <br>
   - Train the agent using deep learning <br>
   - Reward points for every positive behavior <br>
   - <br>
-  --- <strong>GPT-3</strong> --- <br>
+  <strong>------------------------------------ GPT-3 -----------------------------------</strong> <br>
   - The building block of the app - process any user input and generate desirable output <br>
   - Handle prompts using the GPT-3 engine (default: Davinci) <br>
   - <br>
