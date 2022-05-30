@@ -4,7 +4,7 @@
 * Description: 
 * GptApiKey is a class that saves a key to a file then encrypt it,
 * then if anyone wants to access the program, they need to 
-* decrypt the key file and then they can get the pass key.
+* decrypt the key in the file.
 *
 * Author: Pixel Walker -
 * Maynard, Gregory
@@ -12,99 +12,103 @@
 * Do, Khuong
 * Nguyen, Thuong
 *
-* Date: 05-26-2022
+* Date: 05-29-2022
 */
 using System;
 using System.IO;
-using System.Security.AccessControl;
+using System.Security.Cryptography;
+using System.Text;
 
-/** the main ApiKey-Handler class that contains:
-* A method to save the key to file, encrypt it;
-* A method to decrypt the file, get the key;
-* A file path property.
-*/
-class GptApiKey
+namespace GptApiKey
 {
-    public string FilePath { get; }
-
-    // Save key to a file and lock it.
-    public void SaveKeyToFile(string key)
+    public class GptApiKey
     {
-        try
+        public string ApiKey { get; private set; }
+        public string FilePath { get; }
+
+        // method to encypt the key by cryptostream and memorystream, then write it on a file
+        public void SaveKeyToFile(string key)
         {
-            // file may already be encrypted - decrypt it if yes
-            FileAttributes fiAttributes = File.GetAttributes(FilePath);
-
-            if ((fiAttributes & FileAttributes.Encrypted) == FileAttributes.Encrypted)
+            try
             {
-                //File is Encrypted. Decrypt the file
-                File.Decrypt(FilePath);
+                string publickey = "12345678";
+                string secretkey = "87654321";
+                byte[] secretkeyByte = { };
+                secretkeyByte = System.Text.Encoding.UTF8.GetBytes(secretkey);
+                byte[] publickeybyte = { };
+                publickeybyte = System.Text.Encoding.UTF8.GetBytes(publickey);
+                MemoryStream ms = null;
+                CryptoStream cs = null;
+                byte[] inputbyteArray = System.Text.Encoding.UTF8.GetBytes(key);
+                using (DESCryptoServiceProvider des = new DESCryptoServiceProvider())
+                {
+                    ms = new MemoryStream();
+                    cs = new CryptoStream(ms, des.CreateEncryptor(publickeybyte, secretkeyByte), CryptoStreamMode.Write);
+                    cs.Write(inputbyteArray, 0, inputbyteArray.Length);
+                    cs.FlushFinalBlock();
+                    key = Convert.ToBase64String(ms.ToArray());
+                    ApiKey = key;
+                }
+                using (StreamWriter wr = new StreamWriter(FilePath))
+                {
+                    wr.WriteLine(ApiKey);
+                }
             }
-            // open stream writer and save the key
-            using (StreamWriter w = new StreamWriter(FilePath))
+            catch (Exception)
             {
-                w.WriteLine(key);
-                Console.WriteLine("Key Saved In " + FilePath);
-
-                // Encrypt the file.
-                File.Encrypt(FilePath);
+                throw;
             }
         }
-        catch (Exception)
+
+        // method to retrieve the encrypted key from the file then decrypt it
+        public string GetKeyFromFile()
         {
-            throw;
+            try
+            {
+                string publickey = "12345678";
+                string secretkey = "87654321";
+                byte[] privatekeyByte = { };
+                privatekeyByte = System.Text.Encoding.UTF8.GetBytes(secretkey);
+                byte[] publickeybyte = { };
+                publickeybyte = System.Text.Encoding.UTF8.GetBytes(publickey);
+                MemoryStream ms = null;
+                CryptoStream cs = null;
+                byte[] inputbyteArray = new byte[ApiKey.Replace(" ", "+").Length];
+                inputbyteArray = Convert.FromBase64String(ApiKey.Replace(" ", "+"));
+                using (DESCryptoServiceProvider des = new DESCryptoServiceProvider())
+                {
+                    ms = new MemoryStream();
+                    cs = new CryptoStream(ms, des.CreateDecryptor(publickeybyte, privatekeyByte), CryptoStreamMode.Write);
+                    cs.Write(inputbyteArray, 0, inputbyteArray.Length);
+                    cs.FlushFinalBlock();
+                    Encoding encoding = Encoding.UTF8;
+                    ApiKey = encoding.GetString(ms.ToArray());
+                }
+                    return ApiKey;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public GptApiKey(string path) 
+        {
+            FilePath = path;
         }
     }
-
-    // Get the pass key from the encrypted file.
-    public string GetKeyFromFile()
+    
+    //main method to test the encryption/decryption 
+    public class GptApiKeyTest
     {
-        string LockedKey;
-        try
+        static void Main(string[] args)
         {
-            // Decrypt the file
-            File.Decrypt(FilePath);
-            
-            // Open stream Reader
-            using (StreamReader r = new StreamReader(FilePath))
-            {
-                // store the key as the string to output
-                LockedKey = r.ReadLine();
-            }
-            return LockedKey;
-        }
-        catch (Exception)
-        {
-            throw;
-        }
-    }
-
-    // constructor of GptApiKey class with the file path
-    public GptApiKey(string filePath)
-    {
-        FilePath = filePath;
-    }
-}
-
-// a class to test out the file encryption / decryption 
-class GptApiKeyTestDriver
-{
-    public static void Main()
-    {
-        try
-        {
-            // create a new class instance
-            GptApiKey host = new GptApiKey("C:/Users/Tn/Documents/ApiKeyHandler/bin/debug/test.txt");
-            host.SaveKeyToFile("IloveCoding427");
-
-            string example = host.GetKeyFromFile();
-            Console.WriteLine(example);
-
-            Console.WriteLine("Done");
-        }
-        catch (Exception)
-        {
-            throw;
+            GptApiKey example = new GptApiKey("C:/Users/Tn/Documents/ApiKeyHandler/WriteApiKey.txt");
+            example.SaveKeyToFile("IloveCoding4327");
+            string str = example.ApiKey;
+            Console.WriteLine("encrypted key: " + str);
+            str = example.GetKeyFromFile();
+            Console.WriteLine("decryption complete " + str);
         }
     }
 }
