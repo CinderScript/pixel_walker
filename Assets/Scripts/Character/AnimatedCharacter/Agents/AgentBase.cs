@@ -27,6 +27,8 @@ public abstract class AgentBase : Agent
 	private bool isCancelled = false;
 	private bool isSuccess = false;
 
+	private string stopBehaviorMessage;
+
 	protected virtual void Awake()
 	{
 		// GET USER INPUT SCRIPT
@@ -67,7 +69,9 @@ public abstract class AgentBase : Agent
 		await BehaviorFinishAwaiter();
 		RequestAcademyStep = false;
 
-		return new BehaviorResult(MyBehaviorType, isSuccess, isCancelled);
+		return new BehaviorResult(
+			MyBehaviorType, isSuccess, 
+			isCancelled, stopBehaviorMessage);
 	}
 	protected abstract void initializeBehavior();
 
@@ -77,11 +81,12 @@ public abstract class AgentBase : Agent
 		StopBehavior(false);  // sets isSuccess true/false
 	}
 
-	protected void StopBehavior(bool success)
+	protected void StopBehavior(bool success, string msg = null)
 	{
 		isFinished = true;
 		isSuccess = success;
 		movementValues.ClearValues();
+		stopBehaviorMessage = msg;
 		EndEpisode();
 	}
 	
@@ -159,10 +164,11 @@ public class BehaviorResult
 	public bool Success { get; }
 	public bool Cancelled { get; }
 	public string Message { get; set; }
-	public BehaviorResult(BehaviorType behavior, bool success, bool cancelled)
+	public BehaviorResult(BehaviorType behavior, bool success, bool cancelled, string msg = null)
 	{
 		Behavior = behavior;
 		Success = success;
 		Cancelled = cancelled;
+		Message = msg;
 	}
 }

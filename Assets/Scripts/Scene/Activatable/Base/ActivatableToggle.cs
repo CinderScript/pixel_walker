@@ -4,24 +4,24 @@ using UnityEngine;
 
 public abstract class ActivatableToggle : MonoBehaviour, Activatable
 {
-	private bool isDefault;
+	protected bool isToggled { get; private set; }
 
 	protected virtual void Awake()
 	{
-		isDefault = true;
+		isToggled = false;
 	}
 
 	public void Activate()
 	{
-		isDefault = !isDefault;
+		isToggled = !isToggled;
 
-		if (isDefault)
+		if (isToggled)
 		{
-			SetInitialState();
+			SetToggledState();
 		}
 		else
 		{
-			SetToggledState();
+			SetInitialState();
 		}
 	}
 

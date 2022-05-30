@@ -48,11 +48,26 @@ public class ActivateAgent : AgentBase
 		// before starting the behavior, rotate so arm faces the target
 		// and then activate the hand target and inverse kinimatic rig
 		targetSwitchActivatable = target.GetComponentInChildren<ActivatableTrigger>();
-		targetSwitch = targetSwitchActivatable.transform;
+		
+		bool shouldPerform = false;
+		if (targetSwitchActivatable)
+		{
+			targetSwitch = targetSwitchActivatable.transform;
+			shouldPerform = true;
+		}
+		else
+		{
+			var msg = "I can't see anything to activate on this object./n" +
+				"There are not buttons or switches.";
+			StopBehavior(false, msg);
+		}
 
-		areActionsOverriden = false;
-		isActivated = false;
-		PerformActivate();
+		if (shouldPerform)
+		{
+			areActionsOverriden = false;
+			isActivated = false;
+			PerformActivate();
+		}
 	}
 	private async void PerformActivate()
 	{

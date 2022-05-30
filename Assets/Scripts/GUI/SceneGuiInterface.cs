@@ -31,18 +31,20 @@ public class SceneGuiInterface : MonoBehaviour
 		
 		Test();
 
-		//StartCoroutine(TriggerAfterSeconds(4));
+		StartCoroutine(TriggerAfterSeconds(5));
 	}
 
 	IEnumerator TriggerAfterSeconds(float sec)
 	{
 		yield return new WaitForSeconds(sec);
-		CancelBehavior();
+		var properties = new AgentBehaviorProperties(BehaviorType.Activate, "Bench Grinder", "");
+
+		StartBehavior(properties);
 	}
 
 	public async void Test()
 	{
-		var properties = new AgentBehaviorProperties(BehaviorType.Activate, "Workshop Light Switch", "");
+		var properties = new AgentBehaviorProperties(BehaviorType.Activate, "Bench Grinder", "");
 		
 		var result = await StartBehavior(properties);
 		if (result.Cancelled)
@@ -54,7 +56,7 @@ public class SceneGuiInterface : MonoBehaviour
 			Debug.Log($"{result.Behavior} successfully finished!");
 		}
 		else
-			Debug.Log($"{result.Behavior} finished, but without success.");
+			Debug.Log($"I couldn't perform the requested action. {result.Message}");
 	}
 
 	public async Task<BehaviorResult> StartBehavior(AgentBehaviorProperties properties)
@@ -68,7 +70,8 @@ public class SceneGuiInterface : MonoBehaviour
 		}
 		else
 		{
-			throw new Exception( $"{propName} not found!" );
+			string msg = "I can't find an object with the name " + propName;
+			return new BehaviorResult(BehaviorType.None, false, false, msg);
 		}
 
 	}

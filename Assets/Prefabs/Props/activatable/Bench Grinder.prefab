@@ -49,6 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Bench Grinder
   Description: 
+  room: {fileID: 0}
 --- !u!1 &7358043668603218486
 GameObject:
   m_ObjectHideFlags: 0
@@ -269,15 +270,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 7b432d1efda1d744ebd86703dd3f5d76, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.00000003053666
+      value: -0.00000003061787
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 7b432d1efda1d744ebd86703dd3f5d76, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.00000006107332
+      value: 0.00000006123574
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 7b432d1efda1d744ebd86703dd3f5d76, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.00000006107332
+      value: 0.00000006123574
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7b432d1efda1d744ebd86703dd3f5d76, type: 3}
@@ -286,6 +287,26 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 7b432d1efda1d744ebd86703dd3f5d76, type: 3}
   m_PrefabInstance: {fileID: 7020977988097575887}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &7020977988097609067 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 100004, guid: 7b432d1efda1d744ebd86703dd3f5d76, type: 3}
+  m_PrefabInstance: {fileID: 7020977988097575887}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5307982900455060399
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7020977988097609067}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 255e820d96f0d3547b40e9e9204b6394, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetSpeed: 10
+  acceleration: 1
+  rotationAxis: {x: 1, y: 0, z: 0}
 --- !u!1001 &7888615473467672164
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -293,6 +314,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5690402928111296435}
     m_Modifications:
+    - target: {fileID: 701236007383412218, guid: 44d914c0e6e546f4088e8acfecca93b8, type: 3}
+      propertyPath: Activatables.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 701236007383412218, guid: 44d914c0e6e546f4088e8acfecca93b8, type: 3}
+      propertyPath: Activatables.Array.data[0]
+      value: 
+      objectReference: {fileID: 5307982900455060399}
     - target: {fileID: 3314294786924511954, guid: 44d914c0e6e546f4088e8acfecca93b8, type: 3}
       propertyPath: m_Size.x
       value: 0.108202934
