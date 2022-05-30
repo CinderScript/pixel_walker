@@ -263,10 +263,10 @@ MonoBehaviour:
   target: {fileID: 0}
   userInputValues: {fileID: 0}
   movementValues: {fileID: 0}
-  armIKRotationRig: {fileID: 0}
-  armIKPositionRig: {fileID: 0}
+  armIKRotationRig: {fileID: 6120416149529241236}
+  armIKPositionRig: {fileID: 7255180778493871559}
   headAimRig: {fileID: 6370973766736051607}
-  targetSwitch: {fileID: 0}
+  targetSwitchActivatable: {fileID: 0}
 --- !u!1 &540889671744568982
 GameObject:
   m_ObjectHideFlags: 0
@@ -2256,7 +2256,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aeda7bfbf984f2a4da5ab4b8967b115d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Weight: 1
+  m_Weight: 0
   m_Data:
     m_Root: {fileID: 5629600507494571740}
     m_Mid: {fileID: 3753229896807875592}
@@ -4741,7 +4741,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7795297207338384818}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.217, y: 1.2229, z: 0.562}
+  m_LocalPosition: {x: 0.217, y: 0.973, z: 0.279}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5184,7 +5184,7 @@ GameObject:
   - component: {fileID: 1633659326351016253}
   - component: {fileID: 7255180778493871559}
   m_Layer: 0
-  m_Name: ChestIK
+  m_Name: FingerPositionIK
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5217,7 +5217,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 796b75e345bd64d47a31edd757bd2670, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Weight: 1
+  m_Weight: 0
   m_Data:
     m_Root: {fileID: 1319479468919946127}
     m_Tip: {fileID: 8772028211045942738}

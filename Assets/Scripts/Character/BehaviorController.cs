@@ -50,7 +50,10 @@ public class BehaviorController : MonoBehaviour
 		startingPositionHeight = agentBody.transform.position.y;
 	}
 
-	public async Task<BehaviorResult> StartBehavior(BehaviorType behavior, Transform target = null, GameObject location = null)
+	public async Task<BehaviorResult> StartBehavior(
+		BehaviorType behavior, 
+		Transform target = null, 
+		GameObject location = null)
 	{
 		switch (behavior)
 		{

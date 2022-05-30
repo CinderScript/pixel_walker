@@ -28,7 +28,7 @@ public class ActivateAgent : AgentBase
 	// don't use model decision during rotation to target
 	bool areActionsOverriden;
 
-	bool isComplete;
+	bool isActivated;
 
 	protected override void Awake()
 	{
@@ -51,7 +51,7 @@ public class ActivateAgent : AgentBase
 		targetSwitch = targetSwitchActivatable.transform;
 
 		areActionsOverriden = false;
-		isComplete = false;
+		isActivated = false;
 		PerformActivate();
 	}
 	private async void PerformActivate()
@@ -62,13 +62,18 @@ public class ActivateAgent : AgentBase
 		areActionsOverriden = true;
 		movementValues.ClearValues(); // otherwise will use last input action
 		await rotateTowardsTargetWithOffset(-35f, 3.0f);
-		await Task.Delay(1000);
+		await Task.Delay(800);
 		
 		// enable hand IK and reach for trigger
 		StartCoroutine(SetHandRigEnabled(true, .3f));
-		await TouchActivatableTrigger(0.8f);
+		await TouchActivatableTrigger(0.65f);
 
 		// if the switch wasn't triggered, trigger it now
+		if (!isActivated)
+		{
+			targetSwitchActivatable.TriggerActivatables();
+			isActivated = true;
+		}
 		await Task.Delay(200);
 
 		// disable hand IK and reset hand target position
@@ -117,7 +122,7 @@ public class ActivateAgent : AgentBase
 		var startingPos = agentBody.TransformPoint(handTargetStartPosLocal);
 
 		// lerp hand IK target position to the switch
-		while (duration > elapsedTime && !isComplete)
+		while (duration > elapsedTime && !isActivated)
 		{
 			var nextPosition = Vector3.Slerp(startingPos, targetSwitch.position, elapsedTime / duration);
 			SetHandIKPosition(nextPosition);
@@ -127,7 +132,7 @@ public class ActivateAgent : AgentBase
 			yield return new WaitForFixedUpdate();
 		}
 
-		if (!isComplete)
+		if (!isActivated)
 		{
 			Debug.Log("didn't reach activation switch");
 		}
@@ -152,7 +157,7 @@ public class ActivateAgent : AgentBase
 
 	public void HandCollision(GameObject thrower, Collision collision)
 	{
-		isComplete = true;
+		isActivated = true;
 	}
 
 	/// <summary>

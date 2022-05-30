@@ -27,9 +27,9 @@ public class SceneGuiInterface : MonoBehaviour
 		propReferences = sceneArea.GetComponent<AreaPropReferences>();
 
 		//StartNavigationTraining();
-		StartActivateTraining();
+		//StartActivateTraining();
 		
-		//Test();
+		Test();
 
 		//StartCoroutine(TriggerAfterSeconds(4));
 	}
@@ -42,7 +42,7 @@ public class SceneGuiInterface : MonoBehaviour
 
 	public async void Test()
 	{
-		var properties = new AgentBehaviorProperties(BehaviorType.Activate, "Yellow Claw Hammer", "");
+		var properties = new AgentBehaviorProperties(BehaviorType.Activate, "Workshop Light Switch", "");
 		
 		var result = await StartBehavior(properties);
 		if (result.Cancelled)
