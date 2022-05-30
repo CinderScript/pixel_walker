@@ -218,7 +218,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100004, guid: 7b432d1efda1d744ebd86703dd3f5d76, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 2147483647
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 7b432d1efda1d744ebd86703dd3f5d76, type: 3}
       propertyPath: m_RootOrder
@@ -304,8 +304,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 255e820d96f0d3547b40e9e9204b6394, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetSpeed: 10
-  acceleration: 1
+  targetSpeed: 1000
+  acceleration: 400
   rotationAxis: {x: 1, y: 0, z: 0}
 --- !u!1001 &7888615473467672164
 PrefabInstance:

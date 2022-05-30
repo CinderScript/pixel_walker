@@ -120,27 +120,15 @@ public abstract class AgentBase : Agent
 				// is target to the right or left?
 				var isRight = signedAngleToTarget > 0;
 				// is target in front or behind?
-				var isFront = signedAngleToTarget < 90 && signedAngleToTarget > -90;
 
-				if (isRight && isFront)
+				if (isRight)
 				{
 					// turn right
 					movementValues.bodyRotation = 1;
 				}
-				else if (!isRight && isFront)
+				else 
 				{
-					// turn left
 					movementValues.bodyRotation = 2;
-				}
-				else if (isRight && !isFront)
-				{
-					// turn left
-					movementValues.bodyRotation = 2;
-				}
-				else if (!isRight && !isFront)
-				{
-					// turn right
-					movementValues.bodyRotation = 1;
 				}
 
 				yield return new WaitForFixedUpdate();

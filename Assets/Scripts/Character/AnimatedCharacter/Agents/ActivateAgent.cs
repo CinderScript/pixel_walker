@@ -21,6 +21,7 @@ public class ActivateAgent : AgentBase
 
 	private Rigidbody handTargetRb;
 	private Transform handTargetTransform;
+	private Collider handTargetCollider;
 	private Vector3 handTargetStartPosLocal;
 
 	public override BehaviorType MyBehaviorType => BehaviorType.Activate;
@@ -37,10 +38,8 @@ public class ActivateAgent : AgentBase
 		playerArea = GetComponentInParent<AgentArea>().transform;
 		handTargetTransform = agentBody.GetComponentInChildren<HandTarget>().transform;
 		handTargetRb = handTargetTransform.GetComponent<Rigidbody>();
+		handTargetCollider = handTargetTransform.GetComponent<Collider>();
 		handTargetStartPosLocal = handTargetRb.transform.localPosition;
-
-		var handCollisionThrower = handTargetRb.GetComponent<CollisionThrower>();
-		handCollisionThrower.OnCollisionEnterEvent += HandCollision;
 	}
 
 	protected override void initializeBehavior()
@@ -73,7 +72,7 @@ public class ActivateAgent : AgentBase
 	{
 		// face the target and
 		// turn on arm inverse kinimatics
-
+		handTargetCollider.enabled = true;
 		areActionsOverriden = true;
 		movementValues.ClearValues(); // otherwise will use last input action
 		await rotateTowardsTargetWithOffset(-35f, 3.0f);
@@ -96,7 +95,9 @@ public class ActivateAgent : AgentBase
 		await Task.Delay(100);
 		var handStartingPos = agentBody.TransformPoint(handTargetStartPosLocal);
 		SetHandIKPosition(handStartingPos);
+		handTargetCollider.enabled = false;
 		areActionsOverriden = false;
+		StopBehavior(true);
 	}
 	private async Task rotateTowardsTargetWithOffset(float offsetDegrees, float epsilon)
 	{
@@ -169,9 +170,12 @@ public class ActivateAgent : AgentBase
 		}
 	}
 
-
-	public void HandCollision(GameObject thrower, Collision collision)
+	/// <summary>
+	/// Called by the trigger when it detects a collision with the hand IK target
+	/// </summary>
+	public void SetTriggerActivated()
 	{
+		// the object colliding with the hand IK target should be the switch
 		isActivated = true;
 	}
 

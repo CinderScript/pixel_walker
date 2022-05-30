@@ -31,32 +31,37 @@ public class SceneGuiInterface : MonoBehaviour
 		
 		Test();
 
-		StartCoroutine(TriggerAfterSeconds(5));
+		//StartCoroutine(TriggerAfterSeconds(5));
 	}
 
 	IEnumerator TriggerAfterSeconds(float sec)
 	{
 		yield return new WaitForSeconds(sec);
-		var properties = new AgentBehaviorProperties(BehaviorType.Activate, "Bench Grinder", "");
+		var properties = new AgentBehaviorProperties(BehaviorType.Activate, "Drill Press", "");
 
 		StartBehavior(properties);
 	}
 
 	public async void Test()
 	{
-		var properties = new AgentBehaviorProperties(BehaviorType.Activate, "Bench Grinder", "");
-		
-		var result = await StartBehavior(properties);
-		if (result.Cancelled)
+		while (true)
 		{
-			Debug.Log($"Behavior was cancelled while performing {result.Behavior}.");
+			var properties = new AgentBehaviorProperties(BehaviorType.Activate, "Drill Press", "");
+
+			var result = await StartBehavior(properties);
+			if (result.Cancelled)
+			{
+				Debug.Log($"Behavior was cancelled while performing {result.Behavior}.");
+			}
+			else if (result.Success)
+			{
+				Debug.Log($"{result.Behavior} successfully finished!");
+			}
+			else
+				Debug.Log($"I couldn't perform the requested action. {result.Message}");
+
+			await Task.Delay(2000);
 		}
-		else if (result.Success)
-		{
-			Debug.Log($"{result.Behavior} successfully finished!");
-		}
-		else
-			Debug.Log($"I couldn't perform the requested action. {result.Message}");
 	}
 
 	public async Task<BehaviorResult> StartBehavior(AgentBehaviorProperties properties)
