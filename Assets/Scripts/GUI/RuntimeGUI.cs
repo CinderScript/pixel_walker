@@ -60,14 +60,20 @@ public class RuntimeGUI : MonoBehaviour
     //Variables to store input and current selected action
     private UserInputHandler handler;
     private EngineType engine;
-    private const string PROMPT_FILE = "prompt.JSON"; 
+    GptApiKey keyEncryptor;
+    
+
+    private string key;
 
 
 
 
     //CONSTANTS
     private const int DELAY = 1;
-    private const string FILEPATH = "key.txt";
+    private const string KEY_FILE = "key.txt";
+    private const string PROMPT_FILE = "prompt.JSON";
+
+    private const string KEY_DIRECTORY = "PixelWalker";
 
     //Variables for saving
     private string debugMessage = "";
@@ -80,19 +86,8 @@ public class RuntimeGUI : MonoBehaviour
 
 
 
-    async void OnEnable()
+    void OnEnable()
     {
-
-        keyPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/" + FILEPATH;
-
-        if (File.Exists(keyPath))
-        {
-            //File.SetAttributes(keyPath, FileAttributes.Hidden);
-            string key = await LoadApiKey(keyPath);
-            handler = new UserInputHandler(key, PROMPT_FILE, engine);
-        }
-
-
         //Root visual element of the UI Document
         var rootVE = GetComponent<UIDocument>().rootVisualElement;
 
@@ -135,6 +130,7 @@ public class RuntimeGUI : MonoBehaviour
         infoWindow = rootVE.Q<VisualElement>("info-window");
         errorLabel = rootVE.Q<Label>("error-label");
 
+        //Initialize engine window elements
         engineWindow = rootVE.Q<VisualElement>("engine-select");
         engineConfirmBtn = rootVE.Q<Button>("confirm-engine");
         engineRadioGroup = rootVE.Q<RadioButtonGroup>("engine-radio-group");
@@ -163,6 +159,25 @@ public class RuntimeGUI : MonoBehaviour
         levelOneBtn.clicked += () => SceneManager.LoadScene(0);
         levelthreeBtn.clicked += () => SceneManager.LoadScene(1);
         levelTwoBtn.clicked += () => SceneManager.LoadScene(2);
+
+
+        keyPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), KEY_DIRECTORY);
+        Directory.CreateDirectory(keyPath);
+        keyPath = Path.Combine(keyPath, KEY_FILE);
+
+        keyEncryptor = new GptApiKey(keyPath.ToString());
+        if (File.Exists(keyPath))
+        {
+            key = keyEncryptor.GetKeyFromFile();
+            File.SetAttributes(keyPath, FileAttributes.Hidden);
+        }
+        else
+        {
+            OpenApiInputMenu();
+        }
+
+        
+        handler = new UserInputHandler(key, PROMPT_FILE, engine);
     }
 
     public void SetCurrentBehavior(string behavior)
@@ -186,52 +201,42 @@ public class RuntimeGUI : MonoBehaviour
     /// </summary>
     async void SendToGPT()
     {
-        string replyForGptWindow = "...";
-        string replyForDaveWindow = "...";
-        string key = "";
-        if (!File.Exists(keyPath))
+        string replyGptWindow = "...";
+        string replyDaveWindow = "...";
+        GptResponse responce;
+
+        try
         {
-            debugMessage = "No API key on record";
-            StartCoroutine(CreatePopUp(debugMessage, DELAY));
-            Debug.Log("ERROR: NO KEY API PROVIDED");
+            responce = await handler.GetGptResponce(userInput.value);
         }
-        else if (File.Exists(keyPath))
+
+        catch (Exception) { throw; }
+
+        var responceProperties = responce.BehaviorProperties;
+        if (responce.Type == InputType.Command)
         {
-            key = await LoadApiKey(keyPath);
-            //string testHandle = await TestGptResponse(key);
-            GptResponse responce;
-            try
-            {
-                responce = await handler.GetGptResponce(userInput.value);
-            }
+            replyGptWindow = "\nBehavior:\n\t " + responceProperties.Behavior
+                                    + "\nObject:\n\t " + responceProperties.Object
+                                    + "\nLocation:\n\t " + responceProperties.Location;
 
-            catch (Exception){throw;}
-
-            var responceProperties = responce.BehaviorProperties;
-            if (responce.Type == InputType.Command)
-            {
-                replyForGptWindow = "\nBehavior:\n\t " + responceProperties.Behavior
-                                        + "\nObject:\n\t " + responceProperties.Object
-                                        + "\nLocation:\n\t " + responceProperties.Location;
-
-                replyForDaveWindow = responce.GeneratedText.ToString();
-            }
-            else if (responce.Type == InputType.Question)
-            {
-                replyForDaveWindow = responce.GeneratedText.ToString();
-            }
-            else if (responce.Type == InputType.Conversation)
-            {
-                replyForDaveWindow = responce.GeneratedText.ToString();
-            }
-            else
-            {
-                replyForGptWindow = responce.GeneratedText.ToString();
-            }
-            gptParseOutput.value = replyForGptWindow;
-            daveOutput.value = replyForDaveWindow;
+            replyDaveWindow = responce.GeneratedText.ToString();
         }
+        else if (responce.Type == InputType.Question)
+        {
+            replyDaveWindow = responce.GeneratedText.ToString();
+        }
+        else if (responce.Type == InputType.Conversation)
+        {
+            replyDaveWindow = responce.GeneratedText.ToString();
+        }
+        else
+        {
+            replyGptWindow = responce.GeneratedText.ToString();
+        }
+        gptParseOutput.value = replyGptWindow;
+        daveOutput.value = replyDaveWindow;
     }
+
 
     /// <summary>
     /// Determines events when Menu button is clicked.
@@ -323,9 +328,13 @@ public class RuntimeGUI : MonoBehaviour
             string key = apiInput.value;
             string test = await TestGptResponse(key);
             Debug.Log(test);
-            if(test != null){
-                SaveApiKey(key, keyPath);
-            }else{
+            if (test != null)
+            {
+                keyEncryptor.SaveKeyToFile(key);
+                File.SetAttributes(keyPath, FileAttributes.Hidden);
+            }
+            else
+            {
                 throw new Exception("Key not valid");
             }
         }
@@ -404,7 +413,6 @@ public class RuntimeGUI : MonoBehaviour
         menuWindow.style.display = DisplayStyle.None;
         levelSelectWindow.style.display = DisplayStyle.None;
         engineWindow.style.display = DisplayStyle.None;
-
     }
 
     /// <summary>
@@ -412,7 +420,7 @@ public class RuntimeGUI : MonoBehaviour
     /// Selected via radio buttons.
     /// Defaults to Davinci
     /// </summary>
-    async void SelectEngine()
+    void SelectEngine()
     {
         if (engineRadioGroup.value == 1)
         {
@@ -431,38 +439,10 @@ public class RuntimeGUI : MonoBehaviour
             engine = EngineType.Davinci;
         }
 
-        string key = await LoadApiKey(keyPath);
+        key = keyEncryptor.GetKeyFromFile();
         handler = new UserInputHandler(key, PROMPT_FILE, engine);
         Debug.Log(engineRadioGroup.value.ToString());
         ToggleMainUI(true);
     }
-    async void SaveApiKey(string key, string path)
-    {
-        try
-        {
-            await File.WriteAllTextAsync(path, key);
-        }
-        catch (Exception)
-        {
-            throw;
-        }
-        //ApiCrypt.AddEncryption(path);
-        Debug.Log(path);
-    }
-
-    async Task<string> LoadApiKey(string path)
-    {
-        //ApiCrypt.RemoveEncryption(path);
-        try
-        {
-            
-            string key = await File.ReadAllTextAsync(path);
-            //ApiCrypt.AddEncryption(path);
-            return key;
-        }
-        catch (Exception) { throw; }
-    }
-
-
 
 }
