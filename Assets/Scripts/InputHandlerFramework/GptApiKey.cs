@@ -23,7 +23,6 @@ namespace GptApiKey
 {
     public class GptApiKey
     {
-        public string ApiKey { get; private set; }
         public string FilePath { get; }
 
         // method to encypt the key by cryptostream and memorystream, then write it on a file
@@ -47,11 +46,10 @@ namespace GptApiKey
                     cs.Write(inputbyteArray, 0, inputbyteArray.Length);
                     cs.FlushFinalBlock();
                     key = Convert.ToBase64String(ms.ToArray());
-                    ApiKey = key;
                 }
                 using (StreamWriter wr = new StreamWriter(FilePath))
                 {
-                    wr.WriteLine(ApiKey);
+                    wr.WriteLine(key);
                 }
             }
             catch (Exception)
@@ -65,6 +63,11 @@ namespace GptApiKey
         {
             try
             {
+                string key;
+                using (StreamReader rd = new StreamReader(FilePath))
+                {
+                    key = rd.ReadAllText(FilePath);
+                }
                 string publickey = "12345678";
                 string secretkey = "87654321";
                 byte[] privatekeyByte = { };
@@ -73,8 +76,8 @@ namespace GptApiKey
                 publickeybyte = System.Text.Encoding.UTF8.GetBytes(publickey);
                 MemoryStream ms = null;
                 CryptoStream cs = null;
-                byte[] inputbyteArray = new byte[ApiKey.Replace(" ", "+").Length];
-                inputbyteArray = Convert.FromBase64String(ApiKey.Replace(" ", "+"));
+                byte[] inputbyteArray = new byte[key.Replace(" ", "+").Length];
+                inputbyteArray = Convert.FromBase64String(key.Replace(" ", "+"));
                 using (DESCryptoServiceProvider des = new DESCryptoServiceProvider())
                 {
                     ms = new MemoryStream();
@@ -82,9 +85,9 @@ namespace GptApiKey
                     cs.Write(inputbyteArray, 0, inputbyteArray.Length);
                     cs.FlushFinalBlock();
                     Encoding encoding = Encoding.UTF8;
-                    ApiKey = encoding.GetString(ms.ToArray());
+                    key = encoding.GetString(ms.ToArray());
                 }
-                    return ApiKey;
+                return key;
             }
             catch (Exception)
             {
@@ -105,10 +108,9 @@ namespace GptApiKey
         {
             GptApiKey example = new GptApiKey("C:/Users/Tn/Documents/ApiKeyHandler/WriteApiKey.txt");
             example.SaveKeyToFile("IloveCoding4327");
-            string str = example.ApiKey;
-            Console.WriteLine("encrypted key: " + str);
+            Console.WriteLine("Saved Encrypt key to file");
             str = example.GetKeyFromFile();
-            Console.WriteLine("decryption complete " + str);
+            Console.WriteLine("Key decryption complete ");
         }
     }
 }
