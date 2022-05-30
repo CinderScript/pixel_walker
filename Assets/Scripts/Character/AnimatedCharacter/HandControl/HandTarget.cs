@@ -2,23 +2,27 @@ using UnityEngine;
 
 public class HandTarget : MonoBehaviour
 {
-	[Header("Hand of Agent")]
-	public Transform hand;
+	// for use with physical hand that matches rotation of target
+	// not in use when using IK to target finger
 
-	// this objects RB
-	private Rigidbody targetRb;
+	//[Header("Hand of Agent")]
+	//public Transform hand;
 
-	private void Awake()
-	{
-		targetRb = GetComponent<Rigidbody>();
-	}
+	//// this objects RB
+	//private Rigidbody targetRb;
 
-	private void FixedUpdate()
-	{
+	//private void Awake()
+	//{
+	//	targetRb = GetComponent<Rigidbody>();
+	//}
 
-		// point targetRB in direction the hand is pointing
-		targetRb.rotation = Quaternion.LookRotation(hand.forward, hand.up);
+	//private void FixedUpdate()
+	//{
+	//	//Debug.DrawRay(hand.position, -hand.up, Color.green);
+	//	//Debug.DrawRay(targetRb.position, -targetRb.transform.up, Color.red);
 
-		targetRb.angularVelocity = Vector3.zero;
-	}
+	//	// point targetRB in direction the hand is pointing
+	//	targetRb.rotation = Quaternion.LookRotation(hand.forward, hand.up);
+	//	targetRb.angularVelocity = Vector3.zero;
+	//}
 }

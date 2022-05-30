@@ -1,4 +1,6 @@
 ﻿
+using System.Threading.Tasks;
+
 public class DropAgent : AgentBase
 {
 	public override BehaviorType MyBehaviorType => BehaviorType.Drop;

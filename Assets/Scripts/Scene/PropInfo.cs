@@ -10,7 +10,7 @@ public class PropInfo : MonoBehaviour
 	public string Description;
 
 	// set at runtime
-	[Header("Location")]
+	[Header("Set At RTime")]
 	[Tooltip("This object is assigned at runtime by checking the prop's parent objects")]
 	public Room room;
 

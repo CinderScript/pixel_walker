@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Threading.Tasks;
 
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
@@ -11,7 +12,9 @@ using UnityEngine;
 public class NavigateAgent : AgentBase
 {
 	[Header("For Training")]
-	public float success_distance = 0.35f;
+	public float defaultSuccessDistance = 0.7f;
+	public float standTargetSuccessDistanceOverride = 0.3f;
+	private float successDistance;
 
 	[Header("Assigned at RTime")]
 	[SerializeField]
@@ -57,6 +60,17 @@ public class NavigateAgent : AgentBase
 		// get penalty for this lesson in curriculum - only used during training
 		collisionPenalty = Academy.Instance.EnvironmentParameters
 			.GetWithDefault("collision_penalty", COLLISION_PENALTY_DEFAULT);
+
+		var standTarget = target.GetComponentInChildren<StandTarget>();
+		if (standTarget)
+		{
+			target = standTarget.transform;
+			successDistance = standTargetSuccessDistanceOverride;
+		}
+		else
+		{
+			successDistance = defaultSuccessDistance;
+		}
 	}
 
 	public override void CollectObservations(VectorSensor sensor)
@@ -85,7 +99,7 @@ public class NavigateAgent : AgentBase
 		if (lastHit != null)
 		{
 			// isCurrentlyColliding is true
-			var point = agentBody.transform.InverseTransformPoint(lastHit.point);
+			var point = agentBody.InverseTransformPoint(lastHit.point);
 			collisionVector = new Vector2(point.x, point.z);
 			lastHit = null; // consume
 		}
@@ -129,7 +143,7 @@ public class NavigateAgent : AgentBase
 			Vector3 targetPos = new Vector3(target.position.x, 0, target.position.z);
 
 			distanceToTarget = Vector3.Distance(charPos, targetPos);
-			if (distanceToTarget < success_distance)
+			if (distanceToTarget < successDistance)
 			{
 				giveTimePenalty = false;
 				Finished_Success();
@@ -146,41 +160,10 @@ public class NavigateAgent : AgentBase
 		AddReward(SUCCESS_REWARD);
 
 		areActionsOverriden = true;
-		await FaceTargetAsync();
+		movementValues.ClearValues(); // otherwise will use last input action
+		await RotateTowardsPos(target.position, 5f);
 		areActionsOverriden = false;
-
 		StopBehavior(true);         // base class signal stop
-	}
-	IEnumerator FaceTargetAsync()
-	{
-		bool isFacingTarget = false;
-		while (!isFacingTarget)
-		{
-			// direction the agent should be facing
-			Vector3 dirFromAgentToTarget = target.position - transform.position;
-
-			// transform.forward is the current agent direction
-			// dot product of agent's right direction and target direction
-			var dotProduct = Vector3.Dot(dirFromAgentToTarget, transform.right);
-
-			// is target to the right of the agent?
-			if (dotProduct > 0)
-			{
-				// turn right
-				movementValues.bodyRotation = 1;
-			}
-			else
-			{
-				// turn left
-				movementValues.bodyRotation = 2;
-			}
-
-			if ( Mathf.Abs(dotProduct) < 0.1f )
-			{
-				isFacingTarget = true;
-			}
-			yield return new WaitForFixedUpdate();
-		}
 	}
 	private void CharacterCollisionHandler(GameObject thrower, ControllerColliderHit hitInfo)
 	{

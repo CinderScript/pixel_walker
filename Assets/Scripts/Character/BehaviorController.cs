@@ -192,7 +192,7 @@ public class BehaviorController : MonoBehaviour
 		IsTraining = true;
 		while (IsTraining)
 		{
-			//await Navigate(target);
+			await Navigate(target);
 			await Activate(target);
 		}
 	}

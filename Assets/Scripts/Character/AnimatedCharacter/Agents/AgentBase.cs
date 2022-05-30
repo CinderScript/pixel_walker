@@ -11,10 +11,8 @@ public abstract class AgentBase : Agent
 
 	public bool RequestAcademyStep { get; private set; }
 
-	[Header("Agent")]
-	public GameObject agentBody;
-
 	[Header("Assigned at RTime")]
+	public Transform agentBody;
 	[SerializeField]
 	protected Transform playerArea;
 	[SerializeField]
@@ -47,7 +45,7 @@ public abstract class AgentBase : Agent
 		}
 
 		// GET AGENT'S CHARACTER CONTROLLER	(for observations)	
-		agentBody = GetComponentInParent<CharacterController>().gameObject;
+		agentBody = GetComponentInParent<CharacterController>().transform;
 
 		// GET SCENE REFERENCES - spawn points, props, controller movement value input location
 		playerArea = GetComponentInParent<AgentArea>().transform;
@@ -86,13 +84,72 @@ public abstract class AgentBase : Agent
 		movementValues.ClearValues();
 		EndEpisode();
 	}
-
+	
 	IEnumerator BehaviorFinishAwaiter()
 	{
 		while (!isFinished)
 		{
 			yield return new WaitForFixedUpdate();
 		}
+	}
+
+	protected IEnumerator RotateToDir(Vector3 direction, float epsilon)
+	{
+		bool finished = false;
+
+		while (!finished)
+		{
+			var signedAngleToTarget 
+				= Vector3.SignedAngle(
+					agentBody.forward,
+					direction,
+					agentBody.up);
+
+			if (signedAngleToTarget < epsilon && signedAngleToTarget > -epsilon)
+			{
+				movementValues.ClearValues(); // otherwise will use last input action
+				finished = true;
+			}
+			else
+			{
+				// is target to the right or left?
+				var isRight = signedAngleToTarget > 0;
+				// is target in front or behind?
+				var isFront = signedAngleToTarget < 90 && signedAngleToTarget > -90;
+
+				if (isRight && isFront)
+				{
+					// turn right
+					movementValues.bodyRotation = 1;
+				}
+				else if (!isRight && isFront)
+				{
+					// turn left
+					movementValues.bodyRotation = 2;
+				}
+				else if (isRight && !isFront)
+				{
+					// turn left
+					movementValues.bodyRotation = 2;
+				}
+				else if (!isRight && !isFront)
+				{
+					// turn right
+					movementValues.bodyRotation = 1;
+				}
+
+				yield return new WaitForFixedUpdate();
+			}
+		}
+	}
+	protected async Task RotateTowardsPos(Vector3 position, float epsilon)
+	{
+		// direction the agent should be facing
+		var targetPos = new Vector3(position.x, 0, position.z);
+		var agentPos = new Vector3(agentBody.position.x, 0, agentBody.position.z);
+		Vector3 dirFromAgentToTarget = targetPos - agentPos;
+
+		await RotateToDir(dirFromAgentToTarget, epsilon);
 	}
 }
 
@@ -101,6 +158,7 @@ public class BehaviorResult
 	public BehaviorType Behavior { get; }
 	public bool Success { get; }
 	public bool Cancelled { get; }
+	public string Message { get; set; }
 	public BehaviorResult(BehaviorType behavior, bool success, bool cancelled)
 	{
 		Behavior = behavior;

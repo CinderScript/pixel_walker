@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 436627130}
-  m_IndirectSpecularColor: {r: 0.13987543, g: 0.1749982, b: 0.23647676, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1204,7 +1204,7 @@ MonoBehaviour:
   m_VolumeLayerMask:
     serializedVersion: 2
     m_Bits: 311
-  m_VolumeTrigger: {fileID: 864819263}
+  m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 1
   m_Antialiasing: 2
@@ -7071,7 +7071,7 @@ MonoBehaviour:
   priority: 0
   blendDistance: 0
   weight: 1
-  sharedProfile: {fileID: 0}
+  sharedProfile: {fileID: 11400000, guid: 9d6403b545cb6b0488657fd45bea663c, type: 2}
 --- !u!4 &864819263
 Transform:
   m_ObjectHideFlags: 0

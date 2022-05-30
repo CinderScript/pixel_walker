@@ -123,11 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!4 &709155148 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4118225438411926406, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
-  m_PrefabInstance: {fileID: 7529525660460480106}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &745675435
 GameObject:
   m_ObjectHideFlags: 0
@@ -243,6 +238,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!4 &827396088 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7121218835180849769, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
+  m_PrefabInstance: {fileID: 7529525660460480106}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1642835847 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 128910342866220611, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
@@ -480,6 +480,10 @@ PrefabInstance:
       propertyPath: sceneArea
       value: 
       objectReference: {fileID: 1774891076}
+    - target: {fileID: 7001760034394332154, guid: 97f1d3f5100e756428bfebc57434b597, type: 3}
+      propertyPath: activateObject
+      value: 
+      objectReference: {fileID: 827396088}
     - target: {fileID: 8628815513046081643, guid: 97f1d3f5100e756428bfebc57434b597, type: 3}
       propertyPath: sceneArea
       value: 
@@ -495,28 +499,20 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 128910342866220988, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -3.7587695
-      objectReference: {fileID: 0}
-    - target: {fileID: 201928497081409672, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 9.227
+      value: 0.20000029
       objectReference: {fileID: 0}
-    - target: {fileID: 201928497081409672, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
+    - target: {fileID: 128910342866220988, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.7430806
+      objectReference: {fileID: 0}
+    - target: {fileID: 128910342866220988, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 4.69
+      value: -3.7587726
       objectReference: {fileID: 0}
-    - target: {fileID: 912427085652913605, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
-      propertyPath: m_Data.m_Tolerance
-      value: 0.0001
-      objectReference: {fileID: 0}
-    - target: {fileID: 912427085652913605, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
-      propertyPath: m_Data.m_MaxIterations
-      value: 16
-      objectReference: {fileID: 0}
-    - target: {fileID: 912427085652913605, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
-      propertyPath: m_Data.m_TipRotationWeight
-      value: 0
+    - target: {fileID: 128910342866220989, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
+      propertyPath: m_Lens.m_SensorSize.x
+      value: 2.0574162
       objectReference: {fileID: 0}
     - target: {fileID: 1074135842055565209, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
       propertyPath: DisableObjects
@@ -530,17 +526,33 @@ PrefabInstance:
       propertyPath: objects.Array.data[0]
       value: 
       objectReference: {fileID: 1642835847}
-    - target: {fileID: 2883990661231699140, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
-      propertyPath: hand
-      value: 
-      objectReference: {fileID: 709155148}
-    - target: {fileID: 4728416572364400949, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
-      propertyPath: m_IsActive
-      value: 0
+    - target: {fileID: 7013290155715168804, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.20000029
+      objectReference: {fileID: 0}
+    - target: {fileID: 7013290155715168804, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.7430806
       objectReference: {fileID: 0}
     - target: {fileID: 7013290155715168804, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -3.7587695
+      value: -3.7587726
+      objectReference: {fileID: 0}
+    - target: {fileID: 7013290155715168804, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.98480785
+      objectReference: {fileID: 0}
+    - target: {fileID: 7013290155715168804, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.17364818
+      objectReference: {fileID: 0}
+    - target: {fileID: 7013290155715168804, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7013290155715168804, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 7529525658719208993, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
       propertyPath: m_RootOrder
@@ -590,5 +602,24 @@ PrefabInstance:
       propertyPath: m_Name
       value: Area
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7770087268173165900, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
+--- !u!1 &7529525660460480107 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7389272488893467226, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
+  m_PrefabInstance: {fileID: 7529525660460480106}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7529525660460480108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7529525660460480107}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c337057b098a9704cb7c907640f88d8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  material: {fileID: 0}
