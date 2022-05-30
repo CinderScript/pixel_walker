@@ -66,7 +66,7 @@ namespace GptApiKey
                 string key;
                 using (StreamReader rd = new StreamReader(FilePath))
                 {
-                    key = rd.ReadAllText(FilePath);
+                    key = rd.ReadLine();
                 }
                 string publickey = "12345678";
                 string secretkey = "87654321";
@@ -95,12 +95,12 @@ namespace GptApiKey
             }
         }
 
-        public GptApiKey(string path) 
+        public GptApiKey(string path)
         {
             FilePath = path;
         }
     }
-    
+
     //main method to test the encryption/decryption 
     public class GptApiKeyTest
     {
@@ -109,8 +109,8 @@ namespace GptApiKey
             GptApiKey example = new GptApiKey("C:/Users/Tn/Documents/ApiKeyHandler/WriteApiKey.txt");
             example.SaveKeyToFile("IloveCoding4327");
             Console.WriteLine("Saved Encrypt key to file");
-            str = example.GetKeyFromFile();
-            Console.WriteLine("Key decryption complete ");
+            string str = example.GetKeyFromFile();
+            Console.WriteLine("Key decryption complete " + str);
         }
     }
 }
