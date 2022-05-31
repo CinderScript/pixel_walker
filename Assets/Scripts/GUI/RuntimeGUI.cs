@@ -54,9 +54,8 @@ public class RuntimeGUI : MonoBehaviour
 
     //Level Select screen elements (Invisible at Runtime)
     private VisualElement levelSelectWindow;
-    private Button levelOneBtn;
-    private Button levelTwoBtn;
-    private Button levelthreeBtn;
+    private Button navigationLevelLodeBtn;
+    private Button standingPhysicsLevelLoadBtn;
 
     //API Key screen elements (Invisible at Runtime)
     private VisualElement apiWindow;
@@ -92,15 +91,19 @@ public class RuntimeGUI : MonoBehaviour
     private string keyPath;
 
     //List used to fill actions radio button group
-    List<string> actionlist = new List<String>();
+    List<string> actionlist = new List<string>();
+
+    //Scene GUI connection
+    SceneGuiInterface sceneConnection;
 
     void OnEnable()
     {
         //Root visual element of the UI Document
         var rootVE = GetComponent<UIDocument>().rootVisualElement;
+		sceneConnection = FindObjectOfType(typeof(SceneGuiInterface)) as SceneGuiInterface;
 
-        //Initialize Main UI elements
-        menuBtn = rootVE.Q<Button>("menu");
+		//Initialize Main UI elements
+		menuBtn = rootVE.Q<Button>("menu");
         resetBtn = rootVE.Q<Button>("reset");
         submitBtn = rootVE.Q<Button>("submit");
         cancelBtn = rootVE.Q<Button>("cancel");
@@ -117,9 +120,8 @@ public class RuntimeGUI : MonoBehaviour
 
         //Initialize Level Select window elements
         levelSelectWindow = rootVE.Q<VisualElement>("level-select");
-        levelOneBtn = rootVE.Q<Button>("level-1");
-        levelTwoBtn = rootVE.Q<Button>("level-2");
-        levelthreeBtn = rootVE.Q<Button>("level-3");
+        navigationLevelLodeBtn = rootVE.Q<Button>("level-1");
+        standingPhysicsLevelLoadBtn = rootVE.Q<Button>("level-2");
 
         //Initialize API key window elements
         apiWindow = rootVE.Q<VisualElement>("api-menu");
@@ -151,7 +153,8 @@ public class RuntimeGUI : MonoBehaviour
         }
 
         //Fuctionality of all buttons added here
-        submitBtn.clicked += SendToGPT;
+        submitBtn.clicked += OnSubmitHandler;
+        cancelBtn.clicked += sceneConnection.CancelBehavior;
         menuBtn.clicked += OnMainMenuClicked;
         resetBtn.clicked += ReloadScene;
         menuResetBtn.clicked += ReloadScene;
@@ -162,9 +165,8 @@ public class RuntimeGUI : MonoBehaviour
         engineConfirmBtn.clicked += SelectEngine;
 
         //Level select buttons -- refer to scene build order
-        levelOneBtn.clicked += () => SceneManager.LoadScene(0);
-        levelthreeBtn.clicked += () => SceneManager.LoadScene(1);
-        levelTwoBtn.clicked += () => SceneManager.LoadScene(2);
+        navigationLevelLodeBtn.clicked += () => SceneManager.LoadScene(0);
+        standingPhysicsLevelLoadBtn.clicked += () => SceneManager.LoadScene(1);
 
         //Initializing directory path to store encrypted key
         keyPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), KEY_DIRECTORY);
@@ -182,7 +184,7 @@ public class RuntimeGUI : MonoBehaviour
             OpenApiInputMenu();
         }
 
-        handler = new UserInputHandler(key, PROMPT_FILE, engine);
+        handler = new UserInputHandler(sceneConnection.GetPropsList(), key, PROMPT_FILE, engine);
     }
 
     public void SetCurrentBehavior(string behavior)
@@ -204,7 +206,7 @@ public class RuntimeGUI : MonoBehaviour
     /// is supplied  the it creates a pop up (refer to CreatePopUp())
     /// to display error, else calls on the User Input Handler to classify 
     /// </summary>
-    async void SendToGPT()
+    async void OnSubmitHandler()
     {
         string replyGptWindow = "...";
         string replyDaveWindow = "...";
@@ -240,8 +242,24 @@ public class RuntimeGUI : MonoBehaviour
         }
         gptParseOutput.value = replyGptWindow;
         daveOutput.value = replyDaveWindow;
-    }
 
+		if (responce.Type == InputType.Command)
+		{
+            Debug.Log($"Object Name: **{responce.BehaviorProperties.Object}**");
+            var result = await sceneConnection.StartBehavior(responce.BehaviorProperties);
+
+            if (result.Cancelled)
+            {
+                Debug.Log($"Behavior was cancelled while performing {result.Behavior}.");
+            }
+            else if (result.Success)
+            {
+                Debug.Log($"{result.Behavior} successfully finished!");
+            }
+            else
+                Debug.Log($"I couldn't perform the requested action. {result.Message}");
+        }
+	}
 
     /// <summary>
     /// Determines events when Menu button is clicked.
@@ -258,7 +276,6 @@ public class RuntimeGUI : MonoBehaviour
         {
             ToggleMainUI(false);
             menuWindow.style.display = DisplayStyle.Flex;
-
         }
     }
 
@@ -364,7 +381,7 @@ public class RuntimeGUI : MonoBehaviour
             testResponse = await testConnection.GenerateText("Say one word {stop}");
             debugMessage = "Validation Successful!";
             engine = EngineType.Davinci;
-            handler = new UserInputHandler(key, PROMPT_FILE, engine);
+            handler = new UserInputHandler(sceneConnection.GetPropsList(), key, PROMPT_FILE, engine);
         }
         catch (Exception)
         {
@@ -453,7 +470,7 @@ public class RuntimeGUI : MonoBehaviour
         }
 
         key = keyEncryptor.GetKeyFromFile();
-        handler = new UserInputHandler(key, PROMPT_FILE, engine);
+        handler = new UserInputHandler(sceneConnection.GetPropsList(), key, PROMPT_FILE, engine);
         Debug.Log(engineRadioGroup.value.ToString());
         ToggleMainUI(true);
     }

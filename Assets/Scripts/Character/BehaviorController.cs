@@ -79,8 +79,8 @@ public class BehaviorController : MonoBehaviour
 				{
 					return await Navigate(target);
 				}
-
-			case BehaviorType.Activate:
+				
+			case BehaviorType.TurnOn:
 				{
 					var result = await Navigate(target);
 					if (result.Success)
@@ -92,22 +92,49 @@ public class BehaviorController : MonoBehaviour
 						return result;
 					}
 				}
-
-			case BehaviorType.PickUp:
+			case BehaviorType.TurnOff:
 				{
 					var result = await Navigate(target);
 					if (result.Success)
 					{
-						return await PickUp(target);
+						return await Activate(target);
 					}
 					else
 					{
 						return result;
 					}
 				}
+			case BehaviorType.PickUp:
+				{
+					var msg = "I don't know how to pick up objects yet...";
+					return new BehaviorResult(BehaviorType.PickUp, false, false, msg);
+					//var result = await Navigate(target);
+					//if (result.Success)
+					//{
+					//	return await PickUp(target);
+					//}
+					//else
+					//{
+					//	return result;
+					//}
+				}
+			case BehaviorType.SetDown:
+				{
+					var msg = "I don't know how to set down objects yet...";
+					return new BehaviorResult(BehaviorType.SetDown, false, false, msg);
+				}
 
 			case BehaviorType.Drop:
-					return await Drop();
+				{
+					var msg = "I don't know how to drop objects yet...";
+					return new BehaviorResult(BehaviorType.SetDown, false, false, msg);
+				}
+			case BehaviorType.Open:
+				{
+					var msg = "I can't open things yet...";
+					return new BehaviorResult(BehaviorType.SetDown, false, false, msg);
+				}
+			//return await Drop();
 
 			default:
 				throw new System.Exception("Behavior not implemented");

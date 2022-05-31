@@ -45,7 +45,6 @@ public class PromptLoader
         prompts.CommandParser = String.Join("", prompts.CommandList);
         prompts.BestMatchSelector = String.Join("", prompts.BestMatchList);
         prompts.ConversationResponder = String.Join("", prompts.ConversationList);
-        prompts.PropsListLoader = String.Join(", ", prompts.PropsList);
         return prompts;
     }
 }
@@ -71,5 +70,4 @@ public class GptPrompts
     public string CommandParser { get; set; }
     public string BestMatchSelector { get; set; }
     public string ConversationResponder {get; set; }
-    public string PropsListLoader {get; set; }
 }

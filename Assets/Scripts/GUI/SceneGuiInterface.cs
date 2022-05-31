@@ -35,21 +35,20 @@ public class SceneGuiInterface : MonoBehaviour
 	void Awake()
     {
         behaviorController = sceneArea.GetComponentInChildren<BehaviorController>();
+		propReferences = sceneArea.GetComponent<AreaPropReferences>();
     }
 
 	private void Start()
 	{
-		propReferences = sceneArea.GetComponent<AreaPropReferences>();
-
 		//StartNavigationTraining();
-		GuiUsageExample_DebugTest();
+		//GuiUsageExample_DebugTest();
 		Debug.Log(propReferences.GetAllPropNames());
 	}
 
 	IEnumerator TriggerAfterSeconds_DebugTest(float sec)
 	{
 		yield return new WaitForSeconds(sec);
-		var properties = new AgentBehaviorProperties(BehaviorType.Activate, "Drill Press", "");
+		var properties = new AgentBehaviorProperties(BehaviorType.TurnOn, "Drill Press", "");
 
 		StartBehavior(properties);
 	}
@@ -58,7 +57,7 @@ public class SceneGuiInterface : MonoBehaviour
 	{
 		while (true)
 		{
-			var properties = new AgentBehaviorProperties(BehaviorType.Activate, "sound_system", "");
+			var properties = new AgentBehaviorProperties(BehaviorType.Navigate, "yellow_claw_hammer");
 
 			var result = await StartBehavior(properties);
 			if (result.Cancelled)
@@ -79,7 +78,6 @@ public class SceneGuiInterface : MonoBehaviour
 	public async Task<BehaviorResult> StartBehavior(AgentBehaviorProperties properties)
 	{
 		var target = propReferences.GetProp(properties.Object);
-		var propName = target.GetComponent<PropInfo>().Name;
 
 		if (target)
 		{
@@ -87,7 +85,7 @@ public class SceneGuiInterface : MonoBehaviour
 		}
 		else
 		{
-			string msg = "I can't find an object with the name " + propName;
+			string msg = "I can't find an object with the name " + properties.Object;
 			return new BehaviorResult(BehaviorType.None, false, false, msg);
 		}
 

@@ -32,6 +32,7 @@ public class UserInputHandler
     private const int MAX_RETRIES = 3;
     private int retries = MAX_RETRIES;
     private int bestMatchRetries = MAX_RETRIES;
+    private string propsInScene;
 
     
     /// <summary>
@@ -41,8 +42,9 @@ public class UserInputHandler
     /// <param name="apiKey"> the unencrypted api key</param>
     /// <param name="gptPromptsFilePath">file path of encrypted key</param>
     /// <param name="engine">engine type for GPT-3 (default Davinci)</param>
-    public UserInputHandler(string apiKey, string gptPromptsFilePath, EngineType engine)
+    public UserInputHandler(string propsInScene, string apiKey, string gptPromptsFilePath, EngineType engine)
     {
+        this.propsInScene = propsInScene;
         connection = new Gpt3Connection(apiKey, engine);
         classifer = new PromptLoader();
         prompts = classifer.GetPromptsFromFile(gptPromptsFilePath);
@@ -126,7 +128,7 @@ public class UserInputHandler
                     try
                     {
                         objectBestMatch = await getObjectBestMatch(nameOfUserRequestedObject);
-                        generatedText = objectBestMatch;
+                        agentBehaviorProperties.Object = objectBestMatch;
                     }
                     catch (Exception)
                     {
@@ -197,9 +199,8 @@ public class UserInputHandler
     /// <returns></returns>
     private async Task<string> respondConversation(string userInput)
     {
-        string props = prompts.PropsListLoader.ToLower();
         string promptStart = prompts.ConversationResponder;
-        promptStart = promptStart.Replace("{$$props$$}", props);
+        promptStart = promptStart.Replace("{$$props$$}", propsInScene);
 
         string fullPrompt = promptStart + "Input: " + userInput;
         fullPrompt = fullPrompt + "Output:";
@@ -224,9 +225,8 @@ public class UserInputHandler
     /// <returns></returns>
     private async Task<string> answerQuestion(string userInput)
     {
-        string props = prompts.PropsListLoader.ToLower();
         string promptStart = prompts.QuestionResponder;
-        promptStart = promptStart.Replace("{$$props$$}", props);
+        promptStart = promptStart.Replace("{$$props$$}", propsInScene);
 
         // TODO: COMPLETE THE PROMPT WITH USER INPUT
         string fullPrompt = promptStart + "Input: " + userInput;
@@ -278,7 +278,7 @@ public class UserInputHandler
             int endIndex = responce.IndexOf(",");
             var behaviorString = responce.Substring(startIndex, endIndex - startIndex).Trim().ToLower();
 
-            if (behaviorString == "navigate"|| behaviorString == "goto" || behaviorString == "walkto")
+            if (behaviorString == "navigate")
             {
                 behavior = BehaviorType.Navigate;
             }
@@ -286,13 +286,17 @@ public class UserInputHandler
             {
                 behavior = BehaviorType.PickUp;
             }
-            else if (behaviorString == "drop"|| behaviorString == "turnoff")
+            else if (behaviorString == "drop")
             {
                 behavior = BehaviorType.Drop;
             }
-            else if (behaviorString == "activate" || behaviorString == "turnon")
+            else if (behaviorString == "turnon")
             {
-                behavior = BehaviorType.Activate;
+                behavior = BehaviorType.TurnOn;
+            }
+            else if (behaviorString == "turnoff")
+            {
+                behavior = BehaviorType.TurnOff;
             }
             else if (behaviorString == "setdown")
             {
@@ -346,10 +350,9 @@ public class UserInputHandler
     /// <returns></returns>
     private async Task<string> getObjectBestMatch(string sceneObject)
     {
-        string props = prompts.PropsListLoader.ToLower();
         string promptStart = prompts.BestMatchSelector;
 
-        promptStart = promptStart.Replace("{$$props$$}", props);
+        promptStart = promptStart.Replace("{$$props$$}", propsInScene);
 
         string fullPrompt = promptStart + "Input: " + sceneObject.ToLower();
         fullPrompt = fullPrompt + "Output:";
@@ -364,7 +367,7 @@ public class UserInputHandler
             throw;
         }
 
-        bool matchObj = props.Contains(responce.ToLower());
+        bool matchObj = propsInScene.Contains(responce.ToLower());
         if (!matchObj)
         {
             responce = await connection.GenerateText(fullPrompt);
