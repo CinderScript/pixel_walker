@@ -89,7 +89,6 @@ public class ActivateAgent : AgentBase
 			isActivated = true;
 		}
 
-		Debug.Log("small pause");
 		await Task.Delay(200);
 
 		// disable hand IK and reset hand target position

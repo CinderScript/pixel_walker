@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class ActivatableToggle : MonoBehaviour, Activatable
 {
 	[SerializeField]
-	[Header("Initial Animation State")]
+	[Header("Initial Toggle State")]
 	[Tooltip("Sets initial state to either be On or Off")]
 	protected ActivationState initialState = ActivationState.Off;
 

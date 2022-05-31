@@ -46,7 +46,7 @@ public class SceneGuiInterface : MonoBehaviour
 	{
 		while (true)
 		{
-			var properties = new AgentBehaviorProperties(BehaviorType.Activate, "Drill Press", "");
+			var properties = new AgentBehaviorProperties(BehaviorType.Activate, "workshop light switch", "");
 
 			var result = await StartBehavior(properties);
 			if (result.Cancelled)
@@ -66,12 +66,12 @@ public class SceneGuiInterface : MonoBehaviour
 
 	public async Task<BehaviorResult> StartBehavior(AgentBehaviorProperties properties)
 	{
-		var target = propReferences.GetProp(properties.Object).transform;
+		var target = propReferences.GetProp(properties.Object);
 		var propName = target.GetComponent<PropInfo>().Name;
 
 		if (target)
 		{
-			return await behaviorController.StartBehavior(properties.Behavior, target);
+			return await behaviorController.StartBehavior(properties.Behavior, target.transform);
 		}
 		else
 		{
