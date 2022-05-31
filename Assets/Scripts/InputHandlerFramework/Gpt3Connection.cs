@@ -1,7 +1,20 @@
-//**Instructions on getting 'Newtonsoft.Json' from NuGet on Visual Studio  
-//https://docs.microsoft.com/en-us/nuget/quickstart/install-and-use-a-package-in-visual-studio
+/**
+* Project: Pixel Walker
+*
+* Description: Gpt3Connection class creates a Restful
+* API call to GPT-3 to send and recieve responses
+* 
+* Author: Pixel Walker -
+* Maynard, Gregory
+* Shubhajeet, Baral
+* Do, Khuong
+* Nguyen, Thuong
+*
+* Date: 05-26-2022
+*/
 
-using Newtonsoft.Json.Linq; // <-- Get 'Newtonsoft.Json' if unidentified namespace**
+
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,29 +23,71 @@ using System.Threading.Tasks;
 using System.Globalization;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using UnityEngine;
+using System.Threading;
+using System.IO;
+using System.Security.AccessControl;
 
 public class Gpt3Connection
 {
     public string ApiKey { get; }
+    public EngineType GptEngine { get; }
 
-    // any other relevent properties
-
-    public Gpt3Connection(string apiKey)
+    public Gpt3Connection(string apiKey, EngineType gptEngine)
     {
         ApiKey = apiKey;
+        GptEngine = gptEngine;
     }
 
-    public Tuple<string, Exception> GenerateText(string prompt)
+    /// <summary>
+    /// Uses the CallOpenAI method to generate a response.
+    /// Response varies on engine selected.
+    /// </summary>
+    /// <param name="prompt"></param>
+    /// <returns></returns>
+    public async Task<string> GenerateText(string prompt)
     {
-        Tuple<string, Exception> res = CallOpenAI(250, prompt, "text-davinci-002", 0.7, 1, 0, 0);
+        string engineUsed;
+        switch (GptEngine)
+        {
+            case EngineType.Curie:
+                engineUsed = "text-curie-001";
+                break;
+            case EngineType.Babbage:
+                engineUsed = "text-babbage-001";
+                break;
+            case EngineType.Ada:
+                engineUsed = "text-ada-001";
+                break;
+            case EngineType.Davinci:
+                engineUsed = "text-davinci-002";
+                break;
+            default:
+                engineUsed = "text-davinci-002";
+                break;
+
+        }
+
+        var res = await CallOpenAI(400, prompt, engineUsed, 0.7, 1, 0, 0);
         return res;
     }
 
-    public Tuple<string, Exception> CallOpenAI(int tokens, string input, string engine,
+    /// <summary>
+    /// A RESTful API call that sends a string input with relevant parameters
+    /// to OpenAI and returns a JSON containing response 
+    /// </summary>
+    /// <param name="tokens"></param>
+    /// <param name="input"></param>
+    /// <param name="engine"></param>
+    /// <param name="temperature"></param>
+    /// <param name="topP"></param>
+    /// <param name="frequencyPenalty"></param>
+    /// <param name="presencePenalty"></param>
+    /// <returns></returns>
+    private async Task<string> CallOpenAI(int tokens, string input, string engine,
         double temperature, int topP, int frequencyPenalty, int presencePenalty)
     {
-        Exception e = null;
-        Tuple<string, Exception> replywithException = null;
+        string reply = null;
 
         var openAiKey = ApiKey;
         var apiCall = "https://api.openai.com/v1/engines/" + engine + "/completions";
@@ -50,23 +105,28 @@ public class Gpt3Connection
 
                     request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
 
-                    var response = httpClient.SendAsync(request).Result;
-                    string json = response.Content.ReadAsStringAsync().Result;
+                    var response = await httpClient.SendAsync(request);
+                    var json = await response.Content.ReadAsStringAsync();
 
                     var parsedJSON = JObject.Parse(json);
+                    var modelType = parsedJSON["model"];
                     var replyText = parsedJSON["choices"][0]["text"];
 
                     if (json != null)
                     {
-                        replywithException = Tuple.Create(replyText.ToString().Trim(), e);
+                        //string fullResoponse =  + " \nmodel used: " + modelType.ToString().Trim();
+                        reply = replyText.ToString().Trim();
+                        Debug.Log(modelType.ToString() + ": " + reply);
                     }
                 }
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            replywithException = Tuple.Create("ERROR", ex);
+            throw;
         }
-        return replywithException;
+        return reply;
     }
+
+
 }

@@ -1,3 +1,21 @@
+/**
+* Project: Pixel Walker
+*
+* Description: RuntimeGUI is a C# class that handles
+* all UI input and outputs. It does so by utilising the
+* Gpt3Connection Class to send inputs and recieve outputs from
+* Open-AI GPT-3.
+* 
+* Author: Pixel Walker -
+* Maynard, Gregory
+* Shubhajeet, Baral
+* Do, Khuong
+* Nguyen, Thuong
+*
+* Date: 05-26-2022
+*/
+
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,53 +23,73 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using System.Text.RegularExpressions;
-//susing InputManager;
-
+using Newtonsoft.Json.Linq;
+using System.IO;
+using System.Security.AccessControl;
+using System.Threading.Tasks;
 
 public class RuntimeGUI : MonoBehaviour
 {
 
-    // Main UI Elements (Always Visible)
+    // Main UI Elements (Visible at Runtime)
     private VisualElement daveOutGroup;
     private VisualElement daveInGroup;
     private Button menuBtn;
     private Button resetBtn;
-    private Button submit;
+    private Button submitBtn;
+    private Button cancelBtn;
     private TextField userInput;
     private TextField daveOutput;
     private TextField gptParseOutput;
     private TextField apiInput;
-    public RadioButtonGroup actionRadioGroup;
+    private RadioButtonGroup actionRadioGroup;
 
 
-    //Main Menu screen elements (Visible in Main Menu)
+    //Main Menu screen elements (Invisible at Runtime)
     private VisualElement menuWindow;
     private Button levelSelectBtn;
     private Button menuResetBtn;
     private Button apiKeyBtn;
+    private Button engineMenuBtn;
 
-    //Level Select screen elements
+    //Level Select screen elements (Invisible at Runtime)
     private VisualElement levelSelectWindow;
     private Button levelOneBtn;
     private Button levelTwoBtn;
     private Button levelthreeBtn;
 
-    //API Key screen elements
+    //API Key screen elements (Invisible at Runtime)
     private VisualElement apiWindow;
     private Button apiSubmitBtn;
 
 
-    //Elements for error pop up screen
+    //Elements for GPT-3 Engine Selection Window (Invisible at Runtime)
+    private VisualElement engineWindow;
+    private RadioButtonGroup engineRadioGroup;
+    private Button engineConfirmBtn;
+
+
+
+    //Elements for error pop up screen (Invisible at Runtime)
     private VisualElement infoWindow;
     private Label errorLabel;
 
 
     //Variables to store input and current selected action
-    string currentAction;
-    string commandInput;
-    string keyString = "";
+    private UserInputHandler handler;
+    private EngineType engine;
+    GptApiKey keyEncryptor;
+    
+    //CONSTANTS
+    private const int DELAY = 1;
+    private const string KEY_FILE = "key.txt";
+    private const string PROMPT_FILE = "prompt.JSON";
+    private const string KEY_DIRECTORY = "PixelWalker";
 
-    Exception ex;
+    //Variables for saving
+    private string key;
+    private string debugMessage = "";
+    private string keyPath;
 
     //List used to fill actions radio button group
     List<string> actionlist = new List<String>();
@@ -61,11 +99,11 @@ public class RuntimeGUI : MonoBehaviour
         //Root visual element of the UI Document
         var rootVE = GetComponent<UIDocument>().rootVisualElement;
 
-
         //Initialize Main UI elements
         menuBtn = rootVE.Q<Button>("menu");
         resetBtn = rootVE.Q<Button>("reset");
-        submit = rootVE.Q<Button>("submit");
+        submitBtn = rootVE.Q<Button>("submit");
+        cancelBtn = rootVE.Q<Button>("cancel");
         userInput = rootVE.Q<TextField>("user-input");
         daveOutput = rootVE.Q<TextField>("dave-text-out");
         gptParseOutput = rootVE.Q<TextField>("gpt-parsed-words");
@@ -75,6 +113,7 @@ public class RuntimeGUI : MonoBehaviour
         levelSelectBtn = rootVE.Q<Button>("scene");
         menuResetBtn = rootVE.Q<Button>("reset-in-menu");
         apiKeyBtn = rootVE.Q<Button>("insert-key");
+        engineMenuBtn = rootVE.Q<Button>("engine-select-menu");
 
         //Initialize Level Select window elements
         levelSelectWindow = rootVE.Q<VisualElement>("level-select");
@@ -86,6 +125,11 @@ public class RuntimeGUI : MonoBehaviour
         apiWindow = rootVE.Q<VisualElement>("api-menu");
         apiSubmitBtn = rootVE.Q<Button>("api-submit");
         apiInput = rootVE.Q<TextField>("api-input-field");
+        apiInput.isPasswordField = true;
+        apiInput.maskChar = '*';
+
+
+        //Main Input and Output UI Elements 
         daveOutGroup = rootVE.Q<VisualElement>("dave-in");
         daveInGroup = rootVE.Q<VisualElement>("dave-out");
 
@@ -93,29 +137,52 @@ public class RuntimeGUI : MonoBehaviour
         infoWindow = rootVE.Q<VisualElement>("info-window");
         errorLabel = rootVE.Q<Label>("error-label");
 
+        //Initialize engine window elements
+        engineWindow = rootVE.Q<VisualElement>("engine-select");
+        engineConfirmBtn = rootVE.Q<Button>("confirm-engine");
+        engineRadioGroup = rootVE.Q<RadioButtonGroup>("engine-radio-group");
 
         //Initializes and fills the Action list radio groups witht the appropriate action from uxml
         actionRadioGroup = rootVE.Q<RadioButtonGroup>("action-list");
         foreach (var option in actionRadioGroup.choices)
         {
             actionlist.Add(option);
+            Debug.Log(option.ToString());
         }
 
-        Debug.Log(actionRadioGroup.choices.ToString()); // prints action list to console
-
         //Fuctionality of all buttons added here
-        submit.clicked += ParseGPT3Reply;
-        menuBtn.clicked += ToggleMenu;
+        submitBtn.clicked += SendToGPT;
+        menuBtn.clicked += OnMainMenuClicked;
         resetBtn.clicked += ReloadScene;
         menuResetBtn.clicked += ReloadScene;
         levelSelectBtn.clicked += OpenSceneMenu;
         apiKeyBtn.clicked += OpenApiInputMenu;
         apiSubmitBtn.clicked += SetApiKey;
+        engineMenuBtn.clicked += OpenEngineMenu;
+        engineConfirmBtn.clicked += SelectEngine;
 
+        //Level select buttons -- refer to scene build order
         levelOneBtn.clicked += () => SceneManager.LoadScene(0);
         levelthreeBtn.clicked += () => SceneManager.LoadScene(1);
         levelTwoBtn.clicked += () => SceneManager.LoadScene(2);
 
+        //Initializing directory path to store encrypted key
+        keyPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), KEY_DIRECTORY);
+        Directory.CreateDirectory(keyPath);
+        keyPath = Path.Combine(keyPath, KEY_FILE);
+
+        keyEncryptor = new GptApiKey(keyPath.ToString());
+        if (File.Exists(keyPath))
+        {
+            key = keyEncryptor.GetKeyFromFile();
+            File.SetAttributes(keyPath, FileAttributes.Hidden);
+        }
+        else
+        {
+            OpenApiInputMenu();
+        }
+
+        handler = new UserInputHandler(key, PROMPT_FILE, engine);
     }
 
     public void SetCurrentBehavior(string behavior)
@@ -130,107 +197,196 @@ public class RuntimeGUI : MonoBehaviour
         }
     }
 
-    //Calls upon The InputHandlerFramework's UserInputHandler.cs  to send and parse user input, sends error if API key is missing.
-    void ParseGPT3Reply()
+    /// <summary>
+    /// Async method to send user input to GPT-3
+    /// Prints command parses to gpt parse window,
+    /// and prints question replys to dave's output window. if no API key 
+    /// is supplied  the it creates a pop up (refer to CreatePopUp())
+    /// to display error, else calls on the User Input Handler to classify 
+    /// </summary>
+    async void SendToGPT()
     {
-        //Prints error if there is no API Key present
-        if (keyString == "")
+        string replyGptWindow = "...";
+        string replyDaveWindow = "...";
+        GptResponse responce;
+
+        try
         {
-            ex = new Exception("No Key Provided: Menu > API Key to add.");
-            StartCoroutine(CreatePopUp(ex.Message, 3));
-            Debug.Log("ERROR: NO KEY API PROVIDED");
+            responce = await handler.GetGptResponce(userInput.value);
+        }
+
+        catch (Exception) { throw; }
+
+        var responceProperties = responce.BehaviorProperties;
+        if (responce.Type == InputType.Command)
+        {
+            replyGptWindow = "\nBehavior:\n\t " + responceProperties.Behavior
+                                    + "\nObject:\n\t " + responceProperties.Object
+                                    + "\nLocation:\n\t " + responceProperties.Location;
+
+            replyDaveWindow = responce.GeneratedText.ToString();
+        }
+        else if (responce.Type == InputType.Question)
+        {
+            replyDaveWindow = responce.GeneratedText.ToString();
+        }
+        else if (responce.Type == InputType.Conversation)
+        {
+            replyDaveWindow = responce.GeneratedText.ToString();
         }
         else
         {
-            UserInputHandler handler = new UserInputHandler(keyString, "TODO: *fileprompts.txt*");
-            GptResponse responce = handler.GetGptResponce(userInput.value, out ex);
-            Debug.Log(responce.GeneratedText);
-            var responceProperties = responce.BehaviorProperties;
-
-
-            if (responce.Type == InputType.Command)
-            {
-                gptParseOutput.value = "\nBehavior:\n\t " + responceProperties.Behavior + "\nObject:\n\t " + responceProperties.Object
-                            + "\nLocation:\n\t " + responceProperties.Location;
-            }
-            else if (responce.Type == InputType.Question)
-            {
-                daveOutput.value = responce.GeneratedText.ToString();
-            }
-            else
-            {
-                StartCoroutine(CreatePopUp(ex.Message, 3));
-            }
+            replyGptWindow = responce.GeneratedText.ToString();
         }
+        gptParseOutput.value = replyGptWindow;
+        daveOutput.value = replyDaveWindow;
     }
 
-    //Toggles menu on or off(Flex or None) 
-    void ToggleMenu()
+
+    /// <summary>
+    /// Determines events when Menu button is clicked.
+    /// Toggles between MainUI elements and Main Menu elements
+    /// </summary>
+    void OnMainMenuClicked()
     {
-        if (menuWindow.style.display != DisplayStyle.Flex)
+        infoWindow.style.display = DisplayStyle.None;
+        if (menuWindow.style.display == DisplayStyle.Flex)
         {
-            CloseMenuElements();
-            menuWindow.style.display = DisplayStyle.Flex;
-            ToggleMainUI(false);
-        }
-        else
-        {
-            CloseMenuElements();
             ToggleMainUI(true);
         }
+        else
+        {
+            ToggleMainUI(false);
+            menuWindow.style.display = DisplayStyle.Flex;
+
+        }
     }
 
-    //Calls Unity.SceneManager to get current scene and loads it when called
+    /// <summary>
+    /// Calls Unity.SceneManager to get current scene and loads it on click.
+    /// </summary>
     void ReloadScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
-    //Opens Level Select, does not need a None as ui is disabled on new level load
-    //or is closed when the menu button is pressed
+    /// <summary>
+    /// Toggles menu window for selecting between scenes/levels
+    /// </summary>
     void OpenSceneMenu()
     {
-        CloseMenuElements();
-        levelSelectWindow.style.display = DisplayStyle.Flex;
-
-    }
-
-    //Opens Input Text Field for API key, 
-    //toggles off when other menu element is selected
-    //or when api-submit button is pressed
-    void OpenApiInputMenu()
-    {
-        CloseMenuElements();
-        apiWindow.style.display = DisplayStyle.Flex;
-    }
-
-
-    //Sets keystring variable to entered the API key
-    //Pops up window on excution to say key has been entered
-    //Will pop up cautionary message if left empty
-    void SetApiKey()
-    {
-        string tempText;
-        keyString = apiInput.value;
-        if(apiInput.value == ""){
-            ex = new Exception("Field cannot Be left blank.");
-            tempText = ex.Message;
-        }
-        else{
-            tempText = "Key has been entered";
+        if (levelSelectWindow.style.display == DisplayStyle.Flex)
+        {
             ToggleMainUI(true);
         }
-        StartCoroutine(CreatePopUp(tempText, 2));
-        //ToggleMainUI(true);
+        else
+        {
+            ToggleMainUI(false);
+            levelSelectWindow.style.display = DisplayStyle.Flex;
+        }
+    }
+
+    /// <summary>
+    ///Toggles Menu window for changing GPT-3 engine
+    ///closes all other menu elements on click.
+    /// </summary>
+    void OpenEngineMenu()
+    {
+        ToggleMainUI(false);
+        engineWindow.style.display = DisplayStyle.Flex;
+    }
+
+    /// <summary>
+    ///Toggles Menu window Inputing API key.
+    ///closes all other menu elements on click.
+    /// </summary>
+    void OpenApiInputMenu()
+    {
+        if (apiWindow.style.display == DisplayStyle.Flex)
+        {
+            ToggleMainUI(true);
+        }
+        else
+        {
+            ToggleMainUI(false);
+            apiWindow.style.display = DisplayStyle.Flex;
+        }
+    }
+
+    /// <summary>
+    /// Async method for setting API key.
+    /// Has a Gpt3Connection object to test authenticity/
+    /// validity of api key. Sends a small test string to GPT-3
+    /// using the ADA text engine. If there is a reply then a pop
+    /// up is show displaying a successful validation. Else the pop up 
+    /// displays an error message.
+    /// </summary>
+    async void SetApiKey()
+    {
+        if (apiInput.value == "")
+        {
+            debugMessage = "Field cannot be left blank";
+            StartCoroutine(CreatePopUp(debugMessage, DELAY));
+        }
+        else
+        {
+            string key = apiInput.value;
+            string test = await TestGptResponse(key);
+            Debug.Log(test);
+            if (test != null)
+            {
+                keyEncryptor.SaveKeyToFile(key);
+                File.SetAttributes(keyPath, FileAttributes.Hidden);
+            }
+            else
+            {
+                throw new Exception("Key not valid");
+            }
+        }
 
     }
 
-    //Creates a pop up window to display system dialogue
-    //in: string 'message' to be displayed as message on pop up
-    //in: integer 'secondsVisible' is the number of 
-    //    seconds pop up will be displayed
-    //out: IEnumerator coroutine object which delays by secondsVisible
-    IEnumerator CreatePopUp(string message, int secondsVisible)
+    /// <summary>
+    /// Method to send a test string to GPT-3 to
+    /// verify key validity
+    /// always used the Ada tier engine for cost
+    /// saving
+    /// </summary>
+    /// <param name="key">the unencrypted api key</param>
+    /// <returns></returns>
+    async Task<string> TestGptResponse(string key)
+    {
+        string testResponse;
+        engine = EngineType.Ada;
+        Gpt3Connection testConnection = new Gpt3Connection(key, engine); ;
+        try
+        {
+            testResponse = await testConnection.GenerateText("Say one word {stop}");
+            debugMessage = "Validation Successful!";
+            engine = EngineType.Davinci;
+            handler = new UserInputHandler(key, PROMPT_FILE, engine);
+        }
+        catch (Exception)
+        {
+            debugMessage = "Key not Valid. Enter another one and try again.";
+            StartCoroutine(CreatePopUp(debugMessage, DELAY));
+            throw;
+        }
+        ToggleMainUI(true);
+        StartCoroutine(CreatePopUp(debugMessage, DELAY));
+        return testResponse;
+
+    }
+
+    /// <summary>
+    /// Creates a pop up window that displays a message for a
+    /// defined amount of seconds. 
+    /// </summary>
+    /// <param name="message"> a string variable for the message 
+    /// to be displayed on the pop up</param>
+    /// <param name="secondsVisible"> The number of seconds the pop up will be displayed</param>
+    /// <returns>A Couroutine that delays by secondsVisble</returns>
+    IEnumerator CreatePopUp(string message, float secondsVisible)
     {
         errorLabel.text = message;
         infoWindow.style.display = DisplayStyle.Flex;
@@ -238,13 +394,16 @@ public class RuntimeGUI : MonoBehaviour
         infoWindow.style.display = DisplayStyle.None;
     }
 
-    //Toggles the main UI visibility on or off
-    //in: bool (true for visible and false for invisble);
+    /// <summary>
+    /// Toogles Main UI element visibility.
+    /// </summary>
+    /// <param name="toggle"> bool variable true for visible and
+    /// false for other wise</param>
     void ToggleMainUI(bool toggle)
     {
+        CloseMenuElements();
         if (toggle)
         {
-            CloseMenuElements();
             daveInGroup.style.display = DisplayStyle.Flex;
             daveOutGroup.style.display = DisplayStyle.Flex;
             actionRadioGroup.style.display = DisplayStyle.Flex;
@@ -257,13 +416,46 @@ public class RuntimeGUI : MonoBehaviour
         }
     }
 
-    //Closes all non Main UI Elements such as menu elements
-    //Popup windows not handled here
+    /// <summary>
+    ///Closes all non Main UI Elements such as menu elements.
+    ///Popup windows are not handled here.
+    /// </summary>
     void CloseMenuElements()
     {
         apiWindow.style.display = DisplayStyle.None;
         menuWindow.style.display = DisplayStyle.None;
         levelSelectWindow.style.display = DisplayStyle.None;
+        engineWindow.style.display = DisplayStyle.None;
+    }
+
+    /// <summary>
+    /// Sets the GPT-3 Text engine being used.
+    /// Selected via radio buttons.
+    /// Defaults to Davinci
+    /// </summary>
+    void SelectEngine()
+    {
+        if (engineRadioGroup.value == 1)
+        {
+            engine = EngineType.Curie;
+        }
+        else if (engineRadioGroup.value == 2)
+        {
+            engine = EngineType.Babbage;
+        }
+        else if (engineRadioGroup.value == 3)
+        {
+            engine = EngineType.Ada;
+        }
+        else
+        {
+            engine = EngineType.Davinci;
+        }
+
+        key = keyEncryptor.GetKeyFromFile();
+        handler = new UserInputHandler(key, PROMPT_FILE, engine);
+        Debug.Log(engineRadioGroup.value.ToString());
+        ToggleMainUI(true);
     }
 
 }

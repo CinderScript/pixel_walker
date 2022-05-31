@@ -1,7 +1,4 @@
-//**Instructions on getting 'Newtonsoft.Json' from NuGet on Visual Studio  
-//https://docs.microsoft.com/en-us/nuget/quickstart/install-and-use-a-package-in-visual-studio
-
-using Newtonsoft.Json.Linq; // <-- Get 'Newtonsoft.Json' if unidentified namespace**
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +12,8 @@ public class Gpt3Connection
 {
     public string ApiKey { get; }
 
+    public string Engine;
+
     // any other relevent properties
 
     public Gpt3Connection(string apiKey)
@@ -22,10 +21,10 @@ public class Gpt3Connection
         ApiKey = apiKey;
     }
 
-    public Tuple<string, Exception> GenerateText(string prompt)
+    public Tuple<string, Exception> GenerateText(string prompt, string engine)
     {
-        Tuple<string, Exception> res = CallOpenAI(250, prompt, "text-davinci-002", 0.7, 1, 0, 0);
-        return res;
+        Tuple<string, Exception> result = CallOpenAI(250, prompt, engine, 0.7, 1, 0, 0);
+        return result;
     }
 
     public Tuple<string, Exception> CallOpenAI(int tokens, string input, string engine,
@@ -50,8 +49,8 @@ public class Gpt3Connection
 
                     request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
 
-                    var response = httpClient.SendAsync(request).Result;
-                    string json = response.Content.ReadAsStringAsync().Result;
+                    var response = await httpClient.SendAsync(request).Result;
+                    var json =  response.Content.ReadAsStringAsync().Result;
 
                     var parsedJSON = JObject.Parse(json);
                     var replyText = parsedJSON["choices"][0]["text"];

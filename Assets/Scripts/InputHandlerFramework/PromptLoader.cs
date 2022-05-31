@@ -1,103 +1,75 @@
-﻿using System;
+﻿/**
+* Project: Pixel Walker
+*
+* Description: PromptLoader is a class that holds the json object
+* read by the GetPromptsFromFile to access the prompts within the object 
+* so the input handler can use them.
+* 
+* Author: Pixel Walker -
+* Maynard, Gregory
+* Shubhajeet, Baral
+* Do, Khuong
+* Nguyen, Thuong
+*
+* Date: 05-26-2022
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
-public static class PromptLoader
+public class PromptLoader
 {
-
-    //NOTE: FilePrompts not implemented yet,
-    //thus using hard coded classifier variables for testing purposes - Shub
-    public static GptPrompts GetPromptsFromFile(string filePath)
+    /// <summary>
+    /// This will read Prompts from file and deserialize them into C# objects
+    /// </summary>
+    /// <param name="filePath">name of file  containing prompts</param>
+    /// <returns></returns>
+    public GptPrompts GetPromptsFromFile(string filePath)
     {
-        var inputClassifier = "Input: Is there a hammer in this room?" +
-                       "Output: Question {stop}" +
-                       "Input: Is there a hammer here" +
-                       "Output: Question {stop}" +
-                       "Input: Can you move the table over there" +
-                       "Output: Question {stop}" +
-                       "Input: Is the heater on?" +
-                       "Output: Question {stop}" +
-                       "Input: Can you pick up the package, the one near the door?" +
-                       "Output: Question {stop}" +
-                       "Input: Turn on the headlight" +
-                       "Output: Command {stop}" +
-                       "Input: Push that box away, the one on your left" +
-                       "Output: Command {stop}" +
-                       "Input: Please fix the car" +
-                       "Output: Command {stop}" +
-                       "Input: Move the fire extinguisher to the back" +
-                       "Output: Command {stop}" +
-                       "Input: Is the right-front tire fixed?" +
-                       "Output: Question {stop}" +
-                       "Input: Did you have lunch?" +
-                       "Output: Question {stop}";
+        // This will attempt to read from filepath
+        StreamReader r = new StreamReader(filePath);
+        string jsonString = r.ReadToEnd();
 
-        var questionClassifier = "Dave is a two-month-old robot currently working in a garage. " +
-            "There are many tools in the garage. He can find objects, pick things up, and set things back down. " +
-            "Dave can also open close doors, chests, and other things. Dave currently cannot use tools or other objects. " +
-            "This is a list of all the objects in the garage: {$$props$$}." +
-            "Dave is a mechanic, but in his spare time, he enjoys reading sci-fi novels. Revelation Space is his favorite series. He also loves listening to Beetles. Dave likes his glasses so he doesn’t want to take them off or change them. He also doesn’t know how to ride a skateboard. Dave knows how to turn tools and appliances on, but doesn’t know how to use them." +
-            "Input: Hey Dave, can you find a hammer?" +
-            "Output: Yes. {stop}" +
-            "Input: Who are you?" +
-            "Output: I'm Dave, a friendly robot. Who are you? {stop}";
-        ;
-        var responseClassifier =
-                            "Input: Find the hammer" +
-                           "Output: {behavior: WalkTo, object: hammer}" +
-                           "Input: Pick up the screwdriver." +
-                           "Output: {behavior: PickUp, object: screwdriver}" +
-                           "Input: Set down the book on the bench" +
-                           "Output: {behavior: SetDown, object: book, location: bench}" +
-                           "Input: Set down the lamp" +
-                           "Output: {behavior: SetDown, object: book, location: null}" +
-                           "Input: Locate the water bottle" +
-                           "Output: {behavior: WalkTo, object: water_bottle}" +
-                           "Input: Put down the saw" +
-                           "Output: {behavior: SetDown, object: saw, location: null}" +
-                           "Input: Open the backdoor" +
-                           "Output: {behavior: Open, object: backdoor}" +
-                           "Input: Close the cabinet" +
-                           "Output: {behavior: Close, object: cabinet}" +
-                           "Input: Throw the ball into the bucket" +
-                           "Output: {behavior: Throw, object: ball, location: bucket}" +
-                           "Input: Stack the cardboard boxes" +
-                           "Output: {behavior: Stack, object: cardboard_boxes, location: null}" +
-                           "Input: Navigate the toolbox" +
-                           "Output: {behavior: WalkTo, object: toolbox}" +
-                           "Input: Obtain the wrench" +
-                           "Output: {behavior: PickUp, object: wrench}" +
-                           "Input: Get yourself a saw" +
-                           "Output: {behavior: PickUp, object: saw}" +
-                           "Input: Stroll over to the door" +
-                           "Output: {behavior: WalkTo, object: door}" +
-                           "Input: Drop the nail in the toolbox" +
-                           "Output: {behavior: SetDown, object: nail, location: toolbox}";
+        // This will create a new instance of prompt to be deserialized
+        GptPrompts prompts = new GptPrompts();
+        prompts = JsonConvert.DeserializeObject<GptPrompts>(jsonString);
 
-        var BestMatchSelector = "Prompt: Response BestMatchSelector";
-
-        GptPrompts prompts;
-        // TODO: load json from file, deserialize json into Prompts object
-
-        prompts = new GptPrompts(inputClassifier, questionClassifier, responseClassifier, BestMatchSelector);
+        // This will join the string array's elements into one single output string 
+        prompts.InputClassifier = String.Join(" ", prompts.InputList);
+        prompts.QuestionResponder = String.Join(" ", prompts.QuestionList);
+        prompts.CommandParser = String.Join("", prompts.CommandList);
+        prompts.BestMatchSelector = String.Join("", prompts.BestMatchList);
+        prompts.ConversationResponder = String.Join("", prompts.ConversationList);
+        prompts.PropsListLoader = String.Join(", ", prompts.PropsList);
         return prompts;
     }
 }
 
+/// <summary>
+/// Class GptPrompts will have string array properties to get the array from
+/// json object, string properties so the prompts can be accessed after going through
+/// the String.Join process. 
+/// </summary>
 public class GptPrompts
 {
-    public string InputClassifier { get; }
-    public string QuestionResponder { get; }
-    public string CommandParser { get; }
-    public string BestMatchSelector { get; }
+    // initialize the string[] to hold the string object in arrays
+    public string[] InputList { get; set; }
+    public string[] QuestionList { get; set; }
+    public string[] CommandList { get; set; }
+    public string[] BestMatchList { get; set; }
+    public string[] ConversationList {get; set;}
+    public string[] PropsList {get; set;}
 
-    public GptPrompts(string inputClassifier, string questionResponder, string commandParser, string bestMatchSelector)
-    {
-        InputClassifier = inputClassifier;
-        QuestionResponder = questionResponder;
-        CommandParser = commandParser;
-        BestMatchSelector = bestMatchSelector;
-    }
+    // string object to output with the input handler framework
+    public string InputClassifier { get; set; }
+    public string QuestionResponder { get; set; }
+    public string CommandParser { get; set; }
+    public string BestMatchSelector { get; set; }
+    public string ConversationResponder {get; set; }
+    public string PropsListLoader {get; set; }
 }
