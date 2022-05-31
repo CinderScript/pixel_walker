@@ -1,8 +1,26 @@
-﻿using System.Collections;
+﻿/**
+ *	Project:		Pixel Walker
+ *	
+ *	Description:	ActivateAgent is an ML-Agents agent. The activate agent activates
+ *					in game objects that have an ActivatableTrigger attached.
+ *					
+ *					Currently, this agent does not take a ml-agents model to drive
+ *					actions, but is coded with procedural movements controlled by
+ *					inverse kinimatics.
+ *					
+ *	Author:			Pixel Walker -
+ *						Maynard, Gregory
+ *						Shubhajeet, Baral
+ *						Do, Khuong
+ *						Nguyen, Thuong						
+ *					
+ *	Date:			05-30-2022
+ */
+
+using System.Collections;
 using System.Threading.Tasks;
 
 using Unity.MLAgents.Actuators;
-using Unity.MLAgents.Sensors;
 
 using UnityEngine;
 using UnityEngine.Animations.Rigging;

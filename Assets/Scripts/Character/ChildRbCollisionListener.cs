@@ -1,3 +1,19 @@
+/**
+ *	Project:		Pixel Walker
+ *	
+ *	Description:	Agents and the HandController need collision information. 
+ *					ChildRbCollisionListener finds child objects with colliders 
+ *					and exposes events that Agents and controllers can subscribe.
+ *					
+ *	Author:			Pixel Walker -
+ *						Maynard, Gregory
+ *						Shubhajeet, Baral
+ *						Do, Khuong
+ *						Nguyen, Thuong						
+ *					
+ *	Date:			05-30-2022
+ */
+
 using System;
 using System.Collections.Generic;
 using UnityEngine;

@@ -14,6 +14,12 @@
 * Date: 05-26-2022
 */
 
+
+/// <summary>
+/// Provides a description of a requested behavior and the information 
+/// that the beahavior controller needs to select the correct agent 
+/// and give the correct target.
+/// </summary>
 public class AgentBehaviorProperties
 {
 	public BehaviorType Behavior { get; }
@@ -27,6 +33,9 @@ public class AgentBehaviorProperties
 	}
 }
 
+/// <summary>
+/// 
+/// </summary>
 public enum InputType
 {
 	Unknown, Question, Command, Conversation

@@ -1,3 +1,21 @@
+/**
+ *	Project:		Pixel Walker
+ *	
+ *	Description:	BehaviorController provides syncronizing control
+ *					of the different Agent scripts attached to the 
+ *					in game character.  This has a direct connection 
+ *					with the SceneGuiInterface script to initiate 
+ *					behaviors.
+ *					
+ *	Author:			Pixel Walker -
+ *						Maynard, Gregory
+ *						Shubhajeet, Baral
+ *						Do, Khuong
+ *						Nguyen, Thuong						
+ *					
+ *	Date:			05-30-2022
+ */
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

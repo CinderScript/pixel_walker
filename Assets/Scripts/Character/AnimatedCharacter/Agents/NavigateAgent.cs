@@ -1,6 +1,26 @@
+/**
+ *	Project:		Pixel Walker
+ *	
+ *	Description:	NavigateAgent is an ML-Agents agent. This agent uses
+ *					a trained neural network to navigate around the 
+ *					environment and locate a given target.  This agent uses
+ *					a several observations to navigate successfully:
+ *						VectorSensors that racast out from his feet.
+ *						GridSensor that gives corse grained data about surroundings.
+ *						One-hot encoding of the agent's current room.
+ *						One-hot encoding of the target's room.
+ *						Rotational and positional vector data.
+ *					
+ *	Author:			Pixel Walker -
+ *						Maynard, Gregory
+ *						Shubhajeet, Baral
+ *						Do, Khuong
+ *						Nguyen, Thuong						
+ *					
+ *	Date:			05-30-2022
+ */
+
 using System;
-using System.Collections;
-using System.Threading.Tasks;
 
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;

@@ -1,4 +1,19 @@
-using System;
+/**
+ *	Project:		Pixel Walker
+ *	
+ *	Description:	UserInputValues are updated when the user presses movement
+ *					buttons on the keyboard or the mouse. This controls the 
+ *					agent's movement in Heuristic mode for testing as well as 
+ *					moving the in game camera during runtime.
+ *					
+ *	Author:			Pixel Walker -
+ *						Maynard, Gregory
+ *						Shubhajeet, Baral
+ *						Do, Khuong
+ *						Nguyen, Thuong						
+ *					
+ *	Date:			05-30-2022
+ */
 
 using UnityEngine;
 using UnityEngine.InputSystem;

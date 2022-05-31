@@ -1,6 +1,21 @@
-using System;
+/**
+ *	Project:		Pixel Walker
+ *	
+ *	Description:	SceneGuiInterface provides the connection between the
+ *					GUI and the BehaviorController. This class exposes 
+ *					Behaviorcontroller methods that begin the appropriate 
+ *					behavior when given a AgentBehaviorProperties object.
+ *					
+ *	Author:			Pixel Walker -
+ *						Maynard, Gregory
+ *						Shubhajeet, Baral
+ *						Do, Khuong
+ *						Nguyen, Thuong						
+ *					
+ *	Date:			05-30-2022
+ */
+
 using System.Collections;
-using System.Linq;
 using System.Threading.Tasks;
 
 using UnityEngine;
@@ -27,14 +42,9 @@ public class SceneGuiInterface : MonoBehaviour
 		propReferences = sceneArea.GetComponent<AreaPropReferences>();
 
 		//StartNavigationTraining();
-		//StartActivateTraining();
-		
-		Test();
-
-		//StartCoroutine(TriggerAfterSeconds(5));
 	}
 
-	IEnumerator TriggerAfterSeconds(float sec)
+	IEnumerator TriggerAfterSeconds_DebugTest(float sec)
 	{
 		yield return new WaitForSeconds(sec);
 		var properties = new AgentBehaviorProperties(BehaviorType.Activate, "Drill Press", "");
@@ -42,7 +52,7 @@ public class SceneGuiInterface : MonoBehaviour
 		StartBehavior(properties);
 	}
 
-	public async void Test()
+	private async void GuiUsageExample_DebugTest()
 	{
 		while (true)
 		{
