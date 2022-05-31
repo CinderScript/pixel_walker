@@ -70,7 +70,13 @@
         "Input: Close the cabinet",
         "Output: { behavior: Close, object: cabinet }",
         "Input: Stack the cardboard boxes",
-        "Output: { behavior: Stack, object: cardboard boxes, location: null }"
+        "Output: { behavior: Stack, object: cardboard boxes, location: null }",
+        "Input: Play some music",
+        "Output: { behavior: TurnOn, object: sound system, location: null }",
+        "Input: Turn on music",
+        "Output: { behavior: TurnOn, object: sound system, location: null }",
+        "Input: Play some jams",
+        "Output: { behavior: TurnOn, object: sound system, location: null }"
     ],
     "BestMatchList": [
         "Request: Find a red hammer",
