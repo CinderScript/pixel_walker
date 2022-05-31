@@ -42,6 +42,7 @@ public class SceneGuiInterface : MonoBehaviour
 		propReferences = sceneArea.GetComponent<AreaPropReferences>();
 
 		//StartNavigationTraining();
+		GuiUsageExample_DebugTest();
 		Debug.Log(propReferences.GetAllPropNames());
 	}
 
@@ -57,7 +58,7 @@ public class SceneGuiInterface : MonoBehaviour
 	{
 		while (true)
 		{
-			var properties = new AgentBehaviorProperties(BehaviorType.Activate, "workshop light switch", "");
+			var properties = new AgentBehaviorProperties(BehaviorType.Activate, "sound_system", "");
 
 			var result = await StartBehavior(properties);
 			if (result.Cancelled)
