@@ -619,6 +619,10 @@ PrefabInstance:
       propertyPath: m_audioClip
       value: 
       objectReference: {fileID: 8300000, guid: 63b380a29c022774196972c1e0f9699a, type: 3}
+    - target: {fileID: 7013290155715168803, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
+      propertyPath: near clip plane
+      value: 0.2
+      objectReference: {fileID: 0}
     - target: {fileID: 7529525658719208993, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -670,6 +674,10 @@ PrefabInstance:
     - target: {fileID: 7912503591261933733, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
       propertyPath: fadeSpeed
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8342569104387805313, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
+      propertyPath: m_Volume
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 8828177164056544347, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
       propertyPath: m_IsActive

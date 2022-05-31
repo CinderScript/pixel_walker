@@ -35,7 +35,7 @@ public class ActivateAgent : AgentBase
 	[Header("Assigned at RTime")]
 	[SerializeField]
 	private ActivatableTrigger targetSwitchActivatable;
-	private Transform targetSwitch;
+	private Transform targetSwitchTransform;
 
 	private Rigidbody handTargetRb;
 	private Transform handTargetTransform;
@@ -47,7 +47,8 @@ public class ActivateAgent : AgentBase
 	// don't use model decision during rotation to target
 	bool areActionsOverriden;
 
-	bool isActivated;
+	bool didHandTriggerActivatable;
+	BehaviorType behaviorRequested;
 
 	protected override void Awake()
 	{
@@ -60,31 +61,61 @@ public class ActivateAgent : AgentBase
 		handTargetStartPosLocal = handTargetRb.transform.localPosition;
 	}
 
+	public Task<BehaviorResult> PerformeBehavior(Transform target, BehaviorType behaviorType)
+	{
+		behaviorRequested = behaviorType;
+		return base.PerformeBehavior(target);
+	}
 	protected override void initializeBehavior()
 	{
 		// before starting the behavior, rotate so arm faces the target
 		// and then activate the hand target and inverse kinimatic rig
 		targetSwitchActivatable = target.GetComponentInChildren<ActivatableTrigger>();
 		
-		bool shouldPerform = false;
+
 		if (targetSwitchActivatable)
 		{
-			targetSwitch = targetSwitchActivatable.transform;
-			shouldPerform = true;
+			// check if this is a toggle, then check to see if it can be turned off or on
+			if (targetSwitchActivatable is ToggleSwitch)
+			{
+				var toggleSwitch = targetSwitchActivatable as ToggleSwitch;
+				var state = toggleSwitch.CurrentState;
+				
+				if (state == ActivationState.On)
+				{
+					if (behaviorRequested == BehaviorType.TurnOn)
+					{
+						var msg = "This item is already turned on!";
+						StopBehavior(false, msg);
+						return;         // EARLY OUT
+					}
+				}
+				else if (state == ActivationState.Off)
+				{
+					if (behaviorRequested == BehaviorType.TurnOff)
+					{
+						var msg = "This item is already turned off!";
+						StopBehavior(false, msg);
+						return;         // EARLY OUT
+					}
+				}
+			}
+
 		}
 		else
 		{
-			var msg = "I can't see anything to activate on this object./n" +
+			var msg = "I can't see anything to activate on this object.\n" +
 				"There are not buttons or switches.";
 			StopBehavior(false, msg);
+			return;			// EARLY OUT
 		}
 
-		if (shouldPerform)
-		{
-			areActionsOverriden = false;
-			isActivated = false;
-			PerformActivate();
-		}
+		// PERFORM THE ACTIVATION!
+		targetSwitchTransform = targetSwitchActivatable.transform;
+		areActionsOverriden = false;
+		didHandTriggerActivatable = false;
+		PerformActivate();
+
 	}
 	private async void PerformActivate()
 	{
@@ -101,10 +132,10 @@ public class ActivateAgent : AgentBase
 		await TouchActivatableTrigger(0.65f);
 
 		// if the switch wasn't triggered, trigger it now
-		if (!isActivated)
+		if (!didHandTriggerActivatable)
 		{
 			targetSwitchActivatable.TriggerActivatables();
-			isActivated = true;
+			didHandTriggerActivatable = true;
 		}
 
 		await Task.Delay(200);
@@ -158,17 +189,17 @@ public class ActivateAgent : AgentBase
 		var startingPos = agentBody.TransformPoint(handTargetStartPosLocal);
 
 		// lerp hand IK target position to the switch
-		while (duration > elapsedTime && !isActivated)
+		while (duration > elapsedTime && !didHandTriggerActivatable)
 		{
-			var nextPosition = Vector3.Slerp(startingPos, targetSwitch.position, elapsedTime / duration);
+			var nextPosition = Vector3.Slerp(startingPos, targetSwitchTransform.position, elapsedTime / duration);
 			SetHandIKPosition(nextPosition);
 			elapsedTime += Time.fixedDeltaTime;
 
-			Debug.DrawLine(targetSwitch.position, startingPos, Color.magenta);
+			Debug.DrawLine(targetSwitchTransform.position, startingPos, Color.magenta);
 			yield return new WaitForFixedUpdate();
 		}
 
-		if (!isActivated)
+		if (!didHandTriggerActivatable)
 		{
 			Debug.LogError("didn't reach activation switch");
 		}
@@ -196,7 +227,7 @@ public class ActivateAgent : AgentBase
 	public void SetTriggerActivated()
 	{
 		// the object colliding with the hand IK target should be the switch
-		isActivated = true;
+		didHandTriggerActivatable = true;
 	}
 
 	/// <summary>

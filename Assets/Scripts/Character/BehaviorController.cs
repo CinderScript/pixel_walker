@@ -85,7 +85,7 @@ public class BehaviorController : MonoBehaviour
 					var result = await Navigate(target);
 					if (result.Success)
 					{
-						return await Activate(target);
+						return await Activate(target, behavior);
 					}
 					else
 					{
@@ -97,7 +97,7 @@ public class BehaviorController : MonoBehaviour
 					var result = await Navigate(target);
 					if (result.Success)
 					{
-						return await Activate(target);
+						return await Activate(target, behavior);
 					}
 					else
 					{
@@ -146,10 +146,11 @@ public class BehaviorController : MonoBehaviour
 		currentActiveAgent = agents.Find((agent) => agent is NavigateAgent);
 		return await currentActiveAgent?.PerformeBehavior(target);
 	}
-	private async Task<BehaviorResult> Activate(Transform target)
+	private async Task<BehaviorResult> Activate(Transform target, BehaviorType behavior)
 	{
 		currentActiveAgent = agents.Find((agent) => agent is ActivateAgent);
-		return await currentActiveAgent?.PerformeBehavior(target);
+		var activateAgent = currentActiveAgent as ActivateAgent;
+		return await activateAgent?.PerformeBehavior(target, behavior);
 	}
 	private async Task<BehaviorResult> PickUp(Transform target)
 	{
@@ -226,22 +227,14 @@ public class BehaviorController : MonoBehaviour
 			await Navigate(randomProp);
 		}
 	}
-	public async void TrainPickUp(Transform target)
-	{
-		IsTraining = true;
-		while (IsTraining)
-		{		
-			await Navigate(target);
-			await PickUp(target);
-		}
-	}
+	
 	public async void TrainActivate(Transform target)
 	{
 		IsTraining = true;
 		while (IsTraining)
 		{
 			await Navigate(target);
-			await Activate(target);
+			await Activate(target, BehaviorType.Activate);
 		}
 	}
 

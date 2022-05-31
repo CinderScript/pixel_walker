@@ -72,7 +72,7 @@ public abstract class AgentBase : Agent
 		RequestAcademyStep = false;
 	}
 
-	public async Task<BehaviorResult> PerformeBehavior(Transform target = null)
+	public virtual async Task<BehaviorResult> PerformeBehavior(Transform target = null)
 	{
 		isFinished = false;
 		isCancelled = false;

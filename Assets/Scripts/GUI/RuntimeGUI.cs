@@ -80,7 +80,7 @@ public class RuntimeGUI : MonoBehaviour
     GptApiKey keyEncryptor;
     
     //CONSTANTS
-    private const int DELAY = 1;
+    private const int DELAY = 3;
     private const string KEY_FILE = "key.txt";
     private const string PROMPT_FILE = "prompt.JSON";
     private const string KEY_DIRECTORY = "PixelWalker";
@@ -95,6 +95,8 @@ public class RuntimeGUI : MonoBehaviour
 
     //Scene GUI connection
     SceneGuiInterface sceneConnection;
+
+    bool closePopUp = false;
 
     void OnEnable()
     {
@@ -210,14 +212,23 @@ public class RuntimeGUI : MonoBehaviour
     {
         string replyGptWindow = "...";
         string replyDaveWindow = "...";
-        GptResponse responce;
+        GptResponse responce = null;
 
         try
         {
-            responce = await handler.GetGptResponce(userInput.value);
+            // signalable popup
+            var msg = "Getting responce from GPT-3...";
+            StartCoroutine(CreateSignaledPopup(msg));
+			responce = await handler.GetGptResponce(userInput.value);
+            closePopUp = true;
         }
-
-        catch (Exception) { throw; }
+        catch (Exception e) 
+        {
+            var msg = $"An error occured while sending the message to GPT-3.\n\n" +
+					  $"Error: {e.Message}";
+			StartCoroutine(CreateTimedPopUp(msg, DELAY));
+            return;
+        }
 
         var responceProperties = responce.BehaviorProperties;
         if (responce.Type == InputType.Command)
@@ -245,19 +256,22 @@ public class RuntimeGUI : MonoBehaviour
 
 		if (responce.Type == InputType.Command)
 		{
-            Debug.Log($"Object Name: **{responce.BehaviorProperties.Object}**");
             var result = await sceneConnection.StartBehavior(responce.BehaviorProperties);
 
             if (result.Cancelled)
             {
-                Debug.Log($"Behavior was cancelled while performing {result.Behavior}.");
-            }
+                var msg = $"Behavior was cancelled while performing {result.Behavior}.";
+				await CreateTimedPopUp(msg, DELAY);
+			}
             else if (result.Success)
             {
-                Debug.Log($"{result.Behavior} successfully finished!");
+                Debug.Log( $"{result.Behavior} successfully finished!");
             }
-            else
-                Debug.Log($"I couldn't perform the requested action. {result.Message}");
+			else
+			{
+                var msg = $"I couldn't perform the requested action. {result.Message}";
+                await CreateTimedPopUp(msg, DELAY);
+            }
         }
 	}
 
@@ -343,7 +357,7 @@ public class RuntimeGUI : MonoBehaviour
         if (apiInput.value == "")
         {
             debugMessage = "Field cannot be left blank";
-            StartCoroutine(CreatePopUp(debugMessage, DELAY));
+            StartCoroutine(CreateTimedPopUp(debugMessage, DELAY));
         }
         else
         {
@@ -386,11 +400,11 @@ public class RuntimeGUI : MonoBehaviour
         catch (Exception)
         {
             debugMessage = "Key not Valid. Enter another one and try again.";
-            StartCoroutine(CreatePopUp(debugMessage, DELAY));
+            StartCoroutine(CreateTimedPopUp(debugMessage, DELAY));
             throw;
         }
         ToggleMainUI(true);
-        StartCoroutine(CreatePopUp(debugMessage, DELAY));
+        StartCoroutine(CreateTimedPopUp(debugMessage, DELAY));
         return testResponse;
 
     }
@@ -403,11 +417,31 @@ public class RuntimeGUI : MonoBehaviour
     /// to be displayed on the pop up</param>
     /// <param name="secondsVisible"> The number of seconds the pop up will be displayed</param>
     /// <returns>A Couroutine that delays by secondsVisble</returns>
-    IEnumerator CreatePopUp(string message, float secondsVisible)
+    IEnumerator CreateTimedPopUp(string message, float secondsVisible)
     {
         errorLabel.text = message;
         infoWindow.style.display = DisplayStyle.Flex;
         yield return new WaitForSeconds(secondsVisible);
+        infoWindow.style.display = DisplayStyle.None;
+    }
+
+	/// <summary>
+	/// Creates a pop up window that displays until a close signal is received.
+	/// </summary>
+	/// <param name="message"> a string variable for the message 
+	/// to be displayed on the pop up</param>
+	/// <returns>A Couroutine that delays by secondsVisble</returns>
+	IEnumerator CreateSignaledPopup(string message)
+    {
+		closePopUp = false;
+		errorLabel.text = message;
+        infoWindow.style.display = DisplayStyle.Flex;
+
+		while (!closePopUp)
+		{
+            yield return null;
+		}
+		
         infoWindow.style.display = DisplayStyle.None;
     }
 

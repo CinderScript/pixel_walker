@@ -40,9 +40,9 @@ public class SceneGuiInterface : MonoBehaviour
 
 	private void Start()
 	{
-		//StartNavigationTraining();
+		StartNavigationTraining();
 		//GuiUsageExample_DebugTest();
-		Debug.Log(propReferences.GetAllPropNames());
+		//Debug.Log(propReferences.GetAllPropNames());
 	}
 
 	IEnumerator TriggerAfterSeconds_DebugTest(float sec)
