@@ -10,11 +10,11 @@ public class CollisionThrower : MonoBehaviour
 
 	private void OnCollisionEnter(Collision collision)
 	{
-		OnCollisionEnterEvent(gameObject, collision);
+		OnCollisionEnterEvent?.Invoke(gameObject, collision);
 	}
 	private void OnCollisionExit(Collision collision)
 	{
-		OnCollisionExitEvent(gameObject, collision);
+		OnCollisionExitEvent?.Invoke(gameObject, collision);
 	}
 
 	void OnControllerColliderHit(ControllerColliderHit hit)

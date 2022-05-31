@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Threading.Tasks;
 
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
@@ -10,16 +12,21 @@ using UnityEngine;
 public class NavigateAgent : AgentBase
 {
 	[Header("For Training")]
-	public float success_distance = 0.35f;
+	public float defaultSuccessDistance = 0.7f;
+	public float standTargetSuccessDistanceOverride = 0.3f;
+	private float successDistance;
 
 	[Header("Assigned at RTime")]
-	public SpawnPointReferences spawnPoints;
-	public AreaProps areaProps;
-	public Room currentRoom;
-	public Room targetRoom;
-	public bool isCurrentlyColliding = false;
-	public float distanceToTarget;
-	public CollisionThrower collisionThrower;
+	[SerializeField]
+	private RoomName currentRoom;
+	[SerializeField]
+	private Room targetRoom;
+	[SerializeField]
+	private bool isCurrentlyColliding = false;
+	[SerializeField]
+	private float distanceToTarget;
+
+	public override BehaviorType MyBehaviorType => BehaviorType.Navigate;
 
 	// REWARD WEIGHTS
 	private const float SUCCESS_REWARD = 5;
@@ -28,52 +35,44 @@ public class NavigateAgent : AgentBase
 	private const float COLLISION_PENALTY_DEFAULT = -0.002f;
 	private float collisionPenalty;
 
-	private Vector3 startPos;
-	private VectorSensorComponent targetRoomSensorComponent;
 	int numberOfRooms;
+
+	bool areActionsOverriden = false;
 
 	// used to detect if the agent is currently colliding
 	// with an obstical so it can be used as an observation
 	private ControllerColliderHit lastHit;
 
-	private void Awake()
+	protected override void Awake()
 	{
-		collisionThrower = agentBody.GetComponent<CollisionThrower>();
+		base.Awake();
+		
+		var collisionThrower = agentBody.GetComponent<CollisionThrower>();
 		collisionThrower.OnCharacterCollision += CharacterCollisionHandler;
 
-		var root = GetComponentInParent<CharacterRoot>();
-		startPos = root.gameObject.transform.position;
-
-		// GET SCENE REFERENCES - spawn points, props, controller movement value input location
-		playerArea = GetComponentInParent<AgentArea>().transform;
-
-		spawnPoints = playerArea.GetComponentInChildren<SpawnPointReferences>();
-		areaProps = playerArea.GetComponentInChildren<AreaProps>();
-
 		numberOfRooms = Enum.GetValues(typeof(RoomName)).Length;
-
-		targetRoomSensorComponent = transform.GetComponent<VectorSensorComponent>();
 	}
 
-	public override void OnEpisodeBegin()
+	protected override void initializeBehavior()
 	{
-		// Randomly place the agent at one of the spawn locations
-		var spawn = spawnPoints.SelectRandomLocation();
-		var spawnPos = spawn.transform.position;
-		spawnPos.y = startPos.y; // preserve starting height
-		agentBody.transform.position = spawnPos;
-
-		// select a random prop to find
-		target = areaProps.SelectRandomProp().transform;
 		targetRoom = target.GetComponent<PropInfo>().room;
 
-		// get the starting room
-		currentRoom = spawn.room;
-
-		// get penalty for this lesson in curriculum
+		// get penalty for this lesson in curriculum - only used during training
 		collisionPenalty = Academy.Instance.EnvironmentParameters
 			.GetWithDefault("collision_penalty", COLLISION_PENALTY_DEFAULT);
+
+		var standTarget = target.GetComponentInChildren<StandTarget>();
+		if (standTarget)
+		{
+			target = standTarget.transform;
+			successDistance = standTargetSuccessDistanceOverride;
+		}
+		else
+		{
+			successDistance = defaultSuccessDistance;
+		}
 	}
+
 	public override void CollectObservations(VectorSensor sensor)
 	{
 		//Position of target relative to character's position
@@ -92,7 +91,7 @@ public class NavigateAgent : AgentBase
 
 		// add one hot encoding for the current room of player
 		// add one hot encoding for the room of the target
-		sensor.AddOneHotObservation((int)currentRoom.RoomName, numberOfRooms);
+		sensor.AddOneHotObservation((int)currentRoom, numberOfRooms);
 		sensor.AddOneHotObservation((int)targetRoom.RoomName, numberOfRooms); // make goal-signal?
 
 		// report and consume any collisions
@@ -100,7 +99,7 @@ public class NavigateAgent : AgentBase
 		if (lastHit != null)
 		{
 			// isCurrentlyColliding is true
-			var point = agentBody.transform.InverseTransformPoint(lastHit.point);
+			var point = agentBody.InverseTransformPoint(lastHit.point);
 			collisionVector = new Vector2(point.x, point.z);
 			lastHit = null; // consume
 		}
@@ -114,13 +113,69 @@ public class NavigateAgent : AgentBase
 		sensor.AddObservation(isCurrentlyColliding);
 
 	}
+
 	public override void OnActionReceived(ActionBuffers actions)
 	{
-		movementValues.bodyForwardMovement = actions.DiscreteActions[0];
-		movementValues.bodyRotation = actions.DiscreteActions[1];
-
-		AssignRewards();
+		if (!areActionsOverriden)
+		{
+			movementValues.bodyForwardMovement = actions.DiscreteActions[0];
+			movementValues.bodyRotation = actions.DiscreteActions[1];
+			AssignRewards();
+		}
 	}
+	
+	public void SetCurrentRoom(Room room)
+	{
+		currentRoom = room.RoomName;
+	}
+
+	private void AssignRewards()
+	{
+		// done with episode?
+		bool giveTimePenalty = true;
+		
+		// don't let the agent trigger the reward based on distance if the agent
+		// is not in the target's room.
+		if (currentRoom == targetRoom.RoomName)
+		{
+			// get distance to target - ignore height displacement
+			Vector3 charPos = new Vector3(transform.position.x, 0, transform.position.z);
+			Vector3 targetPos = new Vector3(target.position.x, 0, target.position.z);
+
+			distanceToTarget = Vector3.Distance(charPos, targetPos);
+			if (distanceToTarget < successDistance)
+			{
+				giveTimePenalty = false;
+				Finished_Success();
+			}
+		}
+
+		// make agent work quickly
+		if (!giveTimePenalty)
+		{
+			AddReward(TIME_PENALTY);
+		}
+	}
+	private async void Finished_Success() {
+		AddReward(SUCCESS_REWARD);
+
+		areActionsOverriden = true;
+		movementValues.ClearValues(); // otherwise will use last input action
+		await RotateTowardsPos(target.position, 5f);
+		areActionsOverriden = false;
+		StopBehavior(true);         // base class signal stop
+	}
+	private void CharacterCollisionHandler(GameObject thrower, ControllerColliderHit hitInfo)
+	{
+		if (hitInfo.gameObject.layer == LayerMask.NameToLayer("Structure"))
+		{
+			lastHit = hitInfo;
+			isCurrentlyColliding = true;
+			AddReward(collisionPenalty);
+		}
+		// penalize
+	}
+
 	/// <summary>
 	/// Heuristic is called where there is not Model assigned and
 	/// ML-Agents is not training. Heuristic checks for user input
@@ -134,53 +189,7 @@ public class NavigateAgent : AgentBase
 		actions[0] = userInputValues.forward;
 		actions[1] = userInputValues.rotate;
 	}
-	
-	public void SetCurrentRoom(Room room)
-	{
-		currentRoom = room;
-	}
 
-	private void AssignRewards()
-	{
-		// Sparce reward given?
-		bool wasRewarded = false;
-		
-		// don't let the agent trigger the reward based on distance if the agent
-		// is not in the target's room.
-		if (currentRoom.RoomName == targetRoom.RoomName)
-		{
-			// get distance to target - ignore height displacement
-			Vector3 charPos = new Vector3(transform.position.x, 0, transform.position.z);
-			Vector3 targetPos = new Vector3(target.position.x, 0, target.position.z);
-
-			distanceToTarget = Vector3.Distance(charPos, targetPos);
-			if (distanceToTarget < success_distance)
-			{
-				wasRewarded = true;
-				AddReward(SUCCESS_REWARD);
-				//Debug.Log("Reward: " + GetCumulativeReward());
-				EndEpisode();
-			}
-		}
-
-		// make agent work quickly
-		if (!wasRewarded)
-		{
-			AddReward(TIME_PENALTY);
-		}
-	}
-	private void CharacterCollisionHandler(GameObject thrower, ControllerColliderHit hitInfo)
-	{
-		if (hitInfo.gameObject.layer == LayerMask.NameToLayer("Structure"))
-		{
-			lastHit = hitInfo;
-			isCurrentlyColliding = true;
-			AddReward(collisionPenalty);
-		}
-		// penalize
-	}
-
-	
 	void OnDrawGizmos()
 	{
 		// Draw a yellow sphere at the transform's position

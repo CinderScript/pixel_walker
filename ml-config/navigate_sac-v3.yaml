@@ -40,7 +40,7 @@ engine_settings:
   width: 84
   height: 84
   quality_level: 0
-  time_scale: 10
+  time_scale: 30
   target_frame_rate: -1
   capture_frame_rate: 60
   no_graphics: true

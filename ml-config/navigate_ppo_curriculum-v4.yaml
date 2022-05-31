@@ -19,7 +19,7 @@ behaviors:
     network_settings:
       normalize: false
       hidden_units: 512
-      num_layers: 3
+      num_layers: 2
       vis_encode_type: simple
 
     reward_signals:
@@ -42,7 +42,7 @@ environment_parameters:
           signal_smoothing: true
           min_lesson_length: 20
           threshold: 2
-        value: -0.004
+        value: -0.005
 
       - name: Lesson2
         completion_criteria:
@@ -51,7 +51,7 @@ environment_parameters:
           signal_smoothing: true
           min_lesson_length: 20
           threshold: 3.0
-        value: -0.008
+        value: -0.015
 
       - name: Lesson3
         completion_criteria:
@@ -60,7 +60,7 @@ environment_parameters:
           signal_smoothing: true
           min_lesson_length: 20
           threshold: 4.0
-        value: -0.015
+        value: -0.04
 
       - name: Lesson4
         completion_criteria:
@@ -69,20 +69,17 @@ environment_parameters:
           signal_smoothing: true
           min_lesson_length: 20
           threshold: 4.5
-        value: -0.015
-        
+        value: -0.08
+
       - name: Lesson5
-        value: -0.04
-
-
-
+        value: -0.15
 
 
 engine_settings:
   width: 84
   height: 84
   quality_level: 0
-  time_scale: 10
+  time_scale: 15
   target_frame_rate: -1
   capture_frame_rate: 60
   no_graphics: true

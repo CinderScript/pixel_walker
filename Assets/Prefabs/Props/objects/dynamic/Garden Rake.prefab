@@ -155,7 +155,6 @@ GameObject:
   - component: {fileID: 5633305242099029653}
   - component: {fileID: 5633305242098259637}
   - component: {fileID: 5633305242097259637}
-  - component: {fileID: 6547770435431874266}
   m_Layer: 7
   m_Name: 8Tine_Rake
   m_TagString: Prop
@@ -228,21 +227,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &6547770435431874266
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5633305242099452597}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0292f36871c1c65459ff979a81d5f49b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: Unnamed
-  Description: 
-  room: {fileID: 0}
 --- !u!1 &6160878886021165998
 GameObject:
   m_ObjectHideFlags: 0

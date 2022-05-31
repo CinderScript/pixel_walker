@@ -83,7 +83,7 @@ namespace StarterAssets
 
         private Animator _animator;
         private CharacterController _controller;
-        private CharacterMovementInput _input;
+        private CharacterMovementValues _input;
         private GameObject _mainCamera;
 
         private bool _hasAnimator;
@@ -102,7 +102,7 @@ namespace StarterAssets
         {            
             _hasAnimator = TryGetComponent(out _animator);
             _controller = GetComponent<CharacterController>();
-            _input = GetComponent<CharacterMovementInput>();
+            _input = GetComponent<CharacterMovementValues>();
 
             AssignAnimationIDs();
         }
@@ -192,6 +192,7 @@ namespace StarterAssets
             transform.Rotate(0, _currentRotationVelocity * Time.deltaTime * _rotationDirection, 0);
 
             /** ANIMATIONS **/
+			
             _animationBlend = Mathf.Lerp(_animationBlend, targetSpeed, Time.deltaTime * MoveAcceleration);
             if (_animationBlend < 0.01f) _animationBlend = 0f;
 

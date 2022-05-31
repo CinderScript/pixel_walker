@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Linq;
+using System.Threading.Tasks;
 
 using UnityEngine;
 
@@ -10,9 +12,11 @@ public class SceneGuiInterface : MonoBehaviour
     public GameObject sceneArea;
 
 	private BehaviorController behaviorController;
-	private PropInfo[] props;
+	private AreaPropReferences propReferences;
 
-	// Start is called before the first frame update
+	[Header("Training Objects")]
+	public Transform activateObject;
+
 	void Awake()
     {
         behaviorController = sceneArea.GetComponentInChildren<BehaviorController>();
@@ -20,25 +24,90 @@ public class SceneGuiInterface : MonoBehaviour
 
 	private void Start()
 	{
-		props = sceneArea.GetComponentInChildren<AreaProps>().Props;
+		propReferences = sceneArea.GetComponent<AreaPropReferences>();
+
+		//StartNavigationTraining();
+		//StartActivateTraining();
 		
-		var behavior = new AgentBehaviorProperties(BehaviorType.Navigate, "", "");
-		SelectBehavior(behavior);
+		Test();
+
+		//StartCoroutine(TriggerAfterSeconds(5));
 	}
 
-	public void SelectBehavior(AgentBehaviorProperties properties)
+	IEnumerator TriggerAfterSeconds(float sec)
 	{
-		behaviorController.StartBehavior(properties);
+		yield return new WaitForSeconds(sec);
+		var properties = new AgentBehaviorProperties(BehaviorType.Activate, "Drill Press", "");
+
+		StartBehavior(properties);
 	}
 
-	public void StopBehavior()
+	public async void Test()
 	{
-		behaviorController.StopBehavior();
+		while (true)
+		{
+			var properties = new AgentBehaviorProperties(BehaviorType.Activate, "workshop light switch", "");
+
+			var result = await StartBehavior(properties);
+			if (result.Cancelled)
+			{
+				Debug.Log($"Behavior was cancelled while performing {result.Behavior}.");
+			}
+			else if (result.Success)
+			{
+				Debug.Log($"{result.Behavior} successfully finished!");
+			}
+			else
+				Debug.Log($"I couldn't perform the requested action. {result.Message}");
+
+			await Task.Delay(2000);
+		}
+	}
+
+	public async Task<BehaviorResult> StartBehavior(AgentBehaviorProperties properties)
+	{
+		var target = propReferences.GetProp(properties.Object);
+		var propName = target.GetComponent<PropInfo>().Name;
+
+		if (target)
+		{
+			return await behaviorController.StartBehavior(properties.Behavior, target.transform);
+		}
+		else
+		{
+			string msg = "I can't find an object with the name " + propName;
+			return new BehaviorResult(BehaviorType.None, false, false, msg);
+		}
+
+	}
+
+	public void StartNavigationTraining()
+	{
+		// get each behavior controller and start them all on training.
+		var controllers = FindObjectsOfType<BehaviorController>();
+		foreach (var controller in controllers)
+		{
+			controller.TrainNavigation();
+		}
+	}
+
+	public void StartActivateTraining()
+	{
+		// get each behavior controller and start them all on training.
+		var controllers = FindObjectsOfType<BehaviorController>();
+		foreach (var controller in controllers)
+		{
+			controller.TrainActivate(activateObject);
+		}
+	}
+
+	public void CancelBehavior()
+	{
+		behaviorController.CancelCurrentBehavior();
 	}
 
 	public string GetPropsList()
 	{
-		string[] names = props.Select(prop => prop.Name).ToArray();
-		return string.Join(", ", names);
+		return propReferences.GetAllPropNames();
 	}
 }

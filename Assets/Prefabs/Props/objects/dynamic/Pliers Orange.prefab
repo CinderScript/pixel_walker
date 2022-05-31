@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 2133126990588767516}
   - component: {fileID: 2133126990589537596}
   - component: {fileID: 2133126990590537724}
-  - component: {fileID: 678280423425043487}
   - component: {fileID: 6414197117376640207}
   m_Layer: 7
   m_Name: Clipper_Plier_Closed
@@ -85,21 +84,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &678280423425043487
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2133126990588342588}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0292f36871c1c65459ff979a81d5f49b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: Unnamed
-  Description: 
-  room: {fileID: 0}
 --- !u!65 &6414197117376640207
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -121,7 +121,6 @@ GameObject:
   - component: {fileID: 2823176436766785316}
   - component: {fileID: 2823176436763393796}
   - component: {fileID: 2823176436764491204}
-  - component: {fileID: 3737477256572905827}
   - component: {fileID: 6385948598022883412}
   m_Layer: 7
   m_Name: Pipe_Wrench
@@ -196,21 +195,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &3737477256572905827
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2823176436766679812}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0292f36871c1c65459ff979a81d5f49b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: Unnamed
-  Description: 
-  room: {fileID: 0}
 --- !u!65 &6385948598022883412
 BoxCollider:
   m_ObjectHideFlags: 0

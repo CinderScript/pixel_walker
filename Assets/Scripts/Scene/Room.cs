@@ -10,7 +10,7 @@ public class Room : MonoBehaviour
 	{
 		if (other.gameObject.tag == "Player")
 		{
-			other.GetComponentInChildren<NavigateAgent>().currentRoom = this;
+			other.GetComponentInChildren<NavigateAgent>().SetCurrentRoom(this);
 		}
 	}
 }
