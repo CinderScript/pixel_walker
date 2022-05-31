@@ -1,3 +1,19 @@
+/**
+* Project: Pixel Walker
+*
+* Description: This class contains all
+* structures used to store information for 
+* Dave and the UI.
+* 
+* Author: Pixel Walker -
+* Maynard, Gregory
+* Shubhajeet, Baral
+* Do, Khuong
+* Nguyen, Thuong
+*
+* Date: 05-26-2022
+*/
+
 public class AgentBehaviorProperties
 {
 	public BehaviorType Behavior { get; }

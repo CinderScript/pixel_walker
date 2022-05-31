@@ -1,3 +1,18 @@
+/**
+* Project: Pixel Walker
+*
+* Description: The GetApiKey Class has methods to encrypt and decrypt
+* the api key before and after it is saved to a file.
+* 
+* Author: Pixel Walker -
+* Maynard, Gregory
+* Shubhajeet, Baral
+* Do, Khuong
+* Nguyen, Thuong
+*
+* Date: 05-26-2022
+*/
+
 using System;
 using System.IO;
 using System.Security.Cryptography;

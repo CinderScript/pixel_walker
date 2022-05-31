@@ -1,3 +1,19 @@
+/**
+* Project: Pixel Walker
+*
+* Description: UserInputHandler Class handles user input,
+* and then sends it to GPT-3 while it awaits a response
+* It classifies the string and then parses it accordingly.
+* 
+* Author: Pixel Walker -
+* Maynard, Gregory
+* Shubhajeet, Baral
+* Do, Khuong
+* Nguyen, Thuong
+*
+* Date: 05-26-2022
+*/
+
 using System;
 using System.Collections.Generic;
 using System.Linq;

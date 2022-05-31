@@ -1,5 +1,19 @@
-//**Instructions on getting 'Newtonsoft.Json' from NuGet on Visual Studio  
-//https://docs.microsoft.com/en-us/nuget/quickstart/install-and-use-a-package-in-visual-studio
+/**
+* Project: Pixel Walker
+*
+* Description: Gpt3Connection class creates a Restful
+* API call to GPT-3 to send and recieve responses
+* 
+* Author: Pixel Walker -
+* Maynard, Gregory
+* Shubhajeet, Baral
+* Do, Khuong
+* Nguyen, Thuong
+*
+* Date: 05-26-2022
+*/
+
+
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
