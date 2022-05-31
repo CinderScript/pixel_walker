@@ -42,6 +42,7 @@ public class SceneGuiInterface : MonoBehaviour
 		propReferences = sceneArea.GetComponent<AreaPropReferences>();
 
 		//StartNavigationTraining();
+		Debug.Log(propReferences.GetAllPropNames());
 	}
 
 	IEnumerator TriggerAfterSeconds_DebugTest(float sec)

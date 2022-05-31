@@ -35,6 +35,10 @@ public class AreaPropReferences : MonoBehaviour
 	public string GetAllPropNames()
 	{
 		string[] names = Props.Select(prop => prop.Name).ToArray();
+		for (int i = 0; i < names.Length; i++)
+		{
+			names[i] = names[i].Replace(' ', '_');
+		}
 		return string.Join(", ", names);
 	}
 }
