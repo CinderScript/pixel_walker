@@ -2,21 +2,19 @@ using UnityEngine;
 
 public class ToggleableLight : ActivatableToggle
 {
-	private bool initialState;
 	private new Light light;
 
 	protected override void Awake()
 	{
-		base.Awake();
-		initialState = gameObject.activeSelf;
 		light = GetComponent<Light>();
+		base.Awake();
 	}
-	public override void SetToggledState()
+	public override void triggerOnState()
 	{
-		light.enabled = !initialState;
+		light.enabled = true;
 	}
-	public override void SetInitialState()
+	public override void triggerOffState()
 	{
-		light.enabled = initialState;
+		light.enabled = false;
 	}
 }

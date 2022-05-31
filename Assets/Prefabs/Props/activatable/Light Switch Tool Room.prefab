@@ -94,7 +94,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0292f36871c1c65459ff979a81d5f49b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: Light Switch Tool Room
+  Name: Tool Room Light Switch
   Description: 
   room: {fileID: 0}
 --- !u!1 &4577217152398007571

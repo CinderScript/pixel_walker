@@ -4,27 +4,40 @@ using UnityEngine;
 
 public abstract class ActivatableToggle : MonoBehaviour, Activatable
 {
-	protected bool isToggled { get; private set; }
+	[SerializeField]
+	[Header("Initial Animation State")]
+	[Tooltip("Sets initial state to either be On or Off")]
+	protected ActivationState initialState = ActivationState.Off;
+
+	public ActivationState CurrentState { get; private set; }
 
 	protected virtual void Awake()
 	{
-		isToggled = false;
+		CurrentState = initialState;
+		if (initialState == ActivationState.On)
+		{
+			triggerOnState();
+		}
+		else
+		{
+			triggerOffState();
+		}
 	}
 
 	public void Activate()
 	{
-		isToggled = !isToggled;
-
-		if (isToggled)
+		if (CurrentState == ActivationState.Off)
 		{
-			SetToggledState();
+			triggerOnState();
+			CurrentState = ActivationState.On;
 		}
 		else
 		{
-			SetInitialState();
+			triggerOffState();
+			CurrentState = ActivationState.Off;
 		}
 	}
 
-	public abstract void SetInitialState();
-	public abstract void SetToggledState();
+	public abstract void triggerOffState();
+	public abstract void triggerOnState();
 }

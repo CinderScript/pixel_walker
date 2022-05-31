@@ -29,7 +29,7 @@ public class AreaPropReferences : MonoBehaviour
 
 	public GameObject GetProp(string name)
 	{
-		return Props.FirstOrDefault(p => p.Name == name)?.gameObject;
+		return Props.FirstOrDefault(p => p.Name.ToLower() == name.ToLower())?.gameObject;
 	}
 
 	public string GetAllPropNames()

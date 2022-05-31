@@ -88,11 +88,14 @@ public class ActivateAgent : AgentBase
 			targetSwitchActivatable.TriggerActivatables();
 			isActivated = true;
 		}
+
+		Debug.Log("small pause");
 		await Task.Delay(200);
 
 		// disable hand IK and reset hand target position
 		await SetHandRigEnabled(false, 0.4f);
 		await Task.Delay(100);
+		
 		var handStartingPos = agentBody.TransformPoint(handTargetStartPosLocal);
 		SetHandIKPosition(handStartingPos);
 		handTargetCollider.enabled = false;
@@ -150,7 +153,7 @@ public class ActivateAgent : AgentBase
 
 		if (!isActivated)
 		{
-			Debug.Log("didn't reach activation switch");
+			Debug.LogError("didn't reach activation switch");
 		}
 	}
 	private void SetHandIKPosition(Vector3 pos)

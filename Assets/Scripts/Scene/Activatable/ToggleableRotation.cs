@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ActivatableRotation : ActivatableToggle
+public class ToggleableRotation : ActivatableToggle
 {
 	public float targetSpeed = 750f;
 	public float acceleration = 300f;
@@ -13,12 +13,7 @@ public class ActivatableRotation : ActivatableToggle
 	private Coroutine stopRotation;
 	private bool isStillRunning = false;
 
-	protected override void Awake()
-	{
-		base.Awake();
-	}
-
-	public override void SetToggledState()
+	public override void triggerOnState()
 	{
 		if (isStillRunning)
 		{
@@ -26,7 +21,7 @@ public class ActivatableRotation : ActivatableToggle
 		}
 		startRotation = StartCoroutine(StartRotation());
 	}
-	public override void SetInitialState()
+	public override void triggerOffState()
 	{
 		if (isStillRunning)
 		{
