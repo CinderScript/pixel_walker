@@ -211,17 +211,21 @@ public class BehaviorController : MonoBehaviour
 	}
 
 	/* * * * * * * FOR TRAINING * * * * * * * */
-	public async void TrainNavigation()
+	public async void TrainNavigation(bool randomizeLocation)
 	{
 		IsTraining = true;
 		while (IsTraining)
 		{
-			// half the time pick a random location, half the time use last location
-			var random = Random.Range(0, 2);
-			if (random == 1)
+			if (randomizeLocation)
 			{
-				SpawnInRandomLocation();
+				// half the time pick a random location, half the time use last location
+				var random = Random.Range(0, 2);
+				if (random == 1)
+				{
+					SpawnInRandomLocation();
+				}
 			}
+
 			var randomProp = areaProps.SelectRandomProp().transform;
 
 			await Navigate(randomProp);

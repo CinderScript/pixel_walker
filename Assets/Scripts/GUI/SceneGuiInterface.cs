@@ -40,7 +40,7 @@ public class SceneGuiInterface : MonoBehaviour
 
 	private void Start()
 	{
-		StartNavigationTraining();
+		//StartNavigationTraining(false);
 		//GuiUsageExample_DebugTest();
 		//Debug.Log(propReferences.GetAllPropNames());
 	}
@@ -52,7 +52,7 @@ public class SceneGuiInterface : MonoBehaviour
 
 		StartBehavior(properties);
 	}
-
+	
 	private async void GuiUsageExample_DebugTest()
 	{
 		while (true)
@@ -91,13 +91,13 @@ public class SceneGuiInterface : MonoBehaviour
 
 	}
 
-	public void StartNavigationTraining()
+	public void StartNavigationTraining(bool randomLocation)
 	{
 		// get each behavior controller and start them all on training.
 		var controllers = FindObjectsOfType<BehaviorController>();
 		foreach (var controller in controllers)
 		{
-			controller.TrainNavigation();
+			controller.TrainNavigation(randomLocation);
 		}
 	}
 
