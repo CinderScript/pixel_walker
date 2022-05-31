@@ -19,15 +19,18 @@ public class Gpt3Connection
     public string ApiKey { get; }
     public EngineType GptEngine { get; }
 
-    // any other relevent properties
-
     public Gpt3Connection(string apiKey, EngineType gptEngine)
     {
         ApiKey = apiKey;
         GptEngine = gptEngine;
     }
 
-
+    /// <summary>
+    /// Uses the CallOpenAI method to generate a response.
+    /// Response varies on engine selected.
+    /// </summary>
+    /// <param name="prompt"></param>
+    /// <returns></returns>
     public async Task<string> GenerateText(string prompt)
     {
         string engineUsed;
@@ -55,6 +58,18 @@ public class Gpt3Connection
         return res;
     }
 
+    /// <summary>
+    /// A RESTful API call that sends a string input with relevant parameters
+    /// to OpenAI and returns a JSON containing response 
+    /// </summary>
+    /// <param name="tokens"></param>
+    /// <param name="input"></param>
+    /// <param name="engine"></param>
+    /// <param name="temperature"></param>
+    /// <param name="topP"></param>
+    /// <param name="frequencyPenalty"></param>
+    /// <param name="presencePenalty"></param>
+    /// <returns></returns>
     private async Task<string> CallOpenAI(int tokens, string input, string engine,
         double temperature, int topP, int frequencyPenalty, int presencePenalty)
     {

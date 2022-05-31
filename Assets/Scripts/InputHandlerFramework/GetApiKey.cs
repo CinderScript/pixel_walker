@@ -15,7 +15,10 @@ public class GptApiKey
         FilePath = path;
     }
 
-    // method to encypt the key by cryptostream and memorystream, then write it on a file
+    /// <summary>
+    /// method to encypt the key by cryptostream and memorystream, then write it on a file
+    /// </summary>
+    /// <param name="key"></param>
     public void SaveKeyToFile(string key)
     {
         try
@@ -49,7 +52,10 @@ public class GptApiKey
         }
     }
 
-    // method to retrieve the encrypted key from the file then decrypt it
+    /// <summary>
+    ///  method to retrieve the encrypted key from the file then decrypt it
+    /// </summary>
+    /// <returns></returns>
     public string GetKeyFromFile()
     {
         try

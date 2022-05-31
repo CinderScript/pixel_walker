@@ -22,12 +22,13 @@ using System.IO;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-/** class PromptLoader takes in a filepath that contains prompts 
-*   and send that to input handler.
-*/
 public class PromptLoader
 {
-    // This will read Prompts from file and deserialize them into C# objects
+    /// <summary>
+    /// This will read Prompts from file and deserialize them into C# objects
+    /// </summary>
+    /// <param name="filePath">name of file  containing prompts</param>
+    /// <returns></returns>
     public GptPrompts GetPromptsFromFile(string filePath)
     {
         // This will attempt to read from filepath
@@ -49,10 +50,11 @@ public class PromptLoader
     }
 }
 
-/** Class GptPrompts will have string array properties to get the array from
-*   json object, string properties so the prompts can be accessed after going through
-*   the String.Join process. 
-*/
+/// <summary>
+/// Class GptPrompts will have string array properties to get the array from
+/// json object, string properties so the prompts can be accessed after going through
+/// the String.Join process. 
+/// </summary>
 public class GptPrompts
 {
     // initialize the string[] to hold the string object in arrays

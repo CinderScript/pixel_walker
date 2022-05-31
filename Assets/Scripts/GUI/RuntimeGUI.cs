@@ -1,3 +1,21 @@
+/**
+* Project: Pixel Walker
+*
+* Description: RuntimeGUI is a C# class that handles
+* all UI input and outputs. It does so by utilising the
+* Gpt3Connection Class to send inputs and recieve outputs from
+* Open-AI GPT-3.
+* 
+* Author: Pixel Walker -
+* Maynard, Gregory
+* Shubhajeet, Baral
+* Do, Khuong
+* Nguyen, Thuong
+*
+* Date: 05-26-2022
+*/
+
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -62,35 +80,24 @@ public class RuntimeGUI : MonoBehaviour
     private EngineType engine;
     GptApiKey keyEncryptor;
     
-
-    private string key;
-
-
-
-
     //CONSTANTS
     private const int DELAY = 1;
     private const string KEY_FILE = "key.txt";
     private const string PROMPT_FILE = "prompt.JSON";
-
     private const string KEY_DIRECTORY = "PixelWalker";
 
     //Variables for saving
+    private string key;
     private string debugMessage = "";
     private string keyPath;
 
-
     //List used to fill actions radio button group
     List<string> actionlist = new List<String>();
-
-
-
 
     void OnEnable()
     {
         //Root visual element of the UI Document
         var rootVE = GetComponent<UIDocument>().rootVisualElement;
-
 
         //Initialize Main UI elements
         menuBtn = rootVE.Q<Button>("menu");
@@ -140,9 +147,8 @@ public class RuntimeGUI : MonoBehaviour
         foreach (var option in actionRadioGroup.choices)
         {
             actionlist.Add(option);
+            Debug.Log(option.ToString());
         }
-
-        Debug.Log(actionRadioGroup.choices.ToString()); // prints action list to console
 
         //Fuctionality of all buttons added here
         submitBtn.clicked += SendToGPT;
@@ -160,7 +166,7 @@ public class RuntimeGUI : MonoBehaviour
         levelthreeBtn.clicked += () => SceneManager.LoadScene(1);
         levelTwoBtn.clicked += () => SceneManager.LoadScene(2);
 
-
+        //Initializing directory path to store encrypted key
         keyPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), KEY_DIRECTORY);
         Directory.CreateDirectory(keyPath);
         keyPath = Path.Combine(keyPath, KEY_FILE);
@@ -176,7 +182,6 @@ public class RuntimeGUI : MonoBehaviour
             OpenApiInputMenu();
         }
 
-        
         handler = new UserInputHandler(key, PROMPT_FILE, engine);
     }
 
@@ -341,6 +346,14 @@ public class RuntimeGUI : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Method to send a test string to GPT-3 to
+    /// verify key validity
+    /// always used the Ada tier engine for cost
+    /// saving
+    /// </summary>
+    /// <param name="key">the unencrypted api key</param>
+    /// <returns></returns>
     async Task<string> TestGptResponse(string key)
     {
         string testResponse;

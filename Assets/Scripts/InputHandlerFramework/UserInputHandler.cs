@@ -15,9 +15,16 @@ public class UserInputHandler
     private PromptLoader classifer;
     private const int MAX_RETRIES = 3;
     private int retries = MAX_RETRIES;
-
     private int bestMatchRetries = MAX_RETRIES;
 
+    
+    /// <summary>
+    /// Creates an User Input Handler object for interfacing
+    /// with GPT-3
+    /// </summary>
+    /// <param name="apiKey"> the unencrypted api key</param>
+    /// <param name="gptPromptsFilePath">file path of encrypted key</param>
+    /// <param name="engine">engine type for GPT-3 (default Davinci)</param>
     public UserInputHandler(string apiKey, string gptPromptsFilePath, EngineType engine)
     {
         connection = new Gpt3Connection(apiKey, engine);
@@ -25,6 +32,11 @@ public class UserInputHandler
         prompts = classifer.GetPromptsFromFile(gptPromptsFilePath);
     }
 
+    /// <summary>
+    /// Returns A GptResponse object, classifying text as it is recieved
+    /// </summary>
+    /// <param name="userInput">the users input string</param>
+    /// <returns></returns>
     public async Task<GptResponse> GetGptResponce(string userInput)
     {
         InputType inputType;
@@ -41,7 +53,6 @@ public class UserInputHandler
         string generatedText = "Error: No Responce Saved";
 
         AgentBehaviorProperties agentBehaviorProperties = null;
-
 
         string objectBestMatch = "";
 
@@ -88,18 +99,14 @@ public class UserInputHandler
                 {
                     throw;
                 }
-
-                // error checking - if this is null (couldn't parse) then send exception
                 if (agentBehaviorProperties == null)
                 {
-                    //exception = new Exception("Couldn't parse command");
                     return null;
                 }
                 else
-                {   // COMMAND WAS PARSED
+                {   
                     string nameOfUserRequestedObject = agentBehaviorProperties.Object;
 
-                    // TODO: GET BEST MATCH TO ITEM IN SCENE IF COMMAND
                     try
                     {
                         objectBestMatch = await getObjectBestMatch(nameOfUserRequestedObject);
@@ -121,11 +128,15 @@ public class UserInputHandler
         return gptResponce;
     }
 
+    /// <summary>
+    /// Classifies whethert he user's input is a question, command, conversation
+    /// or unknown.
+    /// </summary>
+    /// <param name="userInput">the user's input string</param>
+    /// <returns></returns>
     private async Task<InputType> classifyText(string userInput)
     {
         string promptStart = prompts.InputClassifier;
-
-        // TODO: COMPLETE THE PROMPT WITH USER INPUT
         string fullPrompt = promptStart + "Input: " + userInput;
         fullPrompt = fullPrompt + "Output:";
 
@@ -139,20 +150,20 @@ public class UserInputHandler
             throw;
         }
 
-        string answer = responce;
+        string answer = responce.ToLower();
 
         // TODO: CODE TO SELECT CORRECT INPUT CLASSIFICATION
         InputType type; // todo
 
-        if (answer == "Question")
+        if (answer == "question")
         {
             type = InputType.Question;
         }
-        else if (answer == "Conversation")
+        else if (answer == "conversation")
         {
             type = InputType.Conversation;
         }
-        else if (answer == "Command")
+        else if (answer == "command")
         {
             type = InputType.Command;
         }
@@ -162,12 +173,18 @@ public class UserInputHandler
         }
         return type;
     }
+
+    /// <summary>
+    /// Method for handling user input if conversation.
+    /// </summary>
+    /// <param name="userInput">the user's input string</param>
+    /// <returns></returns>
     private async Task<string> respondConversation(string userInput)
     {
+        string props = prompts.PropsListLoader.ToLower();
         string promptStart = prompts.ConversationResponder;
-        promptStart = promptStart.Replace("{$$props$$}", "Light Switch Workshop, Bench Grinder, 5 Gallon Bucket, Lid of Paint Can, Can of Blue Paint, Wood Box, Garden Rake, Unnamed, Red Plastic Bin, Orange Handled Pliers, Unnamed, Red Pipe Wrench, Unnamed, Yellow Level, Wooden Workbench, Small Portable Workbench, Head of Welding Torch, Blue Spray Paint, Brown Spray Paint, Yellow Spray Paint, Red Spray Paint, Green Spray Paint, White Paint Can, C Clamp, Sound System, Map of New Mexico, Drill Press, Arizona License Plate, Light Switch Tool Room, Acetylene Tank, Oxygen Tank, Plastic Safety Goggles, Blue Level, Blue Plastic Crate, Unnamed, Blue Paint Can, Bench Vice, Paint Thinner, Large Phillips Screwdriver, Small Phillips Screwdriver, Small Stool, Yellow Claw Hammer, Handsaw, Tree on Rock");
+        promptStart = promptStart.Replace("{$$props$$}", props);
 
-        // TODO: COMPLETE THE PROMPT WITH USER INPUT
         string fullPrompt = promptStart + "Input: " + userInput;
         fullPrompt = fullPrompt + "Output:";
 
@@ -183,10 +200,17 @@ public class UserInputHandler
 
         return responce;
     }
+
+    /// <summary>
+    /// Method for handling user input if a question.
+    /// </summary>
+    /// <param name="userInput">The user's input string</param>
+    /// <returns></returns>
     private async Task<string> answerQuestion(string userInput)
     {
+        string props = prompts.PropsListLoader.ToLower();
         string promptStart = prompts.QuestionResponder;
-        promptStart = promptStart.Replace("{$$props$$}", "Light Switch Workshop, Bench Grinder, 5 Gallon Bucket, Lid of Paint Can, Can of Blue Paint, Wood Box, Garden Rake, Unnamed, Red Plastic Bin, Orange Handled Pliers, Unnamed, Red Pipe Wrench, Unnamed, Yellow Level, Wooden Workbench, Small Portable Workbench, Head of Welding Torch, Blue Spray Paint, Brown Spray Paint, Yellow Spray Paint, Red Spray Paint, Green Spray Paint, White Paint Can, C Clamp, Sound System, Map of New Mexico, Drill Press, Arizona License Plate, Light Switch Tool Room, Acetylene Tank, Oxygen Tank, Plastic Safety Goggles, Blue Level, Blue Plastic Crate, Unnamed, Blue Paint Can, Bench Vice, Paint Thinner, Large Phillips Screwdriver, Small Phillips Screwdriver, Small Stool, Yellow Claw Hammer, Handsaw, Tree on Rock");
+        promptStart = promptStart.Replace("{$$props$$}", props);
 
         // TODO: COMPLETE THE PROMPT WITH USER INPUT
         string fullPrompt = promptStart + "Input: " + userInput;
@@ -205,13 +229,18 @@ public class UserInputHandler
         return responce;
     }
 
+    /// <summary>
+    /// Method for handling user input if command.
+    /// Mehod also parses the response for behavior, object and location
+    /// </summary>
+    /// <param name="userInput"></param>
+    /// <returns></returns>
     private async Task<AgentBehaviorProperties> parseCommand(string userInput)
     {
         string promptStart = prompts.CommandParser;
-
-        // TODO: COMPLETE THE PROMPT WITH USER INPUT
         string fullPrompt = promptStart + "Input: " + userInput;
         fullPrompt = fullPrompt + "Output:";
+        bool success = true;
 
         string responce;
         try
@@ -222,8 +251,6 @@ public class UserInputHandler
         {
             throw;
         }
-
-        // TODO: HANDLE EXCEPTION
 
         BehaviorType behavior = BehaviorType.Unknown;
         string sceneObject = null;
@@ -233,31 +260,35 @@ public class UserInputHandler
         {
             int startIndex = responce.IndexOf("behavior: ") + "behavior: ".Length;
             int endIndex = responce.IndexOf(",");
-            var behaviorString = responce.Substring(startIndex, endIndex - startIndex).Trim();
+            var behaviorString = responce.Substring(startIndex, endIndex - startIndex).Trim().ToLower();
 
-            if (behaviorString == "Navigate")
+            if (behaviorString == "navigate")
             {
                 behavior = BehaviorType.Navigate;
             }
-            else if (behaviorString == "PickUp")
+            else if (behaviorString == "pickup")
             {
                 behavior = BehaviorType.PickUp;
             }
-            else if (behaviorString == "Drop")
+            else if (behaviorString == "drop")
             {
                 behavior = BehaviorType.Drop;
             }
-            else if (behaviorString == "Activate")
+            else if (behaviorString == "activate")
             {
                 behavior = BehaviorType.Activate;
             }
-            else if (behaviorString == "SetDown")
+            else if (behaviorString == "setdown")
             {
                 behavior = BehaviorType.SetDown;
             }
-            else if (behaviorString == "Open")
+            else if (behaviorString == "open")
             {
                 behavior = BehaviorType.Open;
+            }
+            else
+            {
+                success = false;
             }
         }
 
@@ -285,11 +316,6 @@ public class UserInputHandler
             location = responce.Substring(startIndex, endIndex - startIndex).Trim();
         }
 
-        // TODO: use jsonFormattedText to create object.  need to deserialize responce
-        bool success = true; // TODO: check if success
-
-
-        // IF THERE IS AN ERROR AND WE CAN'T SERIALIZE, RETURN NULL - FAILED, Try again?
         if (!success)
         {
             throw new Exception("Error: Couldn't parse command");
@@ -300,15 +326,20 @@ public class UserInputHandler
         return parse;
     }
 
+
+    /// <summary>
+    /// Method for finding the closest object to the user's input
+    /// </summary>
+    /// <param name="sceneObject"> name of object in command string</param>
+    /// <returns></returns>
     private async Task<string> getObjectBestMatch(string sceneObject)
     {
-        string props = prompts.PropsListLoader;
+        string props = prompts.PropsListLoader.ToLower();
         string promptStart = prompts.BestMatchSelector;
 
         promptStart = promptStart.Replace("{$$props$$}", props);
 
-        // TODO: COMPLETE THE PROMPT WITH USER INPUT
-        string fullPrompt = promptStart + "Input: " + sceneObject;
+        string fullPrompt = promptStart + "Input: " + sceneObject.ToLower();
         fullPrompt = fullPrompt + "Output:";
 
         string responce;
@@ -321,7 +352,7 @@ public class UserInputHandler
             throw;
         }
 
-        bool matchObj = props.Contains(responce);
+        bool matchObj = props.Contains(responce.ToLower());
         if (!matchObj)
         {
             responce = await connection.GenerateText(fullPrompt);
