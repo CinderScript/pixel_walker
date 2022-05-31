@@ -278,7 +278,7 @@ public class UserInputHandler
             int endIndex = responce.IndexOf(",");
             var behaviorString = responce.Substring(startIndex, endIndex - startIndex).Trim().ToLower();
 
-            if (behaviorString == "navigate")
+            if (behaviorString == "navigate"|| behaviorString == "goto" || behaviorString == "walkto")
             {
                 behavior = BehaviorType.Navigate;
             }
@@ -286,11 +286,11 @@ public class UserInputHandler
             {
                 behavior = BehaviorType.PickUp;
             }
-            else if (behaviorString == "drop")
+            else if (behaviorString == "drop"|| behaviorString == "turnoff")
             {
                 behavior = BehaviorType.Drop;
             }
-            else if (behaviorString == "activate")
+            else if (behaviorString == "activate" || behaviorString == "turnon")
             {
                 behavior = BehaviorType.Activate;
             }
@@ -301,10 +301,6 @@ public class UserInputHandler
             else if (behaviorString == "open")
             {
                 behavior = BehaviorType.Open;
-            }
-            else
-            {
-                success = false;
             }
         }
 
