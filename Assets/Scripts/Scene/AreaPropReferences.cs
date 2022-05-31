@@ -29,6 +29,7 @@ public class AreaPropReferences : MonoBehaviour
 
 	public GameObject GetProp(string name)
 	{
+		name = name.Replace("_", " ");
 		return Props.FirstOrDefault(p => p.Name.ToLower() == name.ToLower())?.gameObject;
 	}
 
