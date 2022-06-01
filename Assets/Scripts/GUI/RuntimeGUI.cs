@@ -80,7 +80,7 @@ public class RuntimeGUI : MonoBehaviour
     GptApiKey keyEncryptor;
     
     //CONSTANTS
-    private const int DELAY = 3;
+    private const int DELAY = 10;
     private const string KEY_FILE = "key.txt";
     private const string PROMPT_FILE = "prompt.JSON";
     private const string KEY_DIRECTORY = "PixelWalker";
@@ -98,7 +98,7 @@ public class RuntimeGUI : MonoBehaviour
 
     bool closePopUp = false;
 
-    void OnEnable()
+    async void OnEnable()
     {
         //Root visual element of the UI Document
         var rootVE = GetComponent<UIDocument>().rootVisualElement;
@@ -178,7 +178,19 @@ public class RuntimeGUI : MonoBehaviour
         keyEncryptor = new GptApiKey(keyPath.ToString());
         if (File.Exists(keyPath))
         {
-            key = keyEncryptor.GetKeyFromFile();
+
+            try
+            {
+                key = keyEncryptor.GetKeyFromFile();
+            }
+            catch (Exception e)
+            {
+                var msg = "Could not get the api key from the file.\n\n" + e.Message;
+				
+                await CreateTimedPopUp(msg, DELAY);
+            }
+
+
             File.SetAttributes(keyPath, FileAttributes.Hidden);
         }
         else
@@ -379,13 +391,31 @@ public class RuntimeGUI : MonoBehaviour
         }
         else
         {
-            string key = apiInput.value;
-            string test = await TestGptResponse(key);
+            var testKey = apiInput.value;
+			
+            string test = await TestGptResponse(testKey);
             Debug.Log(test);
             if (test != null)
             {
-                keyEncryptor.SaveKeyToFile(key);
-                File.SetAttributes(keyPath, FileAttributes.Hidden);
+				try
+				{
+                    if (File.Exists(keyPath))
+                    {
+                        File.Delete(keyPath);
+                    }
+
+                    keyEncryptor.SaveKeyToFile(testKey);
+
+                    key = testKey;
+                    File.SetAttributes(keyPath, FileAttributes.Hidden);
+                }
+				catch (Exception e)
+				{
+                    var msg = "Could not save the api key to the file.\n\n" + e.Message;
+
+                    await CreateTimedPopUp(msg, DELAY);
+                }
+
             }
             else
             {
@@ -502,7 +532,7 @@ public class RuntimeGUI : MonoBehaviour
     /// Selected via radio buttons.
     /// Defaults to Davinci
     /// </summary>
-    void SelectEngine()
+    async void SelectEngine()
     {
         if (engineRadioGroup.value == 1)
         {
@@ -521,7 +551,7 @@ public class RuntimeGUI : MonoBehaviour
             engine = EngineType.Davinci;
         }
 
-        key = keyEncryptor.GetKeyFromFile();
+
         handler = new UserInputHandler(sceneConnection.GetPropsList(), key, PROMPT_FILE, engine);
         Debug.Log(engineRadioGroup.value.ToString());
         ToggleMainUI(true);
