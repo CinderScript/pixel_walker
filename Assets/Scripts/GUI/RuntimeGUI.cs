@@ -108,7 +108,7 @@ public class RuntimeGUI : MonoBehaviour
         resetBtn = rootVE.Q<Button>("reset");
         submitBtn = rootVE.Q<Button>("submit");
         cancelBtn = rootVE.Q<Button>("cancel");
-        exitBtn = rootVE.Q<Button>("exit-application");
+        exitBtn = rootVE.Q<Button>("exit-applicaiton");
         userInput = rootVE.Q<TextField>("user-input");
         daveOutput = rootVE.Q<TextField>("dave-text-out");
         gptParseOutput = rootVE.Q<TextField>("gpt-parsed-words");
@@ -180,16 +180,16 @@ public class RuntimeGUI : MonoBehaviour
         keyEncryptor = new GptApiKey(keyPath.ToString());
         if (File.Exists(keyPath))
         {
-
             try
             {
                 key = keyEncryptor.GetKeyFromFile();
+				//StartCoroutine(DebugOnEnablePopUp(key, 10));
             }
             catch (Exception e)
             {
                 var msg = "Could not get the api key from the file.\n\n" + e.Message;
-				
-                await CreateTimedPopUp(msg, DELAY);
+
+				//StartCoroutine(DebugOnEnablePopUp(msg, 10));
             }
 
 
@@ -199,7 +199,10 @@ public class RuntimeGUI : MonoBehaviour
         {
             OpenApiInputMenu();
         }
+    }
 
+	private void Start()
+	{
         handler = new UserInputHandler(sceneConnection.GetPropsList(), key, PROMPT_FILE, engine);
     }
 
@@ -255,7 +258,7 @@ public class RuntimeGUI : MonoBehaviour
                       $"Error: {e.Message}";
             var debugMsg = msg + $"\n\nTraceback:{e.StackTrace}";
             Debug.LogWarning(debugMsg);
-            StartCoroutine(CreateTimedPopUp(msg, DELAY));
+            StartCoroutine(CreateTimedPopUp(debugMsg, 20));
             return;
         }
 
@@ -306,6 +309,13 @@ public class RuntimeGUI : MonoBehaviour
                 await CreateTimedPopUp(msg, DELAY);
             }
         }
+	}
+
+	IEnumerator DebugOnEnablePopUp(string msg, float duration)
+	{
+        yield return new WaitForUpdate();
+        yield return new WaitForSeconds(0.5f);
+		StartCoroutine(CreateTimedPopUp(msg, duration));
 	}
 
     /// <summary>

@@ -38,7 +38,6 @@ public class SceneGuiInterface : MonoBehaviour
 		propReferences = sceneArea.GetComponent<AreaPropReferences>();
     }
 
-
 	private void Start()
 	{
 		//StartNavigationTraining(false);
