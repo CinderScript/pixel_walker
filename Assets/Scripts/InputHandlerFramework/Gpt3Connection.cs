@@ -123,8 +123,11 @@ public class Gpt3Connection
         }
         catch (Exception)
         {
-            throw;
-        }
+			var msg = "Was not able to connect to GPT-3.\n\n" +
+				      "Please make sure that you have enough credit on your\n" +
+					  "GPT-3 API key and that you have a working internet connection.";
+			throw new Exception(msg);
+		}
         return reply;
     }
 
