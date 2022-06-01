@@ -15,7 +15,6 @@
 * Date: 05-26-2022
 */
 
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -30,7 +29,6 @@ using System.Threading.Tasks;
 
 public class RuntimeGUI : MonoBehaviour
 {
-
     // Main UI Elements (Visible at Runtime)
     private VisualElement daveOutGroup;
     private VisualElement daveInGroup;
@@ -38,6 +36,7 @@ public class RuntimeGUI : MonoBehaviour
     private Button resetBtn;
     private Button submitBtn;
     private Button cancelBtn;
+    private Button exitBtn;
     private TextField userInput;
     private TextField daveOutput;
     private TextField gptParseOutput;
@@ -109,6 +108,7 @@ public class RuntimeGUI : MonoBehaviour
         resetBtn = rootVE.Q<Button>("reset");
         submitBtn = rootVE.Q<Button>("submit");
         cancelBtn = rootVE.Q<Button>("cancel");
+        exitBtn = rootVE.Q<Button>("exit-application");
         userInput = rootVE.Q<TextField>("user-input");
         daveOutput = rootVE.Q<TextField>("dave-text-out");
         gptParseOutput = rootVE.Q<TextField>("gpt-parsed-words");
@@ -165,6 +165,8 @@ public class RuntimeGUI : MonoBehaviour
         apiSubmitBtn.clicked += SetApiKey;
         engineMenuBtn.clicked += OpenEngineMenu;
         engineConfirmBtn.clicked += SelectEngine;
+
+        exitBtn.clicked += Application.Quit;
 
         //Level select buttons -- refer to scene build order
         navigationLevelLodeBtn.clicked += () => SceneManager.LoadScene(0);
