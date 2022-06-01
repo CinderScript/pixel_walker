@@ -17,6 +17,8 @@
 using System;
 using System.Threading.Tasks;
 
+using UnityEngine;
+
 public class UserInputHandler
 {
     private Gpt3Connection connection;
@@ -337,5 +339,43 @@ public class UserInputHandler
         AgentBehaviorProperties parse = new AgentBehaviorProperties(behavior, sceneObject, location);
 
         return parse;
+    }
+
+    /// <summary>
+    /// Method for finding the closest matching location to the user's input
+    /// </summary>
+    /// <param name="sceneObject"> name of location in command string</param>
+    /// <returns></returns>
+    private async Task<string> getObjectBestMatch(string sceneObject)
+    {
+		if (sceneObject.ToLower() == "null")
+		{
+            return "null";
+		}
+
+        string promptStart = prompts.BestMatchSelector;
+
+        promptStart = promptStart.Replace("{$$props$$}", propsInScene);
+
+        string fullPrompt = promptStart + "Input: " + sceneObject.ToLower();
+        fullPrompt = fullPrompt + "Output:";
+
+        string responce;
+        try
+        {
+            responce = await connection.GenerateText(fullPrompt);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+
+        bool matchObj = propsInScene.Contains(responce.ToLower());
+        if (!matchObj)
+        {
+			throw new Exception($"The object {sceneObject} was not found");
+		}
+		
+        return responce;
     }
 }
