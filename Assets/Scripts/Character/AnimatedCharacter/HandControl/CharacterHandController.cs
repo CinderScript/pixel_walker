@@ -1,5 +1,40 @@
+/**
+ *	Project:		Pixel Walker
+ *	
+ *	Description:	CharacterHandController provides a means of controlling 
+ *					the agents hand by moving the hand's inverse kinimatics 
+ *					target. This target has a rigidbody and collider so that
+ *					it can interact with the scene and manipulate objects.
+ *					
+ *					This controller reads the values in the CharacterMovementValues
+ *					object and applies the movements to the hand's IK target, 
+ *					within the constraints defined using dot products of the direction
+ *					the agent is facing and the vector pointing to the agent's hand's
+ *					inverse kinimatic target.
+ *					
+ *	Author:			Pixel Walker -
+ *						Maynard, Gregory
+ *						Shubhajeet, Baral
+ *						Do, Khuong
+ *						Nguyen, Thuong						
+ *					
+ *	Date:			05-30-2022
+ */
+
 using UnityEngine;
 
+/// <summary>
+/// CharacterHandController provides a means of controlling 
+/// the agents hand by moving the hand's inverse kinimatics 
+/// target. This target has a rigidbody and collider so that
+/// it can interact with the scene and manipulate objects.
+///					
+/// This controller reads the values in the CharacterMovementValues
+/// object and applies the movements to the hand's IK target, 
+/// within the constraints defined using dot products of the direction
+/// the agent is facing and the vector pointing to the agent's hand's
+/// inverse kinimatic target.
+/// </summary>
 public class CharacterHandController : MonoBehaviour
 {
 	private const float HAND_SPEED = 1f;

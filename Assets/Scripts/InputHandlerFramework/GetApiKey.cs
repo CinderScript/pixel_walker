@@ -31,6 +31,8 @@ public class GptApiKey
     }
 
     /// <summary>
+    /// This code was copied from the website: https://www.delftstack.com/howto/csharp/encrypt-and-decrypt-a-string-in-csharp/
+    /// No Author is denoted.
     /// method to encypt the key by cryptostream and memorystream, then write it on a file
     /// </summary>
     /// <param name="key"></param>
@@ -68,6 +70,8 @@ public class GptApiKey
     }
 
     /// <summary>
+    /// This code was copied from the website: https://www.delftstack.com/howto/csharp/encrypt-and-decrypt-a-string-in-csharp/
+    /// No Author is denoted.
     ///  method to retrieve the encrypted key from the file then decrypt it
     /// </summary>
     /// <returns></returns>
@@ -83,9 +87,9 @@ public class GptApiKey
             string publickey = "12345678";
             string secretkey = "87654321";
             byte[] privatekeyByte = { };
-            privatekeyByte = System.Text.Encoding.UTF8.GetBytes(secretkey);
+            privatekeyByte = Encoding.UTF8.GetBytes(secretkey);
             byte[] publickeybyte = { };
-            publickeybyte = System.Text.Encoding.UTF8.GetBytes(publickey);
+            publickeybyte = Encoding.UTF8.GetBytes(publickey);
             MemoryStream ms = null;
             CryptoStream cs = null;
             byte[] inputbyteArray = new byte[key.Replace(" ", "+").Length];

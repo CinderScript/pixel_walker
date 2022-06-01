@@ -14,12 +14,18 @@
 * Date: 05-26-2022
 */
 
+
+/// <summary>
+/// Provides a description of a requested behavior and the information 
+/// that the beahavior controller needs to select the correct agent 
+/// and give the correct target.
+/// </summary>
 public class AgentBehaviorProperties
 {
 	public BehaviorType Behavior { get; }
 	public string Object { get; set; }
 	public string Location { get; }
-	public AgentBehaviorProperties(BehaviorType behavior, string sceneObject, string location)
+	public AgentBehaviorProperties(BehaviorType behavior, string sceneObject, string location = null)
 	{
 		Behavior = behavior;
 		Object = sceneObject;
@@ -27,6 +33,9 @@ public class AgentBehaviorProperties
 	}
 }
 
+/// <summary>
+/// 
+/// </summary>
 public enum InputType
 {
 	Unknown, Question, Command, Conversation
@@ -34,7 +43,7 @@ public enum InputType
 
 public enum BehaviorType
 {
-	Unknown, None, Navigate, PickUp, Drop, Activate, SetDown, Open
+	Unknown, None, Navigate, PickUp, Drop, TurnOn, TurnOff, SetDown, Open, Activate
 }
 
 public enum EngineType

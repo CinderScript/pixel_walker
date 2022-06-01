@@ -1,6 +1,21 @@
-using System;
+/**
+ *	Project:		Pixel Walker
+ *	
+ *	Description:	SceneGuiInterface provides the connection between the
+ *					GUI and the BehaviorController. This class exposes 
+ *					Behaviorcontroller methods that begin the appropriate 
+ *					behavior when given a AgentBehaviorProperties object.
+ *					
+ *	Author:			Pixel Walker -
+ *						Maynard, Gregory
+ *						Shubhajeet, Baral
+ *						Do, Khuong
+ *						Nguyen, Thuong						
+ *					
+ *	Date:			05-30-2022
+ */
+
 using System.Collections;
-using System.Linq;
 using System.Threading.Tasks;
 
 using UnityEngine;
@@ -20,33 +35,29 @@ public class SceneGuiInterface : MonoBehaviour
 	void Awake()
     {
         behaviorController = sceneArea.GetComponentInChildren<BehaviorController>();
+		propReferences = sceneArea.GetComponent<AreaPropReferences>();
     }
 
 	private void Start()
 	{
-		propReferences = sceneArea.GetComponent<AreaPropReferences>();
-
-		//StartNavigationTraining();
-		//StartActivateTraining();
-		
-		Test();
-
-		//StartCoroutine(TriggerAfterSeconds(5));
+		//StartNavigationTraining(false);
+		//GuiUsageExample_DebugTest();
+		//Debug.Log(propReferences.GetAllPropNames());
 	}
 
-	IEnumerator TriggerAfterSeconds(float sec)
+	IEnumerator TriggerAfterSeconds_DebugTest(float sec)
 	{
 		yield return new WaitForSeconds(sec);
-		var properties = new AgentBehaviorProperties(BehaviorType.Activate, "Drill Press", "");
+		var properties = new AgentBehaviorProperties(BehaviorType.TurnOn, "Drill Press", "");
 
 		StartBehavior(properties);
 	}
-
-	public async void Test()
+	
+	private async void GuiUsageExample_DebugTest()
 	{
 		while (true)
 		{
-			var properties = new AgentBehaviorProperties(BehaviorType.Activate, "workshop light switch", "");
+			var properties = new AgentBehaviorProperties(BehaviorType.Navigate, "yellow_claw_hammer");
 
 			var result = await StartBehavior(properties);
 			if (result.Cancelled)
@@ -66,38 +77,16 @@ public class SceneGuiInterface : MonoBehaviour
 
 	public async Task<BehaviorResult> StartBehavior(AgentBehaviorProperties properties)
 	{
-		var target = propReferences.GetProp(properties.Object);
-		var propName = target.GetComponent<PropInfo>().Name;
-
-		if (target)
-		{
-			return await behaviorController.StartBehavior(properties.Behavior, target.transform);
-		}
-		else
-		{
-			string msg = "I can't find an object with the name " + propName;
-			return new BehaviorResult(BehaviorType.None, false, false, msg);
-		}
-
+		return await behaviorController.StartBehavior(properties);
 	}
 
-	public void StartNavigationTraining()
+	public void StartNavigationTraining(bool randomLocation)
 	{
 		// get each behavior controller and start them all on training.
 		var controllers = FindObjectsOfType<BehaviorController>();
 		foreach (var controller in controllers)
 		{
-			controller.TrainNavigation();
-		}
-	}
-
-	public void StartActivateTraining()
-	{
-		// get each behavior controller and start them all on training.
-		var controllers = FindObjectsOfType<BehaviorController>();
-		foreach (var controller in controllers)
-		{
-			controller.TrainActivate(activateObject);
+			controller.TrainNavigation(randomLocation);
 		}
 	}
 

@@ -1,3 +1,19 @@
+/**
+ *	Project:		Pixel Walker
+ *	
+ *	Description:	AgentBase is the abstract base class inherited by all
+ *					of the agents in this project. This provides functions 
+ *					for starting and stopping the inheriting agent.
+ *					
+ *	Author:			Pixel Walker -
+ *						Maynard, Gregory
+ *						Shubhajeet, Baral
+ *						Do, Khuong
+ *						Nguyen, Thuong						
+ *					
+ *	Date:			05-30-2022
+ */
+
 using System.Collections;
 using System.Threading.Tasks;
 
@@ -56,7 +72,7 @@ public abstract class AgentBase : Agent
 		RequestAcademyStep = false;
 	}
 
-	public async Task<BehaviorResult> PerformeBehavior(Transform target = null)
+	public virtual async Task<BehaviorResult> PerformeBehavior(Transform target = null)
 	{
 		isFinished = false;
 		isCancelled = false;

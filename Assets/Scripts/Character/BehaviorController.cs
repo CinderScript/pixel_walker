@@ -1,3 +1,21 @@
+/**
+ *	Project:		Pixel Walker
+ *	
+ *	Description:	BehaviorController provides syncronizing control
+ *					of the different Agent scripts attached to the 
+ *					in game character.  This has a direct connection 
+ *					with the SceneGuiInterface script to initiate 
+ *					behaviors.
+ *					
+ *	Author:			Pixel Walker -
+ *						Maynard, Gregory
+ *						Shubhajeet, Baral
+ *						Do, Khuong
+ *						Nguyen, Thuong						
+ *					
+ *	Date:			05-30-2022
+ */
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -50,46 +68,89 @@ public class BehaviorController : MonoBehaviour
 		startingPositionHeight = agentBody.transform.position.y;
 	}
 
-	public async Task<BehaviorResult> StartBehavior(
-		BehaviorType behavior, 
-		Transform target = null, 
-		GameObject location = null)
+	public async Task<BehaviorResult> StartBehavior(AgentBehaviorProperties properties)
 	{
+		// is the target a location or an object?
+		GameObject targetObject = null;
+		if (properties.Object.ToLower() == "null")
+		{
+			targetObject = areaProps.GetRoom(properties.Location);
+
+			if (!targetObject)
+			{
+				string msg = "I can't find the location " + properties.Location;
+				return new BehaviorResult(BehaviorType.None, false, false, msg);
+			}
+		}
+		else
+		{
+			targetObject = areaProps.GetProp(properties.Object);
+
+			if (!targetObject)
+			{
+				string msg = "I can't find an object with the name " + properties.Object;
+				return new BehaviorResult(BehaviorType.None, false, false, msg);
+			}
+		}
+
+		var target = targetObject.transform;
+		var behavior = properties.Behavior;
+
 		switch (behavior)
 		{
 			case BehaviorType.Navigate:
 				{
+
+
 					return await Navigate(target);
 				}
-
-			case BehaviorType.Activate:
+				
+			case BehaviorType.TurnOn:
 				{
 					var result = await Navigate(target);
 					if (result.Success)
 					{
-						return await Activate(target);
+						return await Activate(target, behavior);
 					}
 					else
 					{
 						return result;
 					}
 				}
-
-			case BehaviorType.PickUp:
+			case BehaviorType.TurnOff:
 				{
 					var result = await Navigate(target);
 					if (result.Success)
 					{
-						return await PickUp(target);
+						return await Activate(target, behavior);
 					}
 					else
 					{
 						return result;
 					}
+				}
+			case BehaviorType.PickUp:
+				{
+					var msg = "I don't know how to pick up objects yet...";
+					return new BehaviorResult(BehaviorType.PickUp, false, false, msg);
+				}
+			case BehaviorType.SetDown:
+				{
+					var msg = "I don't know how to set down objects yet...";
+					return new BehaviorResult(BehaviorType.SetDown, false, false, msg);
 				}
 
 			case BehaviorType.Drop:
-					return await Drop();
+				{
+					var msg = "I don't know how to drop objects yet...";
+					return new BehaviorResult(BehaviorType.SetDown, false, false, msg);
+				}
+			case BehaviorType.Open:
+				{
+					var msg = "I can't open things yet...";
+					return new BehaviorResult(BehaviorType.SetDown, false, false, msg);
+				}
+			//return await Drop();
 
 			default:
 				throw new System.Exception("Behavior not implemented");
@@ -99,12 +160,14 @@ public class BehaviorController : MonoBehaviour
 	private async Task<BehaviorResult> Navigate(Transform target)
 	{
 		currentActiveAgent = agents.Find((agent) => agent is NavigateAgent);
+
 		return await currentActiveAgent?.PerformeBehavior(target);
 	}
-	private async Task<BehaviorResult> Activate(Transform target)
+	private async Task<BehaviorResult> Activate(Transform target, BehaviorType behavior)
 	{
 		currentActiveAgent = agents.Find((agent) => agent is ActivateAgent);
-		return await currentActiveAgent?.PerformeBehavior(target);
+		var activateAgent = currentActiveAgent as ActivateAgent;
+		return await activateAgent?.PerformeBehavior(target, behavior);
 	}
 	private async Task<BehaviorResult> PickUp(Transform target)
 	{
@@ -165,38 +228,24 @@ public class BehaviorController : MonoBehaviour
 	}
 
 	/* * * * * * * FOR TRAINING * * * * * * * */
-	public async void TrainNavigation()
+	public async void TrainNavigation(bool randomizeLocation)
 	{
 		IsTraining = true;
 		while (IsTraining)
 		{
-			// half the time pick a random location, half the time use last location
-			var random = Random.Range(0, 2);
-			if (random == 1)
+			if (randomizeLocation)
 			{
-				SpawnInRandomLocation();
+				// half the time pick a random location, half the time use last location
+				var random = Random.Range(0, 2);
+				if (random == 1)
+				{
+					SpawnInRandomLocation();
+				}
 			}
+
 			var randomProp = areaProps.SelectRandomProp().transform;
 
 			await Navigate(randomProp);
-		}
-	}
-	public async void TrainPickUp(Transform target)
-	{
-		IsTraining = true;
-		while (IsTraining)
-		{		
-			await Navigate(target);
-			await PickUp(target);
-		}
-	}
-	public async void TrainActivate(Transform target)
-	{
-		IsTraining = true;
-		while (IsTraining)
-		{
-			await Navigate(target);
-			await Activate(target);
 		}
 	}
 

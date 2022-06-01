@@ -1,6 +1,26 @@
+/**
+ *	Project:		Pixel Walker
+ *	
+ *	Description:	NavigateAgent is an ML-Agents agent. This agent uses
+ *					a trained neural network to navigate around the 
+ *					environment and locate a given target.  This agent uses
+ *					a several observations to navigate successfully:
+ *						VectorSensors that racast out from his feet.
+ *						GridSensor that gives corse grained data about surroundings.
+ *						One-hot encoding of the agent's current room.
+ *						One-hot encoding of the target's room.
+ *						Rotational and positional vector data.
+ *					
+ *	Author:			Pixel Walker -
+ *						Maynard, Gregory
+ *						Shubhajeet, Baral
+ *						Do, Khuong
+ *						Nguyen, Thuong						
+ *					
+ *	Date:			05-30-2022
+ */
+
 using System;
-using System.Collections;
-using System.Threading.Tasks;
 
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
@@ -55,21 +75,33 @@ public class NavigateAgent : AgentBase
 
 	protected override void initializeBehavior()
 	{
-		targetRoom = target.GetComponent<PropInfo>().room;
-
-		// get penalty for this lesson in curriculum - only used during training
-		collisionPenalty = Academy.Instance.EnvironmentParameters
-			.GetWithDefault("collision_penalty", COLLISION_PENALTY_DEFAULT);
-
-		var standTarget = target.GetComponentInChildren<StandTarget>();
-		if (standTarget)
+		// is the target a location or an object?
+		Room room = target.GetComponent<Room>();
+		// if it is a location then...
+		if (room)
 		{
-			target = standTarget.transform;
-			successDistance = standTargetSuccessDistanceOverride;
+			successDistance = 2.0f;
+			targetRoom = room;
 		}
 		else
 		{
-			successDistance = defaultSuccessDistance;
+			targetRoom = target.GetComponent<PropInfo>().room;
+
+			// get penalty for this lesson in curriculum - only used during training
+			collisionPenalty = Academy.Instance.EnvironmentParameters
+				.GetWithDefault("collision_penalty", COLLISION_PENALTY_DEFAULT);
+
+			var standTarget = target.GetComponentInChildren<StandTarget>();
+
+			if (standTarget)
+			{
+				target = standTarget.transform;
+				successDistance = standTargetSuccessDistanceOverride;
+			}
+			else
+			{
+				successDistance = defaultSuccessDistance;
+			}
 		}
 	}
 
@@ -92,7 +124,7 @@ public class NavigateAgent : AgentBase
 		// add one hot encoding for the current room of player
 		// add one hot encoding for the room of the target
 		sensor.AddOneHotObservation((int)currentRoom, numberOfRooms);
-		sensor.AddOneHotObservation((int)targetRoom.RoomName, numberOfRooms); // make goal-signal?
+		sensor.AddOneHotObservation((int)targetRoom.Name, numberOfRooms); // make goal-signal?
 
 		// report and consume any collisions
 		Vector2 collisionVector;
@@ -126,7 +158,7 @@ public class NavigateAgent : AgentBase
 	
 	public void SetCurrentRoom(Room room)
 	{
-		currentRoom = room.RoomName;
+		currentRoom = room.Name;
 	}
 
 	private void AssignRewards()
@@ -136,7 +168,7 @@ public class NavigateAgent : AgentBase
 		
 		// don't let the agent trigger the reward based on distance if the agent
 		// is not in the target's room.
-		if (currentRoom == targetRoom.RoomName)
+		if (currentRoom == targetRoom.Name)
 		{
 			// get distance to target - ignore height displacement
 			Vector3 charPos = new Vector3(transform.position.x, 0, transform.position.z);

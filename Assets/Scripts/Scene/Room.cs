@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Room : MonoBehaviour
 {
-	public RoomName RoomName;
+	public RoomName Name;
 
 	private void OnTriggerEnter(Collider other)
 	{

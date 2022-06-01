@@ -15,7 +15,6 @@
 * Date: 05-26-2022
 */
 
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -30,7 +29,6 @@ using System.Threading.Tasks;
 
 public class RuntimeGUI : MonoBehaviour
 {
-
     // Main UI Elements (Visible at Runtime)
     private VisualElement daveOutGroup;
     private VisualElement daveInGroup;
@@ -38,6 +36,7 @@ public class RuntimeGUI : MonoBehaviour
     private Button resetBtn;
     private Button submitBtn;
     private Button cancelBtn;
+    private Button exitBtn;
     private TextField userInput;
     private TextField daveOutput;
     private TextField gptParseOutput;
@@ -54,9 +53,8 @@ public class RuntimeGUI : MonoBehaviour
 
     //Level Select screen elements (Invisible at Runtime)
     private VisualElement levelSelectWindow;
-    private Button levelOneBtn;
-    private Button levelTwoBtn;
-    private Button levelthreeBtn;
+    private Button navigationLevelLodeBtn;
+    private Button standingPhysicsLevelLoadBtn;
 
     //API Key screen elements (Invisible at Runtime)
     private VisualElement apiWindow;
@@ -81,7 +79,7 @@ public class RuntimeGUI : MonoBehaviour
     GptApiKey keyEncryptor;
     
     //CONSTANTS
-    private const int DELAY = 1;
+    private const int DELAY = 4;
     private const string KEY_FILE = "key.txt";
     private const string PROMPT_FILE = "prompt.JSON";
     private const string KEY_DIRECTORY = "PixelWalker";
@@ -92,18 +90,25 @@ public class RuntimeGUI : MonoBehaviour
     private string keyPath;
 
     //List used to fill actions radio button group
-    List<string> actionlist = new List<String>();
+    List<string> actionlist = new List<string>();
 
-    void OnEnable()
+    //Scene GUI connection
+    SceneGuiInterface sceneConnection;
+
+    bool closePopUp = false;
+
+    async void OnEnable()
     {
         //Root visual element of the UI Document
         var rootVE = GetComponent<UIDocument>().rootVisualElement;
+		sceneConnection = FindObjectOfType(typeof(SceneGuiInterface)) as SceneGuiInterface;
 
-        //Initialize Main UI elements
-        menuBtn = rootVE.Q<Button>("menu");
+		//Initialize Main UI elements
+		menuBtn = rootVE.Q<Button>("menu");
         resetBtn = rootVE.Q<Button>("reset");
         submitBtn = rootVE.Q<Button>("submit");
         cancelBtn = rootVE.Q<Button>("cancel");
+        exitBtn = rootVE.Q<Button>("exit-applicaiton");
         userInput = rootVE.Q<TextField>("user-input");
         daveOutput = rootVE.Q<TextField>("dave-text-out");
         gptParseOutput = rootVE.Q<TextField>("gpt-parsed-words");
@@ -117,9 +122,8 @@ public class RuntimeGUI : MonoBehaviour
 
         //Initialize Level Select window elements
         levelSelectWindow = rootVE.Q<VisualElement>("level-select");
-        levelOneBtn = rootVE.Q<Button>("level-1");
-        levelTwoBtn = rootVE.Q<Button>("level-2");
-        levelthreeBtn = rootVE.Q<Button>("level-3");
+        navigationLevelLodeBtn = rootVE.Q<Button>("level-1");
+        standingPhysicsLevelLoadBtn = rootVE.Q<Button>("level-2");
 
         //Initialize API key window elements
         apiWindow = rootVE.Q<VisualElement>("api-menu");
@@ -146,12 +150,13 @@ public class RuntimeGUI : MonoBehaviour
         actionRadioGroup = rootVE.Q<RadioButtonGroup>("action-list");
         foreach (var option in actionRadioGroup.choices)
         {
-            actionlist.Add(option);
+            actionlist.Add(option.ToLower());
             Debug.Log(option.ToString());
         }
 
         //Fuctionality of all buttons added here
-        submitBtn.clicked += SendToGPT;
+        submitBtn.clicked += OnSubmitHandler;
+        cancelBtn.clicked += sceneConnection.CancelBehavior;
         menuBtn.clicked += OnMainMenuClicked;
         resetBtn.clicked += ReloadScene;
         menuResetBtn.clicked += ReloadScene;
@@ -161,10 +166,11 @@ public class RuntimeGUI : MonoBehaviour
         engineMenuBtn.clicked += OpenEngineMenu;
         engineConfirmBtn.clicked += SelectEngine;
 
+        exitBtn.clicked += Application.Quit;
+
         //Level select buttons -- refer to scene build order
-        levelOneBtn.clicked += () => SceneManager.LoadScene(0);
-        levelthreeBtn.clicked += () => SceneManager.LoadScene(1);
-        levelTwoBtn.clicked += () => SceneManager.LoadScene(2);
+        navigationLevelLodeBtn.clicked += () => SceneManager.LoadScene(0);
+        standingPhysicsLevelLoadBtn.clicked += () => SceneManager.LoadScene(1);
 
         //Initializing directory path to store encrypted key
         keyPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), KEY_DIRECTORY);
@@ -174,26 +180,54 @@ public class RuntimeGUI : MonoBehaviour
         keyEncryptor = new GptApiKey(keyPath.ToString());
         if (File.Exists(keyPath))
         {
-            key = keyEncryptor.GetKeyFromFile();
+            try
+            {
+                key = keyEncryptor.GetKeyFromFile();
+				//StartCoroutine(DebugOnEnablePopUp(key, 10));
+            }
+            catch (Exception e)
+            {
+                var msg = "Could not get the api key from the file.\n\n" + e.Message;
+
+				//StartCoroutine(DebugOnEnablePopUp(msg, 10));
+            }
+
+
             File.SetAttributes(keyPath, FileAttributes.Hidden);
         }
         else
         {
             OpenApiInputMenu();
         }
-
-        handler = new UserInputHandler(key, PROMPT_FILE, engine);
     }
 
-    public void SetCurrentBehavior(string behavior)
+	private void Start()
+	{
+        handler = new UserInputHandler(sceneConnection.GetPropsList(), key, PROMPT_FILE, engine);
+    }
+
+    /// <summary>
+    /// Sets the RadioButtonGroup to the behavior 
+    /// that is being executed
+    /// </summary>
+    /// <param name="behavior">the current BehaviorType executed</param>
+    public void SetCurrentBehavior(BehaviorType behavior)
     {
-        if (!actionlist.Contains(behavior))
+        if (behavior == BehaviorType.TurnOn)
         {
-            Debug.Log("Error: Action not in list");
+            actionRadioGroup.value = 0;
+        }
+        else if(behavior == BehaviorType.TurnOff)
+        {
+            actionRadioGroup.value = 1;
+        }
+        else if(behavior == BehaviorType.Navigate)
+        {
+            actionRadioGroup.value = 2;
         }
         else
         {
-            actionRadioGroup.value = actionlist.IndexOf(behavior);
+            actionRadioGroup.value = -1;
         }
     }
 
@@ -204,18 +238,29 @@ public class RuntimeGUI : MonoBehaviour
     /// is supplied  the it creates a pop up (refer to CreatePopUp())
     /// to display error, else calls on the User Input Handler to classify 
     /// </summary>
-    async void SendToGPT()
+    async void OnSubmitHandler()
     {
         string replyGptWindow = "...";
         string replyDaveWindow = "...";
-        GptResponse responce;
+        GptResponse responce = null;
 
         try
         {
+            // signalable popup
+            var msg = "Getting responce from GPT-3...";
+            StartCoroutine(CreateSignaledPopup(msg));
             responce = await handler.GetGptResponce(userInput.value);
+            closePopUp = true;
         }
-
-        catch (Exception) { throw; }
+        catch (Exception e)
+        {
+            var msg = $"An error occured while sending the message to GPT-3.\n\n" +
+                      $"Error: {e.Message}";
+            var debugMsg = msg + $"\n\nTraceback:{e.StackTrace}";
+            Debug.LogWarning(debugMsg);
+            StartCoroutine(CreateTimedPopUp(debugMsg, 20));
+            return;
+        }
 
         var responceProperties = responce.BehaviorProperties;
         if (responce.Type == InputType.Command)
@@ -240,8 +285,38 @@ public class RuntimeGUI : MonoBehaviour
         }
         gptParseOutput.value = replyGptWindow;
         daveOutput.value = replyDaveWindow;
-    }
 
+		if (responce.Type == InputType.Command)
+		{
+            SetCurrentBehavior(responce.BehaviorProperties.Behavior);
+            var result = await sceneConnection.StartBehavior(responce.BehaviorProperties);
+
+            if (result.Cancelled)
+            {
+                SetCurrentBehavior(BehaviorType.None);
+                var msg = $"Behavior was cancelled while performing {result.Behavior}.";
+				await CreateTimedPopUp(msg, DELAY);
+			}
+            else if (result.Success)
+            {
+                SetCurrentBehavior(BehaviorType.None);
+                Debug.Log( $"{result.Behavior} successfully finished!");
+            }
+			else
+			{
+                SetCurrentBehavior(BehaviorType.None);
+                var msg = $"I couldn't perform the requested action. {result.Message}";
+                await CreateTimedPopUp(msg, DELAY);
+            }
+        }
+	}
+
+	IEnumerator DebugOnEnablePopUp(string msg, float duration)
+	{
+        yield return new WaitForUpdate();
+        yield return new WaitForSeconds(0.5f);
+		StartCoroutine(CreateTimedPopUp(msg, duration));
+	}
 
     /// <summary>
     /// Determines events when Menu button is clicked.
@@ -258,7 +333,6 @@ public class RuntimeGUI : MonoBehaviour
         {
             ToggleMainUI(false);
             menuWindow.style.display = DisplayStyle.Flex;
-
         }
     }
 
@@ -326,17 +400,35 @@ public class RuntimeGUI : MonoBehaviour
         if (apiInput.value == "")
         {
             debugMessage = "Field cannot be left blank";
-            StartCoroutine(CreatePopUp(debugMessage, DELAY));
+            StartCoroutine(CreateTimedPopUp(debugMessage, DELAY));
         }
         else
         {
-            string key = apiInput.value;
-            string test = await TestGptResponse(key);
+            var testKey = apiInput.value;
+			
+            string test = await TestGptResponse(testKey);
             Debug.Log(test);
             if (test != null)
             {
-                keyEncryptor.SaveKeyToFile(key);
-                File.SetAttributes(keyPath, FileAttributes.Hidden);
+				try
+				{
+                    if (File.Exists(keyPath))
+                    {
+                        File.Delete(keyPath);
+                    }
+
+                    keyEncryptor.SaveKeyToFile(testKey);
+
+                    key = testKey;
+                    File.SetAttributes(keyPath, FileAttributes.Hidden);
+                }
+				catch (Exception e)
+				{
+                    var msg = "Could not save the api key to the file.\n\n" + e.Message;
+
+                    await CreateTimedPopUp(msg, DELAY);
+                }
+
             }
             else
             {
@@ -364,16 +456,16 @@ public class RuntimeGUI : MonoBehaviour
             testResponse = await testConnection.GenerateText("Say one word {stop}");
             debugMessage = "Validation Successful!";
             engine = EngineType.Davinci;
-            handler = new UserInputHandler(key, PROMPT_FILE, engine);
+            handler = new UserInputHandler(sceneConnection.GetPropsList(), key, PROMPT_FILE, engine);
         }
         catch (Exception)
         {
             debugMessage = "Key not Valid. Enter another one and try again.";
-            StartCoroutine(CreatePopUp(debugMessage, DELAY));
+            StartCoroutine(CreateTimedPopUp(debugMessage, DELAY));
             throw;
         }
         ToggleMainUI(true);
-        StartCoroutine(CreatePopUp(debugMessage, DELAY));
+        StartCoroutine(CreateTimedPopUp(debugMessage, DELAY));
         return testResponse;
 
     }
@@ -386,11 +478,31 @@ public class RuntimeGUI : MonoBehaviour
     /// to be displayed on the pop up</param>
     /// <param name="secondsVisible"> The number of seconds the pop up will be displayed</param>
     /// <returns>A Couroutine that delays by secondsVisble</returns>
-    IEnumerator CreatePopUp(string message, float secondsVisible)
+    IEnumerator CreateTimedPopUp(string message, float secondsVisible)
     {
         errorLabel.text = message;
         infoWindow.style.display = DisplayStyle.Flex;
         yield return new WaitForSeconds(secondsVisible);
+        infoWindow.style.display = DisplayStyle.None;
+    }
+
+	/// <summary>
+	/// Creates a pop up window that displays until a close signal is received.
+	/// </summary>
+	/// <param name="message"> a string variable for the message 
+	/// to be displayed on the pop up</param>
+	/// <returns>A Couroutine that delays by secondsVisble</returns>
+	IEnumerator CreateSignaledPopup(string message)
+    {
+		closePopUp = false;
+		errorLabel.text = message;
+        infoWindow.style.display = DisplayStyle.Flex;
+
+		while (!closePopUp)
+		{
+            yield return null;
+		}
+		
         infoWindow.style.display = DisplayStyle.None;
     }
 
@@ -433,7 +545,7 @@ public class RuntimeGUI : MonoBehaviour
     /// Selected via radio buttons.
     /// Defaults to Davinci
     /// </summary>
-    void SelectEngine()
+    async void SelectEngine()
     {
         if (engineRadioGroup.value == 1)
         {
@@ -452,8 +564,8 @@ public class RuntimeGUI : MonoBehaviour
             engine = EngineType.Davinci;
         }
 
-        key = keyEncryptor.GetKeyFromFile();
-        handler = new UserInputHandler(key, PROMPT_FILE, engine);
+
+        handler = new UserInputHandler(sceneConnection.GetPropsList(), key, PROMPT_FILE, engine);
         Debug.Log(engineRadioGroup.value.ToString());
         ToggleMainUI(true);
     }

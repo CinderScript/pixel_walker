@@ -15,18 +15,14 @@
 
 
 using Newtonsoft.Json.Linq;
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Globalization;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
+
 using UnityEngine;
-using System.Threading;
-using System.IO;
-using System.Security.AccessControl;
 
 public class Gpt3Connection
 {
@@ -117,14 +113,18 @@ public class Gpt3Connection
                         //string fullResoponse =  + " \nmodel used: " + modelType.ToString().Trim();
                         reply = replyText.ToString().Trim();
                         Debug.Log(modelType.ToString() + ": " + reply);
+                        Debug.Log(parsedJSON.ToString());
                     }
                 }
             }
         }
         catch (Exception)
         {
-            throw;
-        }
+			var msg = "Was not able to connect to GPT-3.\n\n" +
+				      "Please make sure that you have enough credit on your\n" +
+					  "GPT-3 API key and that you have a working internet connection.";
+			throw new Exception(msg);
+		}
         return reply;
     }
 
