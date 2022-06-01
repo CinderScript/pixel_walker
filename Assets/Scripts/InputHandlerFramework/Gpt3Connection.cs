@@ -15,18 +15,14 @@
 
 
 using Newtonsoft.Json.Linq;
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Globalization;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
+
 using UnityEngine;
-using System.Threading;
-using System.IO;
-using System.Security.AccessControl;
 
 public class Gpt3Connection
 {
