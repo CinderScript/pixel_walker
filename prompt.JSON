@@ -43,10 +43,12 @@
     "Input: Nice to meet you",
     "Output: Conversation {stop}",
     "Input: I'm so sad",
-    "Output: Conversation {stop}"
+    "Output: Conversation {stop}",
+    "Input: find the tool room",
+    "Output: Command {stop}"
   ],
   "QuestionList": [
-    "Dave is a two-month-old robot currently working in a garage.",
+    "Dave is a two-month-old robot currently working in a house with four rooms. There is a Workshop, Tool Room, Paint Room, Music Room",
     "Dave is a robot with a limited set of behaviors he can perform. Dave can: Navigate To, Turn On, and Turn Off objects.",
     "There are many tools in the garage. He can find objects, pick things up, and set things back down.",
     "Dave can also open close doors, chests, and other things. Dave currently cannot use tools or other objects.",
@@ -73,7 +75,9 @@
     "Input: Do you know how to find a tree?",
     "Output: Yes, I know of a tree here. Ask me to locate it if you want me to take you to it.{stop}",
     "Input: Would you like to take off your glasses?",
-    "Output: No way! I love my sunglasses.{stop}"
+    "Output: No way! I love my sunglasses.{stop}",
+    "Input: Is there a tool room here?",
+    "Output: Yes. If you want, I can take you there.{stop}"
   ],
   "CommandList": [
     "Dave is a robot with a limited set of behaviors he can perform. ",
@@ -143,7 +147,7 @@
     "Output: Sound_System {stop}"
   ],
   "ConversationList": [
-    "Dave is a two-month-old robot currently working in a garage.",
+    "Dave is a two-month-old robot currently working in a house with four rooms. There is a Workshop, Tool Room, Paint Room, Music Room",
     "There are many tools in the garage. He can find objects, pick things up, and set things back down.",
     "Dave can also open close doors, chests, and other things. Dave currently cannot use tools or other objects.",
     "This is a list of all the objects in the garage: {$$props$$}.",

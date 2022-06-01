@@ -614,6 +614,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 609719175, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
+      propertyPath: Name
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 1435068225101680667, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
       propertyPath: Activatables.Array.size
       value: 2
@@ -625,6 +629,10 @@ PrefabInstance:
     - target: {fileID: 1570379783323133747, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3589673082895137705, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
+      propertyPath: Name
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6064972756338245287, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
       propertyPath: m_Pitch
@@ -638,6 +646,10 @@ PrefabInstance:
       propertyPath: m_audioClip
       value: 
       objectReference: {fileID: 8300000, guid: 63b380a29c022774196972c1e0f9699a, type: 3}
+    - target: {fileID: 6875790770836237489, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
+      propertyPath: Name
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 7013290155715168803, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
       propertyPath: near clip plane
       value: 0.2
@@ -690,6 +702,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Area
       objectReference: {fileID: 0}
+    - target: {fileID: 7829795297955347216, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
+      propertyPath: Name
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 7912503591261933733, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
       propertyPath: fadeSpeed
       value: 0.5
@@ -705,6 +721,10 @@ PrefabInstance:
     - target: {fileID: 8844779564963075883, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
       propertyPath: m_Name
       value: SoundEffect
+      objectReference: {fileID: 0}
+    - target: {fileID: 9187232016775822769, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
+      propertyPath: Name
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
