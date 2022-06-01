@@ -304,6 +304,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7121218835180849769, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
   m_PrefabInstance: {fileID: 7529525660460480106}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1481424021 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7598497311415932714, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
+  m_PrefabInstance: {fileID: 7529525660460480106}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a7a6a56247fc6c4884d5cd5663f1e99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1673566329
 GameObject:
   m_ObjectHideFlags: 0
@@ -603,6 +614,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1435068225101680667, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
+      propertyPath: Activatables.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1435068225101680667, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
+      propertyPath: Activatables.Array.data[2]
+      value: 
+      objectReference: {fileID: 1481424021}
     - target: {fileID: 1570379783323133747, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
       propertyPath: m_IsActive
       value: 0

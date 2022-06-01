@@ -144,6 +144,7 @@ public class BehaviorController : MonoBehaviour
 	private async Task<BehaviorResult> Navigate(Transform target)
 	{
 		currentActiveAgent = agents.Find((agent) => agent is NavigateAgent);
+
 		return await currentActiveAgent?.PerformeBehavior(target);
 	}
 	private async Task<BehaviorResult> Activate(Transform target, BehaviorType behavior)

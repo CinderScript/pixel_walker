@@ -6,13 +6,18 @@ using UnityEngine;
 
 public class AreaPropReferences : MonoBehaviour
 {
+	[Header("Scene Objects")]
 	public PropInfo[] Props;
     public GameObject SelectedProp;
+
+	[Header("Scene Rooms")]
+	public Room[] Rooms;
 
 	private void Awake()
 	{
 		// area containing props is the parent of this object
 		Props = GetComponentsInChildren<PropInfo>();
+		Rooms = GetComponentsInChildren<Room>();
 	}
 
 	public GameObject SelectRandomProp()
@@ -30,7 +35,16 @@ public class AreaPropReferences : MonoBehaviour
 	public GameObject GetProp(string name)
 	{
 		name = name.Replace("_", " ");
-		return Props.FirstOrDefault(p => p.Name.ToLower() == name.ToLower())?.gameObject;
+		return Props.FirstOrDefault(prop => prop.Name.ToLower() == name.ToLower())?.gameObject;
+	}
+	public GameObject GetRoom(string name)
+	{
+		name = name.Replace("_", " ");
+		return Rooms.FirstOrDefault(room => RoomNameToString(room).ToLower() == name.ToLower())?.gameObject;
+	}
+	private string RoomNameToString(Room room)
+	{
+		return room.Name.ToString().Replace("_", " ");
 	}
 
 	public string GetAllPropNames()

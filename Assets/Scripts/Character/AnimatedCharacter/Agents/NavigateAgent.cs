@@ -112,7 +112,7 @@ public class NavigateAgent : AgentBase
 		// add one hot encoding for the current room of player
 		// add one hot encoding for the room of the target
 		sensor.AddOneHotObservation((int)currentRoom, numberOfRooms);
-		sensor.AddOneHotObservation((int)targetRoom.RoomName, numberOfRooms); // make goal-signal?
+		sensor.AddOneHotObservation((int)targetRoom.Name, numberOfRooms); // make goal-signal?
 
 		// report and consume any collisions
 		Vector2 collisionVector;
@@ -146,7 +146,7 @@ public class NavigateAgent : AgentBase
 	
 	public void SetCurrentRoom(Room room)
 	{
-		currentRoom = room.RoomName;
+		currentRoom = room.Name;
 	}
 
 	private void AssignRewards()
@@ -156,7 +156,7 @@ public class NavigateAgent : AgentBase
 		
 		// don't let the agent trigger the reward based on distance if the agent
 		// is not in the target's room.
-		if (currentRoom == targetRoom.RoomName)
+		if (currentRoom == targetRoom.Name)
 		{
 			// get distance to target - ignore height displacement
 			Vector3 charPos = new Vector3(transform.position.x, 0, transform.position.z);
