@@ -27,6 +27,7 @@ public class UserInputHandler
     private int retries = MAX_RETRIES;
     private int bestMatchRetries = MAX_RETRIES;
     private string propsInScene;
+    private string locationsInScene;
 
     
     /// <summary>
@@ -337,38 +338,4 @@ public class UserInputHandler
 
         return parse;
     }
-
-
-    /// <summary>
-    /// Method for finding the closest object to the user's input
-    /// </summary>
-    /// <param name="sceneObject"> name of object in command string</param>
-    /// <returns></returns>
-    private async Task<string> getObjectBestMatch(string sceneObject)
-    {
-        string promptStart = prompts.BestMatchSelector;
-
-        promptStart = promptStart.Replace("{$$props$$}", propsInScene);
-
-        string fullPrompt = promptStart + "Input: " + sceneObject.ToLower();
-        fullPrompt = fullPrompt + "Output:";
-
-        string responce;
-        try
-        {
-            responce = await connection.GenerateText(fullPrompt);
-        }
-        catch (Exception)
-        {
-            throw;
-        }
-
-        bool matchObj = propsInScene.Contains(responce.ToLower());
-        if (!matchObj)
-        {
-            responce = await connection.GenerateText(fullPrompt);
-        }
-        return responce;
-    }
-
 }
