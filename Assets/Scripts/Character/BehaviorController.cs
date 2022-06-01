@@ -68,15 +68,40 @@ public class BehaviorController : MonoBehaviour
 		startingPositionHeight = agentBody.transform.position.y;
 	}
 
-	public async Task<BehaviorResult> StartBehavior(
-		BehaviorType behavior, 
-		Transform target = null, 
-		GameObject location = null)
+	public async Task<BehaviorResult> StartBehavior(AgentBehaviorProperties properties)
 	{
+		// is the target a location or an object?
+		GameObject targetObject = null;
+		if (properties.Object.ToLower() == "null")
+		{
+			targetObject = areaProps.GetRoom(properties.Location);
+
+			if (!targetObject)
+			{
+				string msg = "I can't find the location " + properties.Location;
+				return new BehaviorResult(BehaviorType.None, false, false, msg);
+			}
+		}
+		else
+		{
+			targetObject = areaProps.GetProp(properties.Object);
+
+			if (!targetObject)
+			{
+				string msg = "I can't find an object with the name " + properties.Object;
+				return new BehaviorResult(BehaviorType.None, false, false, msg);
+			}
+		}
+
+		var target = targetObject.transform;
+		var behavior = properties.Behavior;
+
 		switch (behavior)
 		{
 			case BehaviorType.Navigate:
 				{
+
+
 					return await Navigate(target);
 				}
 				
@@ -108,15 +133,6 @@ public class BehaviorController : MonoBehaviour
 				{
 					var msg = "I don't know how to pick up objects yet...";
 					return new BehaviorResult(BehaviorType.PickUp, false, false, msg);
-					//var result = await Navigate(target);
-					//if (result.Success)
-					//{
-					//	return await PickUp(target);
-					//}
-					//else
-					//{
-					//	return result;
-					//}
 				}
 			case BehaviorType.SetDown:
 				{
@@ -230,16 +246,6 @@ public class BehaviorController : MonoBehaviour
 			var randomProp = areaProps.SelectRandomProp().transform;
 
 			await Navigate(randomProp);
-		}
-	}
-	
-	public async void TrainActivate(Transform target)
-	{
-		IsTraining = true;
-		while (IsTraining)
-		{
-			await Navigate(target);
-			await Activate(target, BehaviorType.Activate);
 		}
 	}
 

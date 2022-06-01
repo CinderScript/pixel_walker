@@ -80,7 +80,7 @@ public class RuntimeGUI : MonoBehaviour
     GptApiKey keyEncryptor;
     
     //CONSTANTS
-    private const int DELAY = 10;
+    private const int DELAY = 4;
     private const string KEY_FILE = "key.txt";
     private const string PROMPT_FILE = "prompt.JSON";
     private const string KEY_DIRECTORY = "PixelWalker";
@@ -239,22 +239,23 @@ public class RuntimeGUI : MonoBehaviour
         string replyDaveWindow = "...";
         GptResponse responce = null;
 
-            try
-                {
-                    // signalable popup
-                    var msg = "Getting responce from GPT-3...";
-                    StartCoroutine(CreateSignaledPopup(msg));
-                    responce = await handler.GetGptResponce(userInput.value);
-                    closePopUp = true;
-                }
-                catch (Exception e) 
-                {
-                    var msg = $"An error occured while sending the message to GPT-3.\n\n" +
-                              $"Error: {e.Message}\n" +
-                              $"Traceback:{e.StackTrace}";
-                    StartCoroutine(CreateTimedPopUp(msg, DELAY));
-                    return;
-                }
+        try
+        {
+            // signalable popup
+            var msg = "Getting responce from GPT-3...";
+            StartCoroutine(CreateSignaledPopup(msg));
+            responce = await handler.GetGptResponce(userInput.value);
+            closePopUp = true;
+        }
+        catch (Exception e)
+        {
+            var msg = $"An error occured while sending the message to GPT-3.\n\n" +
+                      $"Error: {e.Message}";
+            var debugMsg = msg + $"\n\nTraceback:{e.StackTrace}";
+            Debug.LogWarning(debugMsg);
+            StartCoroutine(CreateTimedPopUp(msg, DELAY));
+            return;
+        }
 
         var responceProperties = responce.BehaviorProperties;
         if (responce.Type == InputType.Command)

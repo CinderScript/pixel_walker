@@ -78,18 +78,7 @@ public class SceneGuiInterface : MonoBehaviour
 
 	public async Task<BehaviorResult> StartBehavior(AgentBehaviorProperties properties)
 	{
-		var target = propReferences.GetProp(properties.Object);
-
-		if (target)
-		{
-			return await behaviorController.StartBehavior(properties.Behavior, target.transform);
-		}
-		else
-		{
-			string msg = "I can't find an object with the name " + properties.Object;
-			return new BehaviorResult(BehaviorType.None, false, false, msg);
-		}
-
+		return await behaviorController.StartBehavior(properties);
 	}
 
 	public void StartNavigationTraining(bool randomLocation)
@@ -99,16 +88,6 @@ public class SceneGuiInterface : MonoBehaviour
 		foreach (var controller in controllers)
 		{
 			controller.TrainNavigation(randomLocation);
-		}
-	}
-
-	public void StartActivateTraining()
-	{
-		// get each behavior controller and start them all on training.
-		var controllers = FindObjectsOfType<BehaviorController>();
-		foreach (var controller in controllers)
-		{
-			controller.TrainActivate(activateObject);
 		}
 	}
 

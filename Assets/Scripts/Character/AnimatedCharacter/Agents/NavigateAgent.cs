@@ -75,21 +75,33 @@ public class NavigateAgent : AgentBase
 
 	protected override void initializeBehavior()
 	{
-		targetRoom = target.GetComponent<PropInfo>().room;
-
-		// get penalty for this lesson in curriculum - only used during training
-		collisionPenalty = Academy.Instance.EnvironmentParameters
-			.GetWithDefault("collision_penalty", COLLISION_PENALTY_DEFAULT);
-
-		var standTarget = target.GetComponentInChildren<StandTarget>();
-		if (standTarget)
+		// is the target a location or an object?
+		Room room = target.GetComponent<Room>();
+		// if it is a location then...
+		if (room)
 		{
-			target = standTarget.transform;
-			successDistance = standTargetSuccessDistanceOverride;
+			successDistance = 2.0f;
+			targetRoom = room;
 		}
 		else
 		{
-			successDistance = defaultSuccessDistance;
+			targetRoom = target.GetComponent<PropInfo>().room;
+
+			// get penalty for this lesson in curriculum - only used during training
+			collisionPenalty = Academy.Instance.EnvironmentParameters
+				.GetWithDefault("collision_penalty", COLLISION_PENALTY_DEFAULT);
+
+			var standTarget = target.GetComponentInChildren<StandTarget>();
+
+			if (standTarget)
+			{
+				target = standTarget.transform;
+				successDistance = standTargetSuccessDistanceOverride;
+			}
+			else
+			{
+				successDistance = defaultSuccessDistance;
+			}
 		}
 	}
 

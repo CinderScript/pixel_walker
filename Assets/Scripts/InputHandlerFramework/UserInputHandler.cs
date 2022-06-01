@@ -273,9 +273,20 @@ public class UserInputHandler
 
         if (responce.Contains("behavior"))
         {
-            int startIndex = responce.IndexOf("behavior: ") + "behavior: ".Length;
-            int endIndex = responce.IndexOf(",");
-            var behaviorString = responce.Substring(startIndex, endIndex - startIndex).Trim().ToLower();
+            string behaviorString;
+
+            try
+			{
+                int startIndex = responce.IndexOf("behavior: ") + "behavior: ".Length;
+                int endIndex = responce.IndexOf(",");
+                behaviorString = responce.Substring(startIndex, endIndex - startIndex).Trim().ToLower();
+            }
+			catch (Exception)
+			{
+
+                throw new Exception("Sorry, I couldn't parse that input.");
+            }
+
 
             if (behaviorString == "navigate")
             {
@@ -369,12 +380,6 @@ public class UserInputHandler
         {
             throw;
         }
-
-        bool matchObj = propsInScene.Contains(responce.ToLower());
-        if (!matchObj)
-        {
-			throw new Exception($"The object {sceneObject} was not found");
-		}
 		
         return responce;
     }
