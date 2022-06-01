@@ -117,6 +117,7 @@ public class Gpt3Connection
                         //string fullResoponse =  + " \nmodel used: " + modelType.ToString().Trim();
                         reply = replyText.ToString().Trim();
                         Debug.Log(modelType.ToString() + ": " + reply);
+                        Debug.Log(parsedJSON.ToString());
                     }
                 }
             }

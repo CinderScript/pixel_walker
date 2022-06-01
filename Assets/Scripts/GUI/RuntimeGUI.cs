@@ -150,7 +150,7 @@ public class RuntimeGUI : MonoBehaviour
         actionRadioGroup = rootVE.Q<RadioButtonGroup>("action-list");
         foreach (var option in actionRadioGroup.choices)
         {
-            actionlist.Add(option);
+            actionlist.Add(option.ToLower());
             Debug.Log(option.ToString());
         }
 
@@ -189,15 +189,28 @@ public class RuntimeGUI : MonoBehaviour
         handler = new UserInputHandler(sceneConnection.GetPropsList(), key, PROMPT_FILE, engine);
     }
 
-    public void SetCurrentBehavior(string behavior)
+    /// <summary>
+    /// Sets the RadioButtonGroup to the behavior 
+    /// that is being executed
+    /// </summary>
+    /// <param name="behavior">the current BehaviorType executed</param>
+    public void SetCurrentBehavior(BehaviorType behavior)
     {
-        if (!actionlist.Contains(behavior))
+        if (behavior == BehaviorType.TurnOn)
         {
-            Debug.Log("Error: Action not in list");
+            actionRadioGroup.value = 0;
+        }
+        else if(behavior == BehaviorType.TurnOff)
+        {
+            actionRadioGroup.value = 1;
+        }
+        else if(behavior == BehaviorType.Navigate)
+        {
+            actionRadioGroup.value = 2;
         }
         else
         {
-            actionRadioGroup.value = actionlist.IndexOf(behavior);
+            actionRadioGroup.value = -1;
         }
     }
 
@@ -214,21 +227,22 @@ public class RuntimeGUI : MonoBehaviour
         string replyDaveWindow = "...";
         GptResponse responce = null;
 
-        try
-        {
-            // signalable popup
-            var msg = "Getting responce from GPT-3...";
-            StartCoroutine(CreateSignaledPopup(msg));
-			responce = await handler.GetGptResponce(userInput.value);
-            closePopUp = true;
-        }
-        catch (Exception e) 
-        {
-            var msg = $"An error occured while sending the message to GPT-3.\n\n" +
-					  $"Error: {e.Message}";
-			StartCoroutine(CreateTimedPopUp(msg, DELAY));
-            return;
-        }
+            try
+                {
+                    // signalable popup
+                    var msg = "Getting responce from GPT-3...";
+                    StartCoroutine(CreateSignaledPopup(msg));
+                    responce = await handler.GetGptResponce(userInput.value);
+                    closePopUp = true;
+                }
+                catch (Exception e) 
+                {
+                    var msg = $"An error occured while sending the message to GPT-3.\n\n" +
+                              $"Error: {e.Message}\n" +
+                              $"Traceback:{e.StackTrace}";
+                    StartCoroutine(CreateTimedPopUp(msg, DELAY));
+                    return;
+                }
 
         var responceProperties = responce.BehaviorProperties;
         if (responce.Type == InputType.Command)
@@ -256,19 +270,23 @@ public class RuntimeGUI : MonoBehaviour
 
 		if (responce.Type == InputType.Command)
 		{
+            SetCurrentBehavior(responce.BehaviorProperties.Behavior);
             var result = await sceneConnection.StartBehavior(responce.BehaviorProperties);
 
             if (result.Cancelled)
             {
+                SetCurrentBehavior(BehaviorType.None);
                 var msg = $"Behavior was cancelled while performing {result.Behavior}.";
 				await CreateTimedPopUp(msg, DELAY);
 			}
             else if (result.Success)
             {
+                SetCurrentBehavior(BehaviorType.None);
                 Debug.Log( $"{result.Behavior} successfully finished!");
             }
 			else
 			{
+                SetCurrentBehavior(BehaviorType.None);
                 var msg = $"I couldn't perform the requested action. {result.Message}";
                 await CreateTimedPopUp(msg, DELAY);
             }
