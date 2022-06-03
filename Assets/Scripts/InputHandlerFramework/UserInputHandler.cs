@@ -65,7 +65,7 @@ public class UserInputHandler
 
             throw;
         }
-        string generatedText = "Error: No Responce Saved";
+        string generatedText = "";
 
         AgentBehaviorProperties agentBehaviorProperties = null;
 

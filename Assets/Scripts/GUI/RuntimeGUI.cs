@@ -188,10 +188,8 @@ public class RuntimeGUI : MonoBehaviour
             catch (Exception e)
             {
                 var msg = "Could not get the api key from the file.\n\n" + e.Message;
-
 				//StartCoroutine(DebugOnEnablePopUp(msg, 10));
             }
-
 
             File.SetAttributes(keyPath, FileAttributes.Hidden);
         }
