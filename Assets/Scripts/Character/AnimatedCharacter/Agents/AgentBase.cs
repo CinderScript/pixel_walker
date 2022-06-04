@@ -25,8 +25,6 @@ public abstract class AgentBase : Agent
 {
 	public abstract BehaviorType MyBehaviorType { get; }
 
-	public bool RequestAcademyStep { get; private set; }
-
 	[Header("Assigned at RTime")]
 	public Transform agentBody;
 	[SerializeField]
@@ -68,8 +66,6 @@ public abstract class AgentBase : Agent
 		// GET SCENE REFERENCES - spawn points, props, controller movement value input location
 		playerArea = GetComponentInParent<AgentArea>().transform;
 		movementValues = playerArea.GetComponentInChildren<CharacterMovementValues>();
-
-		RequestAcademyStep = false;
 	}
 
 	public virtual async Task<BehaviorResult> PerformeBehavior(Transform target = null)
@@ -81,9 +77,9 @@ public abstract class AgentBase : Agent
 		this.target = target;
 		initializeBehavior();
 
-		RequestAcademyStep = true;
+		Academy.Instance.AutomaticSteppingEnabled = true;
 		await BehaviorFinishAwaiter();
-		RequestAcademyStep = false;
+		Academy.Instance.AutomaticSteppingEnabled = false;
 
 		return new BehaviorResult(
 			MyBehaviorType, isSuccess, 

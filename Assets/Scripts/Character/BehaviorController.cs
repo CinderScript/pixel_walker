@@ -50,6 +50,7 @@ public class BehaviorController : MonoBehaviour
 	
 	private void Awake()
 	{
+		Academy.Instance.AutomaticSteppingEnabled = false;
 		Academy.Instance.AgentPreStep += AcademyStepHandler;
 
 		//Setup communication with agents
@@ -186,7 +187,7 @@ public class BehaviorController : MonoBehaviour
 	}
 	void CancelBehavior(AgentBase agent)
 	{
-		agent.CancelBehavior();
+		agent?.CancelBehavior();
 		// stop training in case this is a training session
 		IsTraining = false;
 	}
@@ -198,11 +199,7 @@ public class BehaviorController : MonoBehaviour
 		{
 			if (currentActiveAgent)
 			{
-				if (currentActiveAgent.RequestAcademyStep)
-				{
-					currentActiveAgent.RequestDecision();
-					// RequestDescision also calls RequestAction()
-				}
+				currentActiveAgent.RequestDecision();
 			}
 		}
 

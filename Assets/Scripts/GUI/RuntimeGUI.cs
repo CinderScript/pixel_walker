@@ -26,23 +26,29 @@ using Newtonsoft.Json.Linq;
 using System.IO;
 using System.Security.AccessControl;
 using System.Threading.Tasks;
+using UnityEngine.InputSystem;
 
 public class RuntimeGUI : MonoBehaviour
 {
-    // Main UI Elements (Visible at Runtime)
-    private VisualElement daveOutGroup;
+	// input system
+	PixelWalker_InputActions pixelWalker_InputActions;
+    InputAction submitAction;
+
+	#region SCREEN CONTROLS
+	// Main UI Elements (Visible at Runtime)
+	private VisualElement daveOutGroup;
     private VisualElement daveInGroup;
     private Button menuBtn;
     private Button resetBtn;
     private Button submitBtn;
     private Button cancelBtn;
     private Button exitBtn;
-    private TextField userInput;
+    private TextField userInputField;
+    private VisualElement userInputFieldInnerText;
     private TextField daveOutput;
     private TextField gptParseOutput;
     private TextField apiInput;
     private RadioButtonGroup actionRadioGroup;
-
 
     //Main Menu screen elements (Invisible at Runtime)
     private VisualElement menuWindow;
@@ -66,15 +72,14 @@ public class RuntimeGUI : MonoBehaviour
     private RadioButtonGroup engineRadioGroup;
     private Button engineConfirmBtn;
 
-
-
     //Elements for error pop up screen (Invisible at Runtime)
     private VisualElement infoWindow;
     private Label errorLabel;
+	#endregion
 
-
-    //Variables to store input and current selected action
-    private UserInputHandler handler;
+	#region LOGIC VARS
+	//Variables to store input and current selected action
+	private UserInputHandler userInputHandler;
     private EngineType engine;
     GptApiKey keyEncryptor;
     
@@ -96,20 +101,29 @@ public class RuntimeGUI : MonoBehaviour
     SceneGuiInterface sceneConnection;
 
     bool closePopUp = false;
+	#endregion
 
-    async void OnEnable()
+	private void Awake()
+	{
+        pixelWalker_InputActions = new PixelWalker_InputActions();
+		submitAction = pixelWalker_InputActions.UI.Submit;
+    }
+
+	void OnEnable()
     {
+        #region UI REFERENCES
         //Root visual element of the UI Document
         var rootVE = GetComponent<UIDocument>().rootVisualElement;
-		sceneConnection = FindObjectOfType(typeof(SceneGuiInterface)) as SceneGuiInterface;
+        var d = GetComponent<UIDocument>();
+        sceneConnection = FindObjectOfType(typeof(SceneGuiInterface)) as SceneGuiInterface;
 
-		//Initialize Main UI elements
-		menuBtn = rootVE.Q<Button>("menu");
+        //Initialize Main UI elements
+        menuBtn = rootVE.Q<Button>("menu");
         resetBtn = rootVE.Q<Button>("reset");
         submitBtn = rootVE.Q<Button>("submit");
         cancelBtn = rootVE.Q<Button>("cancel");
         exitBtn = rootVE.Q<Button>("exit-applicaiton");
-        userInput = rootVE.Q<TextField>("user-input");
+        userInputField = rootVE.Q<TextField>("user-input");
         daveOutput = rootVE.Q<TextField>("dave-text-out");
         gptParseOutput = rootVE.Q<TextField>("gpt-parsed-words");
 
@@ -132,7 +146,6 @@ public class RuntimeGUI : MonoBehaviour
         apiInput.isPasswordField = true;
         apiInput.maskChar = '*';
 
-
         //Main Input and Output UI Elements 
         daveOutGroup = rootVE.Q<VisualElement>("dave-in");
         daveInGroup = rootVE.Q<VisualElement>("dave-out");
@@ -145,13 +158,13 @@ public class RuntimeGUI : MonoBehaviour
         engineWindow = rootVE.Q<VisualElement>("engine-select");
         engineConfirmBtn = rootVE.Q<Button>("confirm-engine");
         engineRadioGroup = rootVE.Q<RadioButtonGroup>("engine-radio-group");
+		#endregion
 
-        //Initializes and fills the Action list radio groups witht the appropriate action from uxml
-        actionRadioGroup = rootVE.Q<RadioButtonGroup>("action-list");
+		//Initializes and fills the Action list radio groups witht the appropriate action from uxml
+		actionRadioGroup = rootVE.Q<RadioButtonGroup>("action-list");
         foreach (var option in actionRadioGroup.choices)
         {
             actionlist.Add(option.ToLower());
-            Debug.Log(option.ToString());
         }
 
         //Fuctionality of all buttons added here
@@ -165,15 +178,18 @@ public class RuntimeGUI : MonoBehaviour
         apiSubmitBtn.clicked += SetApiKey;
         engineMenuBtn.clicked += OpenEngineMenu;
         engineConfirmBtn.clicked += SelectEngine;
-
         exitBtn.clicked += Application.Quit;
+
+        submitAction.Enable();
+        submitAction.performed += OnSubmitKeyPressedHandler;
 
         //Level select buttons -- refer to scene build order
         navigationLevelLodeBtn.clicked += () => SceneManager.LoadScene(0);
         standingPhysicsLevelLoadBtn.clicked += () => SceneManager.LoadScene(1);
 
-        //Initializing directory path to store encrypted key
-        keyPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), KEY_DIRECTORY);
+		#region GPT-3 API KEY
+		//Initializing directory path to store encrypted key
+		keyPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), KEY_DIRECTORY);
         Directory.CreateDirectory(keyPath);
         keyPath = Path.Combine(keyPath, KEY_FILE);
 
@@ -197,12 +213,29 @@ public class RuntimeGUI : MonoBehaviour
         {
             OpenApiInputMenu();
         }
+		#endregion
+
+	}
+
+	private void OnDisable()
+    {
+        submitAction.Disable();
     }
 
-	private void Start()
+    private void Start()
 	{
-        handler = new UserInputHandler(sceneConnection.GetPropsList(), key, PROMPT_FILE, engine);
-    }
+        userInputHandler = new UserInputHandler(sceneConnection.GetPropsList(), key, PROMPT_FILE, engine);
+
+		
+		foreach (var item in userInputField.Children())
+		{
+			if (item.name == "unity-text-input")
+			{
+				userInputFieldInnerText = item;
+			}
+		}
+		StartCoroutine(KeepInputFieldFocused());
+	}
 
     /// <summary>
     /// Sets the RadioButtonGroup to the behavior 
@@ -247,7 +280,8 @@ public class RuntimeGUI : MonoBehaviour
             // signalable popup
             var msg = "Getting responce from GPT-3...";
             StartCoroutine(CreateSignaledPopup(msg));
-            responce = await handler.GetGptResponce(userInput.value);
+            responce = await userInputHandler.GetGptResponce(userInputField.value);
+            userInputFieldInnerText.Focus();
             closePopUp = true;
         }
         catch (Exception e)
@@ -454,7 +488,7 @@ public class RuntimeGUI : MonoBehaviour
             testResponse = await testConnection.GenerateText("Say one word {stop}");
             debugMessage = "Validation Successful!";
             engine = EngineType.Davinci;
-            handler = new UserInputHandler(sceneConnection.GetPropsList(), key, PROMPT_FILE, engine);
+            userInputHandler = new UserInputHandler(sceneConnection.GetPropsList(), key, PROMPT_FILE, engine);
         }
         catch (Exception)
         {
@@ -543,7 +577,7 @@ public class RuntimeGUI : MonoBehaviour
     /// Selected via radio buttons.
     /// Defaults to Davinci
     /// </summary>
-    async void SelectEngine()
+    void SelectEngine()
     {
         if (engineRadioGroup.value == 1)
         {
@@ -563,9 +597,33 @@ public class RuntimeGUI : MonoBehaviour
         }
 
 
-        handler = new UserInputHandler(sceneConnection.GetPropsList(), key, PROMPT_FILE, engine);
+        userInputHandler = new UserInputHandler(sceneConnection.GetPropsList(), key, PROMPT_FILE, engine);
         Debug.Log(engineRadioGroup.value.ToString());
         ToggleMainUI(true);
     }
 
+    async void OnSubmitKeyPressedHandler(InputAction.CallbackContext context)
+    {
+        OnSubmitHandler();
+        await Task.Delay(100);
+    }
+    IEnumerator KeepInputFieldFocused()
+	{
+        yield return new WaitForSecondsRealtime(1f);
+
+        while (true)
+		{
+			if (userInputField.focusController.focusedElement != userInputField)
+			{
+			    userInputFieldInnerText.Focus();
+			}
+
+			yield return new WaitForSecondsRealtime(1f);
+        }
+	}
+
+	public static bool IsElementFocused(VisualElement visualElement)
+	{
+		return visualElement.focusController.focusedElement == visualElement;
+	}
 }

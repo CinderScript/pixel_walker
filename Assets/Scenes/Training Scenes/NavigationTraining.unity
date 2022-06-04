@@ -138,6 +138,10 @@ PrefabInstance:
       propertyPath: sourceAsset
       value: 
       objectReference: {fileID: 9197481963319205126, guid: 59941958dab77ce4bbaab21a533fdf60, type: 3}
+    - target: {fileID: 4561720922364505257, guid: 43cfa7986a874404f8bbbe65ad999985, type: 3}
+      propertyPath: m_PanelSettings
+      value: 
+      objectReference: {fileID: 11400000, guid: a5a62cd7a07197544a91c0ed3f12215b, type: 2}
     - target: {fileID: 4561720922364505262, guid: 43cfa7986a874404f8bbbe65ad999985, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -182,6 +186,50 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4561720922364505263, guid: 43cfa7986a874404f8bbbe65ad999985, type: 3}
+      propertyPath: m_MoveAction
+      value: 
+      objectReference: {fileID: -3259937708991082801, guid: bdf07ed53aa39004eaf2a7cc4c3efa46, type: 3}
+    - target: {fileID: 4561720922364505263, guid: 43cfa7986a874404f8bbbe65ad999985, type: 3}
+      propertyPath: m_PointAction
+      value: 
+      objectReference: {fileID: 7604717226955966214, guid: bdf07ed53aa39004eaf2a7cc4c3efa46, type: 3}
+    - target: {fileID: 4561720922364505263, guid: 43cfa7986a874404f8bbbe65ad999985, type: 3}
+      propertyPath: m_ActionsAsset
+      value: 
+      objectReference: {fileID: -944628639613478452, guid: bdf07ed53aa39004eaf2a7cc4c3efa46, type: 3}
+    - target: {fileID: 4561720922364505263, guid: 43cfa7986a874404f8bbbe65ad999985, type: 3}
+      propertyPath: m_CancelAction
+      value: 
+      objectReference: {fileID: -4843528236550663322, guid: bdf07ed53aa39004eaf2a7cc4c3efa46, type: 3}
+    - target: {fileID: 4561720922364505263, guid: 43cfa7986a874404f8bbbe65ad999985, type: 3}
+      propertyPath: m_SubmitAction
+      value: 
+      objectReference: {fileID: -5880548617590001261, guid: bdf07ed53aa39004eaf2a7cc4c3efa46, type: 3}
+    - target: {fileID: 4561720922364505263, guid: 43cfa7986a874404f8bbbe65ad999985, type: 3}
+      propertyPath: m_LeftClickAction
+      value: 
+      objectReference: {fileID: 3537036353772102846, guid: bdf07ed53aa39004eaf2a7cc4c3efa46, type: 3}
+    - target: {fileID: 4561720922364505263, guid: 43cfa7986a874404f8bbbe65ad999985, type: 3}
+      propertyPath: m_RightClickAction
+      value: 
+      objectReference: {fileID: 3873257707517751424, guid: bdf07ed53aa39004eaf2a7cc4c3efa46, type: 3}
+    - target: {fileID: 4561720922364505263, guid: 43cfa7986a874404f8bbbe65ad999985, type: 3}
+      propertyPath: m_MiddleClickAction
+      value: 
+      objectReference: {fileID: -4482023458458088600, guid: bdf07ed53aa39004eaf2a7cc4c3efa46, type: 3}
+    - target: {fileID: 4561720922364505263, guid: 43cfa7986a874404f8bbbe65ad999985, type: 3}
+      propertyPath: m_ScrollWheelAction
+      value: 
+      objectReference: {fileID: -3764305223534258610, guid: bdf07ed53aa39004eaf2a7cc4c3efa46, type: 3}
+    - target: {fileID: 4561720922364505263, guid: 43cfa7986a874404f8bbbe65ad999985, type: 3}
+      propertyPath: m_TrackedDevicePositionAction
+      value: 
+      objectReference: {fileID: 4299076141766489939, guid: bdf07ed53aa39004eaf2a7cc4c3efa46, type: 3}
+    - target: {fileID: 4561720922364505263, guid: 43cfa7986a874404f8bbbe65ad999985, type: 3}
+      propertyPath: m_TrackedDeviceOrientationAction
+      value: 
+      objectReference: {fileID: -6329347182813389084, guid: bdf07ed53aa39004eaf2a7cc4c3efa46, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 43cfa7986a874404f8bbbe65ad999985, type: 3}
 --- !u!1 &745675435
@@ -583,6 +631,14 @@ PrefabInstance:
     - target: {fileID: 1970948473211942123, guid: 97f1d3f5100e756428bfebc57434b597, type: 3}
       propertyPath: m_Name
       value: Scene
+      objectReference: {fileID: 0}
+    - target: {fileID: 1970948474465470598, guid: 97f1d3f5100e756428bfebc57434b597, type: 3}
+      propertyPath: m_DefaultControlScheme
+      value: Keyboard&Mouse
+      objectReference: {fileID: 0}
+    - target: {fileID: 1970948474465470598, guid: 97f1d3f5100e756428bfebc57434b597, type: 3}
+      propertyPath: m_NeverAutoSwitchControlSchemes
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1970948474516515976, guid: 97f1d3f5100e756428bfebc57434b597, type: 3}
       propertyPath: sceneArea
