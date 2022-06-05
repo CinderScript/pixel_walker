@@ -40,7 +40,7 @@ public class SceneGuiInterface : MonoBehaviour
 
 	private void Start()
 	{
-		StartCoroutine(StartLater(BehaviorTest));
+		//StartCoroutine(StartLater(BehaviorTest));
 		//Debug.Log(propReferences.GetAllPropNames());
 	}
 

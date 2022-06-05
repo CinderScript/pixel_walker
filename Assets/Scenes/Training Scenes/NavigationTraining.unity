@@ -726,6 +726,10 @@ PrefabInstance:
       propertyPath: Name
       value: Light Switch
       objectReference: {fileID: 0}
+    - target: {fileID: 5104325723340001954, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
+      propertyPath: Name
+      value: Paint Can Lid
+      objectReference: {fileID: 0}
     - target: {fileID: 6064972756338245287, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
       propertyPath: m_Pitch
       value: 0
@@ -845,6 +849,18 @@ PrefabInstance:
     - target: {fileID: 8844779564963075883, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
       propertyPath: m_Name
       value: SoundEffect
+      objectReference: {fileID: 0}
+    - target: {fileID: 8975076406166320986, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.204
+      objectReference: {fileID: 0}
+    - target: {fileID: 8975076406166320986, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.186
+      objectReference: {fileID: 0}
+    - target: {fileID: 8975076406166320986, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.17
       objectReference: {fileID: 0}
     - target: {fileID: 9187232016775822769, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
       propertyPath: Name
