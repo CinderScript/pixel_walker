@@ -55,10 +55,6 @@ public class BehaviorController : MonoBehaviour
 
 		//Setup communication with agents
 		agents = GetComponentsInChildren<AgentBase>().ToList();
-		foreach (var agent in agents)
-		{
-			//agent.OnBehaviorFinished += OnBehaviorFinishHandler;
-		}
 
 		var playerArea = GetComponentInParent<AgentArea>().transform;
 		spawnPoints = playerArea.GetComponentInParent<SpawnPointReferences>();
@@ -69,43 +65,76 @@ public class BehaviorController : MonoBehaviour
 		startingPositionHeight = agentBody.transform.position.y;
 	}
 
-	public async Task<BehaviorResult> StartBehavior(AgentBehaviorProperties properties)
+	public (string message, Task<BehaviorResult> result) StartBehavior(AgentBehaviorProperties properties)
 	{
-		// is the target a location or an object?
+		string msg = "";
 		GameObject targetObject = null;
+		PropInfo prop = areaProps.GetProp(properties.Object, properties.Location);
+		Room room = areaProps.GetRoom(properties.Location);
+
+		// is the target a location or an object?
+		// if the target is a location (no object listed)
 		if (properties.Object.ToLower() == "null")
 		{
-			targetObject = areaProps.GetRoom(properties.Location);
-
-			if (!targetObject)
+			// if is a room
+			if (room)
 			{
-				string msg = "I can't find the location " + properties.Location;
-				return new BehaviorResult(BehaviorType.None, false, false, msg);
+				// going to the room indicated
+				msg = $"I know where the {properties.Location} is. I'm going there.";
+				targetObject = room.gameObject;
 			}
+			else 
+			{
+				// didn't find the room
+				msg = "I can't find the location: " + properties.Location;
+			}
+		}
+		// the target is a scene prop, not a location
+		else
+		{
+			if (prop)
+			{
+				// found the object - going there.
+				targetObject = prop.gameObject;
+				
+				if (prop.room != room)
+				{
+					msg = $"I couldn't find {properties.Object} in the {properties.Location}," +
+						$" but I did find one in the {prop.room.Name.ToString().Replace("_", " ")}";
+				}
+				else
+				{
+					msg = $"There is a {properties.Object} in the {properties.Location}. I'm going there.";
+				}
+			}
+			else
+			{
+				// didn't find the object
+				msg = "I can't find an object with the name " + properties.Object;
+			}
+		}
+
+		var behavior = properties.Behavior;
+
+		if (targetObject)
+		{
+			return (msg, PerformBehavior(behavior, targetObject.transform));
 		}
 		else
 		{
-			targetObject = areaProps.GetProp(properties.Object);
-
-			if (!targetObject)
-			{
-				string msg = "I can't find an object with the name " + properties.Object;
-				return new BehaviorResult(BehaviorType.None, false, false, msg);
-			}
+			return (msg, null);
 		}
+	}
 
-		var target = targetObject.transform;
-		var behavior = properties.Behavior;
-
+	private async Task<BehaviorResult> PerformBehavior(BehaviorType behavior, Transform target = null)
+	{
 		switch (behavior)
 		{
 			case BehaviorType.Navigate:
 				{
-
-
 					return await Navigate(target);
 				}
-				
+
 			case BehaviorType.TurnOn:
 				{
 					var result = await Navigate(target);
@@ -151,11 +180,12 @@ public class BehaviorController : MonoBehaviour
 					var msg = "I can't open things yet...";
 					return new BehaviorResult(BehaviorType.SetDown, false, false, msg);
 				}
-			//return await Drop();
 
 			default:
 				throw new System.Exception("Behavior not implemented");
 		}
+
+
 	}
 
 	private async Task<BehaviorResult> Navigate(Transform target)

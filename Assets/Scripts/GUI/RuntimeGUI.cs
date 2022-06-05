@@ -321,7 +321,11 @@ public class RuntimeGUI : MonoBehaviour
 		if (responce.Type == InputType.Command)
 		{
             SetCurrentBehavior(responce.BehaviorProperties.Behavior);
-            var result = await sceneConnection.StartBehavior(responce.BehaviorProperties);
+            var messageAndResult = sceneConnection.StartBehavior(responce.BehaviorProperties);
+            var startMsg = messageAndResult.message;
+            var result = await messageAndResult.result;
+
+            daveOutput.value = startMsg;
 
             if (result.Cancelled)
             {

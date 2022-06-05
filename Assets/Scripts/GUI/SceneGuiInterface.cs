@@ -40,44 +40,32 @@ public class SceneGuiInterface : MonoBehaviour
 
 	private void Start()
 	{
-		//StartNavigationTraining(false);
-		//GuiUsageExample_DebugTest();
+		StartCoroutine(StartLater(BehaviorTest));
 		//Debug.Log(propReferences.GetAllPropNames());
 	}
 
-	IEnumerator TriggerAfterSeconds_DebugTest(float sec)
+	IEnumerator StartLater(System.Action action)
 	{
-		yield return new WaitForSeconds(sec);
-		var properties = new AgentBehaviorProperties(BehaviorType.TurnOn, "Drill Press", "");
-
-		StartBehavior(properties);
-	}
-	
-	private async void GuiUsageExample_DebugTest()
-	{
-		while (true)
-		{
-			var properties = new AgentBehaviorProperties(BehaviorType.Navigate, "yellow_claw_hammer");
-
-			var result = await StartBehavior(properties);
-			if (result.Cancelled)
-			{
-				Debug.Log($"Behavior was cancelled while performing {result.Behavior}.");
-			}
-			else if (result.Success)
-			{
-				Debug.Log($"{result.Behavior} successfully finished!");
-			}
-			else
-				Debug.Log($"I couldn't perform the requested action. {result.Message}");
-
-			await Task.Delay(2000);
-		}
+		yield return new WaitForSeconds(1);
+		action();
 	}
 
-	public async Task<BehaviorResult> StartBehavior(AgentBehaviorProperties properties)
+	async void BehaviorTest()
 	{
-		return await behaviorController.StartBehavior(properties);
+		AgentBehaviorProperties properties =
+			new AgentBehaviorProperties(BehaviorType.TurnOff, "Yellow Claw Hammer", "Music Room");
+		var start = StartBehavior(properties);
+
+		Debug.Log("Starting Message: " + start.message);
+
+		var result = await start.result;
+		Debug.Log("result msg: " + result.Message);
+		Debug.Log("success: " + result.Success);
+	}
+
+	public (string message, Task<BehaviorResult> result) StartBehavior(AgentBehaviorProperties properties)
+	{
+		return behaviorController.StartBehavior(properties);
 	}
 
 	public void StartNavigationTraining(bool randomLocation)

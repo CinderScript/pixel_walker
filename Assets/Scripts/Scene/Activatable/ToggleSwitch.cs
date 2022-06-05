@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [DisallowMultipleComponent]
-public class ToggleSwitch : ActivatableTrigger
+public class ToggleSwitch : ActivationTrigger
 {
 	[Header("On Activations")]
 	[SerializeField]

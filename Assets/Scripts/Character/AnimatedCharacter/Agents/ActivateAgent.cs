@@ -34,7 +34,7 @@ public class ActivateAgent : AgentBase
 
 	[Header("Assigned at RTime")]
 	[SerializeField]
-	private ActivatableTrigger targetSwitchActivatable;
+	private ActivationTrigger activationTrigger;
 	private Transform targetSwitchTransform;
 
 	private Rigidbody handTargetRb;
@@ -70,15 +70,15 @@ public class ActivateAgent : AgentBase
 	{
 		// before starting the behavior, rotate so arm faces the target
 		// and then activate the hand target and inverse kinimatic rig
-		targetSwitchActivatable = target.GetComponentInChildren<ActivatableTrigger>();
+		activationTrigger = target.GetComponentInChildren<ActivationTrigger>();
 		
-
-		if (targetSwitchActivatable)
+		// if there was an activation triger on this target
+		if (activationTrigger)
 		{
 			// check if this is a toggle, then check to see if it can be turned off or on
-			if (targetSwitchActivatable is ToggleSwitch)
+			if (activationTrigger is ToggleSwitch)
 			{
-				var toggleSwitch = targetSwitchActivatable as ToggleSwitch;
+				var toggleSwitch = activationTrigger as ToggleSwitch;
 				var state = toggleSwitch.CurrentState;
 				
 				if (state == ActivationState.On)
@@ -111,7 +111,7 @@ public class ActivateAgent : AgentBase
 		}
 
 		// PERFORM THE ACTIVATION!
-		targetSwitchTransform = targetSwitchActivatable.transform;
+		targetSwitchTransform = activationTrigger.transform;
 		areActionsOverriden = false;
 		didHandTriggerActivatable = false;
 		PerformActivate();
@@ -134,7 +134,7 @@ public class ActivateAgent : AgentBase
 		// if the switch wasn't triggered, trigger it now
 		if (!didHandTriggerActivatable)
 		{
-			targetSwitchActivatable.TriggerActivatables();
+			activationTrigger.TriggerActivatables();
 			didHandTriggerActivatable = true;
 		}
 

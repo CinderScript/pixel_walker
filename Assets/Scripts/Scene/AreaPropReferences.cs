@@ -32,15 +32,53 @@ public class AreaPropReferences : MonoBehaviour
 		return SelectedProp = prop.gameObject;
 	}
 
-	public GameObject GetProp(string name)
+	/// <summary>
+	/// Returns the scene prop with the name given. If a location is specified,
+	/// then this location is prioritized if multiple objects have the same name.
+	/// </summary>
+	/// <param name="name"></param>
+	/// <param name="location"></param>
+	/// <returns></returns>
+	public PropInfo GetProp(string name, string location = "")
 	{
 		name = name.Replace("_", " ");
-		return Props.FirstOrDefault(prop => prop.Name.ToLower() == name.ToLower())?.gameObject;
+		location = location.Replace("_", " ");
+		var room = GetRoom(location);
+
+		// if there is no room, then find the prop
+		if (!room)
+		{
+			return Props.FirstOrDefault(prop => prop.Name.ToLower() == name.ToLower());
+		}
+		else
+		{
+			// get all objects that match
+			var propsMatched = Props.Where(prop => prop.Name.ToLower() == name.ToLower());
+
+			// if there is at least one, set this to be returned if a room cannot be matched
+			PropInfo returnValue = null;
+			if (propsMatched.Count() > 0)
+			{
+				returnValue = propsMatched.First();
+			}
+
+			foreach (var prop in propsMatched)
+			{
+				if (prop.room == room)
+				{
+					return prop;
+				}
+			}
+
+			// if no room was matched, return name match if any
+			return returnValue;
+		}
+
 	}
-	public GameObject GetRoom(string name)
+	public Room GetRoom(string name)
 	{
 		name = name.Replace("_", " ");
-		return Rooms.FirstOrDefault(room => RoomNameToString(room).ToLower() == name.ToLower())?.gameObject;
+		return Rooms.FirstOrDefault(room => RoomNameToString(room).ToLower() == name.ToLower());
 	}
 	private string RoomNameToString(Room room)
 	{

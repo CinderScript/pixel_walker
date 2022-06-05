@@ -722,6 +722,10 @@ PrefabInstance:
       propertyPath: Name
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4369611379459421706, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
+      propertyPath: Name
+      value: Light Switch
+      objectReference: {fileID: 0}
     - target: {fileID: 6064972756338245287, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
       propertyPath: m_Pitch
       value: 0
@@ -737,6 +741,10 @@ PrefabInstance:
     - target: {fileID: 6875790770836237489, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
       propertyPath: Name
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6961749624170740276, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
+      propertyPath: Name
+      value: Light Switch
       objectReference: {fileID: 0}
     - target: {fileID: 7013290155715168803, guid: 26e2bf3244f15f74e8f9b8b614c16a79, type: 3}
       propertyPath: near clip plane

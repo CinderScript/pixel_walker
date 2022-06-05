@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class ActivatableToggle : MonoBehaviour, Activatable
+public abstract class ActivatableToggle : MonoBehaviour, IActivatable
 {
 	[SerializeField]
 	[Header("Initial Toggle State")]
